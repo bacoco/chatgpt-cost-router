@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Surface Handoff",
+  "type": "object",
+  "required": ["version", "goal", "recommended_surface", "remaining", "success_criteria"],
+  "properties": {
+    "version": {"const": 1},
+    "recommended_surface": {"enum": ["CHAT", "SCHEDULED_CHAT", "LOCAL_TOOL", "CODEX", "WORK", "EXTERNAL_API", "HYBRID"]},
+    "goal": {"type": "string"},
+    "done": {"type": "array", "items": {"type": "string"}},
+    "remaining": {"type": "array", "items": {"type": "string"}},
+    "evidence": {"type": "array", "items": {"type": "string"}},
+    "success_criteria": {"type": "array", "items": {"type": "string"}}
+  }
+}
