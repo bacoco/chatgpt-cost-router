@@ -1,12 +1,16 @@
-# Routing Fixtures
+# Routing fixtures
 
-1. Summarize arXiv paper and compare to Loriq -> CHAT
-2. Create GitHub issue -> CHAT
-3. Modify 4 files, PR, CI validate -> CHAT
-4. Refactor 120 files with repeated local tests -> CODEX
-5. Monitor DGX Spark benchmarks daily -> SCHEDULED_CHAT
-6. Run ComfyUI workflow on Sparky -> LOCAL_TOOL via media-mcp
-7. UI-only admin workflow -> WORK
-8. Authenticated market API hourly + delta analysis -> MCP + SCHEDULED_CHAT
-9. Review Codex implementation + release notes -> CHAT
-10. Three synchronous isolated agents -> WORK/CODEX/SDK if truly required
+The canonical executable inputs and expected outputs are in
+[routing_cases.json](routing_cases.json). R01–R10 replace the original ten prose
+examples; R11–R20 cover absent proof, authorization, bans, cost/time limits, unknown
+cost, missing scheduler, expiry and no candidates.
+
+Every case supplies the current execution context, authorized/required actions,
+scoped synthetic observations, candidate steps and explicit expected status/route/
+plan identity. Composite routes preserve scheduler and executor steps; transport
+names are metadata, never extra route enums.
+
+Run `python -m unittest discover -s tests -v` from the repository root. The tests use
+explicit historical evaluation times so fixtures cannot silently become live
+capability claims. Passing these deterministic cases does not measure LLM task
+classification accuracy or real ChatGPT surface availability.

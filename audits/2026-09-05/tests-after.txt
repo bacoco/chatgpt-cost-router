@@ -1,0 +1,44 @@
+test_canonical_example_is_valid (test_audit_regressions.AuditRegressions.test_canonical_example_is_valid) ... ok
+test_native_skills_have_discoverable_metadata (test_audit_regressions.AuditRegressions.test_native_skills_have_discoverable_metadata) ... ok
+test_reject_blank_objective (test_audit_regressions.AuditRegressions.test_reject_blank_objective) ... ok
+test_reject_empty_success_criteria (test_audit_regressions.AuditRegressions.test_reject_empty_success_criteria) ... ok
+test_reject_missing_or_unknown_version (test_audit_regressions.AuditRegressions.test_reject_missing_or_unknown_version) ... ok
+test_reject_wrong_known_control_types (test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types) ... ok
+test_blocked_has_distinct_exit_and_no_plan (test_cli.CliTests.test_blocked_has_distinct_exit_and_no_plan) ... ok
+test_capability_validation_uses_explicit_clock (test_cli.CliTests.test_capability_validation_uses_explicit_clock) ... ok
+test_documented_example (test_cli.CliTests.test_documented_example) ... ok
+test_invalid_json_and_duplicate_fields_fail_without_traceback (test_cli.CliTests.test_invalid_json_and_duplicate_fields_fail_without_traceback) ... ok
+test_invalid_offset_is_not_normalized_into_valid_time (test_cli.CliTests.test_invalid_offset_is_not_normalized_into_valid_time) ... ok
+test_delegation_and_completed_return (test_handoff_ledger.HandoffTests.test_delegation_and_completed_return) ... ok
+test_delegation_requires_work_but_return_has_no_new_actions (test_handoff_ledger.HandoffTests.test_delegation_requires_work_but_return_has_no_new_actions) ... ok
+test_execution_requires_current_state_and_destination_proof (test_handoff_ledger.HandoffTests.test_execution_requires_current_state_and_destination_proof) ... ok
+test_extension_namespace_preserves_forward_compatibility (test_handoff_ledger.HandoffTests.test_extension_namespace_preserves_forward_compatibility) ... ok
+test_false_completion_missing_or_wrong_commit_proof (test_handoff_ledger.HandoffTests.test_false_completion_missing_or_wrong_commit_proof) ... ok
+test_policy_and_current_repository_state_must_match (test_handoff_ledger.HandoffTests.test_policy_and_current_repository_state_must_match) ... ok
+test_wrong_known_fields_and_typo_are_rejected (test_handoff_ledger.HandoffTests.test_wrong_known_fields_and_typo_are_rejected) ... ok
+test_cancellation_only_before_execution (test_handoff_ledger.LedgerTests.test_cancellation_only_before_execution) ... ok
+test_completed_requires_proof_and_is_terminal (test_handoff_ledger.LedgerTests.test_completed_requires_proof_and_is_terminal) ... ok
+test_identical_registration_is_idempotent_conflicting_payload_rejected (test_handoff_ledger.LedgerTests.test_identical_registration_is_idempotent_conflicting_payload_rejected) ... ok
+test_only_one_worker_obtains_the_running_transition (test_handoff_ledger.LedgerTests.test_only_one_worker_obtains_the_running_transition) ... ok
+test_policy_update_blocks_new_claims_but_allows_result_reconciliation (test_handoff_ledger.LedgerTests.test_policy_update_blocks_new_claims_but_allows_result_reconciliation) ... ok
+test_result_cannot_change_scope (test_handoff_ledger.LedgerTests.test_result_cannot_change_scope) ... ok
+test_result_cannot_drop_required_tests (test_handoff_ledger.LedgerTests.test_result_cannot_drop_required_tests) ... ok
+test_uncertain_outcome_survives_restart_and_cannot_retry (test_handoff_ledger.LedgerTests.test_uncertain_outcome_survives_restart_and_cannot_retry) ... ok
+test_all_cost_components_and_current_context_count (test_router.RouterTests.test_all_cost_components_and_current_context_count) ... ok
+test_canonical_and_adversarial_fixtures (test_router.RouterTests.test_canonical_and_adversarial_fixtures) ... ok
+test_capability_is_action_resource_and_session_scoped (test_router.RouterTests.test_capability_is_action_resource_and_session_scoped) ... ok
+test_expiry_boundary_and_stale_observation (test_router.RouterTests.test_expiry_boundary_and_stale_observation) ... ok
+test_future_manifest_and_invalid_dates_rejected (test_router.RouterTests.test_future_manifest_and_invalid_dates_rejected) ... ok
+test_hop_limit_does_not_force_another_handoff (test_router.RouterTests.test_hop_limit_does_not_force_another_handoff) ... ok
+test_later_denial_overrides_old_success_in_any_order (test_router.RouterTests.test_later_denial_overrides_old_success_in_any_order) ... ok
+test_missing_extra_and_duplicate_actions (test_router.RouterTests.test_missing_extra_and_duplicate_actions) ... ok
+test_negative_boolean_and_nonfinite_cost_rejected (test_router.RouterTests.test_negative_boolean_and_nonfinite_cost_rejected) ... ok
+test_no_candidates_is_explicitly_blocked (test_router.RouterTests.test_no_candidates_is_explicitly_blocked) ... ok
+test_route_does_not_mutate_request (test_router.RouterTests.test_route_does_not_mutate_request) ... ok
+test_same_timestamp_conflict_fails_closed (test_router.RouterTests.test_same_timestamp_conflict_fails_closed) ... ok
+test_transfer_threshold_and_budget (test_router.RouterTests.test_transfer_threshold_and_budget) ... ok
+
+----------------------------------------------------------------------
+Ran 39 tests in 1.108s
+
+OK

@@ -1,24 +1,20 @@
-# Use Cases
+# Use cases
 
-| Use case | Default | Escalate when |
+These are candidate plans, conditional on current scoped evidence and authorization.
+The executable [fixtures](../tests/routing_cases.json) record all prerequisites.
+
+| Task | Candidate plan | Actual deciding requirement |
 |---|---|---|
-| General analysis | Chat | rarely |
-| Web research | Chat | interactive browser required |
-| GitHub issue | Chat | usually never |
-| GitHub PR/review | Chat | large refactor/test loop |
-| Coding 1–20 files | Chat + GitHub | local tests dominate |
-| Large refactor | Chat first | Codex likely |
-| CI diagnosis | Chat + GitHub Actions | local-only repro needed |
-| Monitoring | Scheduled Chat | event webhook needed |
-| Newsletter | Scheduled Chat | UI-only publication |
-| Gmail | Chat/Scheduler | rarely |
-| WordPress via app/API | Chat/Scheduler | UI-only admin |
-| Python/data | Chat/Scheduler | special compute/network needed |
-| Public API GET | Web -> Python | auth/write needed |
-| Private API | MCP/app | external backend otherwise |
-| SSH/VPS | MCP gateway | Work until gateway exists |
-| ComfyUI/Sparky | media MCP | Work/local UI if no gateway |
-| Image | Chat | specialized local pipeline |
-| Video | media MCP/local | Work if UI-only |
-| True subagents | pseudo-agent schedulers | Work/Codex/SDK if synchronous delegation required |
-| Local Mac apps/files | limited | Work/Codex Desktop |
+| Research or repository review | CHAT | Source/repository reading and sufficient context |
+| Issue, targeted edit, PR | CHAT + GitHub transport | Required write permissions and verifiable CI on the right commit |
+| Refactor or iterative debugging | CODEX or another sufficient context | Local environment/test loop requirements, not a file-count threshold |
+| Recurring research | SCHEDULED_CHAT trigger and executor | Scheduling plus fresh tools at each run |
+| ComfyUI / inference | LOCAL_TOOL via an installed adapter | Reachable hardware/workflow, authorization and comparable cost |
+| UI-only administration | WORK with a suitable browser | Actual authenticated UI access to the target |
+| Hourly API + delta | Scheduled trigger plus capable API/compute executor | Composite steps, state and recovery semantics |
+| Post-implementation review | Current context or verified destination | Remaining capabilities and marginal transfer benefit |
+| Synchronous isolated workers | Verified WORK/CODEX/API capability | Genuine synchronous delegation; asynchronous schedules are a different requirement |
+| SSH or desktop application | A context with proven target access | A surface name alone does not establish SSH or local-machine access |
+
+The numbers 4, 20 and 120 files are examples, not routing thresholds. Some one-file
+changes require complex integration; some broad mechanical changes do not.

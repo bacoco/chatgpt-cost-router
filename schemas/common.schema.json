@@ -1,0 +1,563 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cost-router.invalid/schemas/common.schema.json",
+  "title": "Common",
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "surface": {
+      "enum": [
+        "CHAT",
+        "SCHEDULED_CHAT",
+        "LOCAL_TOOL",
+        "CODEX",
+        "WORK",
+        "EXTERNAL_API"
+      ]
+    },
+    "sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "resource": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "action",
+        "resource"
+      ]
+    },
+    "cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "transfer": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retry": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ci": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "execution",
+        "transfer",
+        "retry",
+        "ci"
+      ]
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "surface": {
+          "enum": [
+            "CHAT",
+            "SCHEDULED_CHAT",
+            "LOCAL_TOOL",
+            "CODEX",
+            "WORK",
+            "EXTERNAL_API"
+          ]
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "resource": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "unavailable",
+            "unknown"
+          ]
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "method": {
+          "enum": [
+            "action-result",
+            "permission-check",
+            "not-checked"
+          ]
+        }
+      },
+      "required": [
+        "surface",
+        "session_id",
+        "action",
+        "resource",
+        "status",
+        "observed_at",
+        "expires_at",
+        "evidence_ref",
+        "method"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "verified"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expires_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "evidence_ref": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "method": {
+                "enum": [
+                  "action-result",
+                  "permission-check"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "step_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "role": {
+          "enum": [
+            "scheduler",
+            "executor"
+          ]
+        },
+        "surface": {
+          "enum": [
+            "CHAT",
+            "SCHEDULED_CHAT",
+            "LOCAL_TOOL",
+            "CODEX",
+            "WORK",
+            "EXTERNAL_API"
+          ]
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/action"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "cost": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/cost"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "duration_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "delivery": {
+          "enum": [
+            "manual",
+            "adapter"
+          ]
+        },
+        "adapter_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "step_id",
+        "role",
+        "surface",
+        "session_id",
+        "actions",
+        "cost",
+        "duration_seconds",
+        "delivery",
+        "adapter_ref"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "delivery": {
+                "const": "adapter"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "adapter_ref": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "scheduler"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "surface": {
+                "enum": [
+                  "SCHEDULED_CHAT",
+                  "EXTERNAL_API"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "cost_unit": {
+          "const": "usd_micro"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/step"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "plan_id",
+        "cost_unit",
+        "steps"
+      ]
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "goal": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "current_surface": {
+          "enum": [
+            "CHAT",
+            "SCHEDULED_CHAT",
+            "LOCAL_TOOL",
+            "CODEX",
+            "WORK",
+            "EXTERNAL_API"
+          ]
+        },
+        "current_session_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "required_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/action"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "authorized_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/action"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "authorization_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "forbidden_surfaces": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "CHAT",
+              "SCHEDULED_CHAT",
+              "LOCAL_TOOL",
+              "CODEX",
+              "WORK",
+              "EXTERNAL_API"
+            ]
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "recurring": {
+          "type": "boolean"
+        },
+        "max_cost_units": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "max_duration_seconds": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transfer_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "task_id",
+        "goal",
+        "current_surface",
+        "current_session_id",
+        "required_actions",
+        "authorized_actions",
+        "authorization_ref",
+        "forbidden_surfaces",
+        "recurring",
+        "max_cost_units",
+        "max_duration_seconds",
+        "transfer_count"
+      ]
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "manifest_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "observations": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/observation"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "version",
+        "manifest_id",
+        "captured_at",
+        "observations"
+      ]
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "criterion": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "result": {
+          "enum": [
+            "pass",
+            "fail",
+            "unknown"
+          ]
+        },
+        "evidence_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "commit_sha": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/sha"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "criterion",
+        "result",
+        "evidence_ref",
+        "observed_at",
+        "commit_sha"
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "commit_sha": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/sha"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "ref",
+        "description",
+        "observed_at",
+        "commit_sha"
+      ]
+    }
+  }
+}

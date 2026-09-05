@@ -1,25 +1,31 @@
-# Roadmap
+# Roadmap and actual status
 
-## Phase 0 — Baseline
-Freeze routing rules, task taxonomy and metrics.
+## Implemented in this repository
 
-## Phase 1 — GitHub skills
-Implement capability-router and surface-handoff skills, schemas and fixtures.
+- Canonical policy with cost comparison, feasibility and explicit blocked results.
+- Typed capability, plan, decision and handoff v2 contracts.
+- Two valid repository-backed skills and native repository discovery links.
+- Deterministic CLI plus contextualized canonical and adversarial fixtures.
+- Scope/freshness, budget, de-escalation and completed-return verification.
+- Local durable operation ledger with atomic execution claims and no blind uncertain retry.
+- Regression tests and GitHub Actions workflow; audit and remediation records.
 
-## Phase 2 — Scheduler integration
-Add pre/validate/post/on_error hooks, state, run manifests and capability preflight.
+## First integration milestone
 
-## Phase 3 — GitHub coding lane
-Standardize Chat -> branch -> edit -> PR -> CI -> review. Define Codex escalation threshold.
+Before changing real routing, collect the baseline described in TOKEN_ECONOMICS.
+Implement one host observer/adapter for a bounded GitHub -> CI task. Verify the full
+path against actual authorization, commit-specific CI evidence, capability expiry,
+provider idempotency/reconciliation and output acceptance. The CLI alone does not
+prove that this integration exists or has passed.
 
-## Phase 4 — Local compute gateways
-Build machines-mcp and media-mcp.
+## Scheduling milestone
 
-## Phase 5 — VPS gateway
-Build safe vps-mcp.
+Implement the chosen scheduler's per-run preflight, durable checkpoint and stream
+concurrency contract. Exercise publication/checkpoint crash points and late runs.
+The local operation ledger is one building block, not a distributed scheduler.
 
-## Phase 6 — Specialist LLM router
-Add Codex CLI, Claude and local model adapters.
+## Optional specialist gateways
 
-## Phase 7 — Measurement
-Tune thresholds and measure actual Work/Codex reduction.
+Add media/machine/VPS/model adapters only after workload and measured benefit justify
+them. Measure shifted costs and quality continuously, tune a versioned policy and
+retain the baseline. Do not postpone baseline collection until the final phase.

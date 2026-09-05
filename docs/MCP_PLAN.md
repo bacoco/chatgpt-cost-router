@@ -1,22 +1,23 @@
-# MCP Plan
+# External integration acceptance plan
 
-## machines-mcp
-DGX Spark, Mac Studio, RTX 4090.
-Tools: status, run_inference, run_benchmark, submit_job, job_status, fetch_result.
+No gateway listed here is implemented or advertised as connected by this repository.
+Build one useful adapter and measure a complete workflow before adding the others.
+Each adapter must implement [CAPABILITIES](CAPABILITIES.md) and
+[EXECUTION_PROTOCOL](EXECUTION_PROTOCOL.md), preserving user scope and budgets.
 
-## media-mcp
-ComfyUI/Sparky.
-Tools: list_workflows, get_workflow, run_workflow, job_status, get_outputs.
+| Candidate adapter | Concrete purpose | Required proof before use |
+|---|---|---|
+| machines-mcp | Owned machine inference/benchmarks | Machine reachable; exact job supported; estimate, scoped permission and provider/job identity |
+| media-mcp | ComfyUI workflows | Workflow/version, authenticated access, submit/status/result and uncertain-submit reconciliation |
+| vps-mcp | Known VPS operations | Narrow typed operations, target allowlist, server-side secrets and action-level authorization |
+| universal-api-mcp | Authenticated APIs | Allowlisted endpoints, typed requests, permissions, rate/budget limits and audited effects |
+| llm-router-mcp | Specialist slices through another model | Supported execution context, current cost estimate, scope-preserving input/output and result evidence |
 
-## vps-mcp
-Safe VPS operations.
-Tools: status, docker_ps, service_logs, disk_usage, safe_exec, deploy_known_project.
+Prefer documented APIs or existing connectors to a new gateway where sufficient.
+Generic shell passthrough is not an implementation of safe_exec. A gateway's claimed
+capability is not verified by its name. Multi-model comparisons must be justified by
+a concrete quality requirement and included in the cost estimate.
 
-## llm-router-mcp
-Specialist delegation.
-Tools: codex_task, claude_review, local_llm_task, compare_solutions.
-
-Calling Codex/Claude through MCP does not make their underlying usage free; savings come from using them only for the specialist slice.
-
-## universal-api-mcp
-Authenticated APIs with allowlists, typed schemas, server-side secrets, rate limits and audit logs.
+An adapter must pass isolated authorization, duplicate-submit, timeout, crash and
+result-verification tests against its real provider before production enablement.
+No transparent automatic transfer between arbitrary ChatGPT surfaces is assumed.

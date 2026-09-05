@@ -1,396 +1,95 @@
 # ChatGPT Cost & Capability Router
 
-A routing layer whose goal is simple: **do as much work as possible in standard ChatGPT and Scheduled Chat, and use Work / Codex / paid APIs only when they are actually necessary.**
+Choose a sufficient execution plan using **verified capabilities, user authorization
+and estimated total cost**. Code does not automatically require Codex; complexity
+alone does not require Work. Owned hardware is an option when its actual capabilities
+and costs fit the task.
 
-The project exists because the same task can often be completed on several ChatGPT surfaces with very different cost and capability profiles. Without a router, it is easy to send research, GitHub work, monitoring, data processing, or small coding tasks to Codex/Work even when standard Chat could already do them.
+The repository now contains a deterministic recommendation engine, versioned JSON
+contracts, two repository-backed skills, a durable local operation ledger and tests.
+It evaluates caller-supplied plans. It does not discover host tools, launch another
+ChatGPT surface, operate hardware, send messages or implement remote MCP gateways.
 
-The target is to reduce Work/Codex usage substantially — initial working estimate: **~50–80%**, with a central target around **65–70%** — while keeping quality, verification and safety intact. This is a hypothesis to measure, not a billing guarantee.
+## Try the executable example
 
-## The idea in one diagram
+Requires Python 3.11 or newer. Run from this checkout:
 
-```text
-                         USER TASK
-                             |
-                             v
-                  +---------------------+
-                  | CAPABILITY ROUTER   |
-                  | What does the task  |
-                  | really need?        |
-                  +----------+----------+
-                             |
-          +------------------+-------------------+
-          |                  |                   |
-          v                  v                   v
-  +---------------+  +----------------+  +----------------+
-  | STANDARD CHAT |  | SCHEDULED CHAT |  | LOCAL / MCP    |
-  |               |  |                |  |                |
-  | research      |  | monitoring     |  | DGX Spark      |
-  | GitHub        |  | newsletters    |  | Mac Studio     |
-  | small coding  |  | delta T-1 -> T |  | RTX 4090       |
-  | review        |  | periodic jobs  |  | ComfyUI        |
-  | Python/data   |  | state updates  |  | VPS / APIs     |
-  +-------+-------+  +--------+-------+  +--------+-------+
-          |                   |                   |
-          +-------------------+-------------------+
-                              |
-                              v
-                     Is something missing?
-                              |
-                       +------+------+
-                       |             |
-                      NO            YES
-                       |             |
-                       v             v
-                     DONE    +------------------+
-                             | SPECIALIST       |
-                             | FALLBACK         |
-                             |                  |
-                             | CODEX / WORK     |
-                             | paid API         |
-                             +--------+---------+
-                                      |
-                                      v
-                          Return to Chat when the
-                          expensive capability is
-                          no longer needed
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-dev.txt
+python -m cost_router route examples/request.json --at 2026-09-05T00:30:00Z
+python -m cost_router validate handoff examples/handoff.json
+python -m unittest discover -s tests -v
 ```
 
-## Core rule
-
-> **Code does not automatically mean Codex.**
-
-The router first asks whether standard Chat already has the required capabilities. For example, if Chat can read/write the repository, create a branch, change a few files, open a PR and let GitHub Actions validate it, there may be no reason to start with Codex.
-
-Likewise:
-
-- research does not automatically mean Work;
-- monitoring does not automatically mean an agent;
-- image/video/inference does not automatically mean a paid model if owned hardware can do it;
-- an authenticated API does not automatically require Python Internet access if an app/MCP can provide the I/O layer.
-
-## What each surface is for
-
-### 1. Standard Chat — default
-
-Use first for:
-
-- research and synthesis;
-- Web search;
-- GitHub issues, PRs, review and targeted edits;
-- small/medium coding tasks;
-- reading CI results;
-- Python/data analysis;
-- Gmail and connected apps;
-- planning, architecture and documentation.
-
-The philosophy is: **push Chat until a real capability boundary is reached.**
-
-### 2. Scheduled Chat — automation engine
-
-Use for work that must run automatically:
-
-- hourly/daily monitoring;
-- research pipelines;
-- changelog/release tracking;
-- newsletters;
-- delta analysis between T-1 and T;
-- periodic GitHub state updates;
-- recurring Gmail/report workflows.
-
-Our capability audits observed Scheduled Chat using Web, Python, shell, GitHub read/write, Gmail, Contacts and Files/Library. The router must still check what is actually exposed at runtime instead of assuming every environment has the same tools.
-
-### 3. Local compute / MCP — cheap specialist execution
-
-Before escalating to Work/Codex, prefer owned resources when they fit the task:
-
-```text
-Chat / Scheduled Chat
-         |
-         v
-       MCP / App
-         |
-   +-----+-----------------------------+
-   |            |          |           |
-   v            v          v           v
-DGX Spark   Mac Studio   RTX 4090   VPS / APIs
-   |
-   v
-local LLM / inference / ComfyUI / benchmarks
-```
-
-Planned gateways include:
-
-- `machines-mcp` — DGX Spark, Mac Studio, RTX 4090;
-- `media-mcp` — Sparky / ComfyUI workflows;
-- `vps-mcp` — safe SSH/VPS operations;
-- `universal-api-mcp` — authenticated APIs;
-- `llm-router-mcp` — delegate only specialist slices to Codex CLI, Claude or local models.
-
-Calling Codex or Claude through MCP does **not** make their usage free. The saving comes from asking them to do only the part that truly needs them.
-
-### 4. Codex — specialist coding fallback
-
-Escalate when coding requires capabilities that become inefficient or unavailable in Chat, for example:
-
-- deep traversal of a large repository;
-- a large refactor touching many dependent files;
-- long autonomous edit → build → test → debug loops;
-- persistent development environment;
-- local integration testing that GitHub Actions cannot replace efficiently.
-
-When the implementation/testing phase is complete, the router should send the task back to Chat for research, documentation, release notes, communication, review or follow-up.
-
-### 5. Work — browser/computer/agentic fallback
-
-Use when the task genuinely requires:
-
-- interactive browser/computer use;
-- UI-only workflows with no API/app/MCP route;
-- complex desktop/local-app interaction;
-- long-running agentic execution;
-- true multi-agent delegation where that surface provides it.
-
-Work is not the default just because a task is complicated.
-
-### 6. External API — last resort
-
-Use a metered API when a real programmable backend is required, for example:
-
-- a product serving end users;
-- SLA/high-frequency programmatic calls;
-- an external service that cannot be reached through Chat apps/MCP;
-- automation that must run independently of ChatGPT surfaces.
-
-## How the router works
-
-The `capability-router` skill performs five steps:
-
-```text
-1. CLASSIFY
-   What kind of task is this?
-
-2. PREFLIGHT
-   Which capabilities are actually available here?
-
-3. SCORE
-   Which surface can complete it safely with the lowest agentic cost?
-
-4. ROUTE
-   Chat / Scheduler / Local-MCP / Codex / Work / API
-
-5. RE-EVALUATE
-   As soon as the expensive capability is no longer needed,
-   return the task to Chat.
-```
-
-A future executable implementation can emit something like:
-
-```json
-{
-  "chat": 82,
-  "scheduled_chat": 10,
-  "local_tool": 35,
-  "codex": 18,
-  "work": 5,
-  "api": 0,
-  "decision": "CHAT",
-  "reason": "GitHub read/write and CI are sufficient for this targeted change"
-}
-```
-
-## Skills and hooks
-
-The canonical skills live in this GitHub repository instead of depending only on native ChatGPT skills.
-
-```text
-skills/
-  capability-router/
-    SKILL.md
-  surface-handoff/
-    SKILL.md
-```
-
-This makes them:
-
-- versioned;
-- auditable;
-- testable;
-- reusable from Chat/Scheduled Chat when GitHub is accessible;
-- easy to update without rewriting every scheduled prompt.
-
-The intended evolution is to add hooks such as:
-
-```text
-pre       -> inspect capabilities / load state
-validate  -> verify evidence and output contract
-post      -> persist state / produce next action
-on_error  -> record failure / prevent false success
-```
-
-## Handoff instead of copying entire conversations
-
-When escalation is required, the router creates a compact structured handoff rather than copying tens of thousands of tokens of chat history.
-
-```text
-CHAT
-  |
-  | compact handoff.json
-  v
-CODEX / WORK / LOCAL TOOL
-  |
-  | specialist result + evidence
-  v
-CHAT
-```
-
-Typical handoff content:
-
-- goal;
-- work already completed;
-- remaining work;
-- repository/branch/files;
-- constraints;
-- evidence;
-- tests;
-- success criteria;
-- why escalation is required;
-- condition for returning to Chat.
-
-See [`docs/HANDOFF_SPEC.md`](docs/HANDOFF_SPEC.md).
-
-## Example: coding task
-
-Request:
-
-> Fix a bug in Loriq, update four files, add tests and open a PR.
-
-Router reasoning:
-
-```text
-GitHub read/write available?       YES
-Number of files small?             YES
-Can GitHub Actions run the tests?  YES
-Need local interactive tooling?    NO
-Need long autonomous loop?         NO
-
-=> ROUTE: CHAT
-```
-
-If CI then reveals a deep platform-specific issue requiring many iterative local builds:
-
-```text
-=> ESCALATE: CODEX
-```
-
-After Codex fixes/tests it:
-
-```text
-=> RETURN: CHAT
-   review diff, explain change, update docs, communicate result
-```
-
-## Example: daily intelligence workflow
-
-```text
-Scheduled Chat
-      |
-      +--> Web / GitHub / apps
-      |
-      v
-Python / shell
-normalize + deduplicate + delta
-      |
-      v
-ChatGPT reasoning
-analysis + red team + synthesis
-      |
-      +--> GitHub state
-      +--> Library snapshots
-      +--> Gmail
-      +--> WordPress/app
-```
-
-No Work/Codex is required unless a source/action becomes UI-only or another hard capability is missing.
-
-## Example: Sparky / ComfyUI
-
-Instead of using a browser/desktop agent to click through ComfyUI every time:
-
-```text
-Chat
- |
- v
-media-mcp
- |
- +--> list_workflows
- +--> run_workflow
- +--> job_status
- +--> get_outputs
- |
- v
-Sparky / ComfyUI
-```
-
-The expensive LLM orchestrates; the owned GPU performs the heavy media workload.
-
-## Measuring whether it works
-
-Do not rely only on intuition. Track:
-
-- route selected;
-- task class;
-- whether escalation occurred;
-- false/unnecessary escalations;
-- handoff size;
-- files touched;
-- CI iterations;
-- retries;
-- completion quality;
-- observable Work/Codex usage before/after.
-
-Initial hypothesis:
-
-| Scenario | Expected reduction of Work/Codex usage |
-|---|---:|
-| Conservative | ~50% |
-| Target | ~65–70% |
-| Strong-fit workloads | ~80%+ |
-
-These figures are estimates to validate with telemetry, **not promises about OpenAI billing or quotas**.
-
-## Repository map
-
-```text
-README.md                         this overview
-SPEC.md                           product specification
-docs/ARCHITECTURE.md              architecture details
-docs/ROUTING_SPEC.md              routing policy
-docs/USE_CASES.md                 use-case matrix
-docs/TOKEN_ECONOMICS.md           savings assumptions/measurement
-docs/HANDOFF_SPEC.md              surface handoff format
-docs/MCP_PLAN.md                  planned gateways
-docs/ROADMAP.md                   development plan
-skills/capability-router/SKILL.md routing skill
-skills/surface-handoff/SKILL.md   handoff skill
-schemas/handoff.schema.json       machine-readable handoff contract
-tests/routing_cases.md            canonical routing fixtures
-```
-
-## Development plan
-
-1. Make the router executable and test its scoring.
-2. Add runtime capability preflight.
-3. Add GitHub/Scheduler hooks and run manifests.
-4. Standardize the Chat → GitHub → CI coding lane.
-5. Build `machines-mcp` and `media-mcp`.
-6. Build safe VPS/API gateways.
-7. Add optional Codex/Claude/local-LLM delegation.
-8. Measure real savings and tune thresholds.
-
-See [`docs/ROADMAP.md`](docs/ROADMAP.md).
-
-## Design principle
-
-**Use the cheapest sufficient capability, not the most powerful available surface.**
-
-The router should make escalation explicit, evidence-based, reversible and temporary.
+The request example and its observations are **synthetic fixtures**, not live
+capability proofs or provider prices. `--at` explicitly replays historical time.
+For real decisions, supply fresh observations and omit `--at`. Expired or unknown
+capabilities cannot make a plan eligible. Exit codes: `0` valid/routed, `2` invalid
+input, `3` blocked decision.
+
+## Decision rules
+
+1. Describe exact required and authorized actions, resource scope, current context,
+   recurrence and cost/duration limits.
+2. Validate each candidate's actions, authorization and current destination evidence.
+3. Reject plans with missing capabilities, unknown costs, prohibited surfaces,
+   uncovered recurrence, duplicate work or exceeded budgets.
+4. Compare execution + transfer + retry + CI cost in integer USD micro-units.
+   Break ties by staying in the current context, then the versioned preference order.
+5. Emit the selected plan or an explicit blocked result with rejection reasons.
+6. Re-evaluate remaining work and destination access at handoff. A recommendation
+   becomes execution only through an adapter's explicit acceptance and claim.
+
+The canonical values and parameters live in [policy/routing.json](policy/routing.json).
+The normative algorithm and plan composition are in [ROUTING_SPEC](docs/ROUTING_SPEC.md).
+`HYBRID` describes a plan spanning multiple surfaces; a handoff itself always names
+one actual receiving surface and session.
+
+## Skills
+
+- [capability-router](skills/capability-router/SKILL.md): classify the remaining task,
+  assemble evidence and plans, then evaluate them.
+- [surface-handoff](skills/surface-handoff/SKILL.md): prepare a v2 delegation or return
+  envelope preserving scope, state and proofs.
+
+Native repository discovery uses the `.agents/skills` symlinks. GitHub-only use can
+read the skills and their linked contracts at one pinned commit. See
+[INSTALLATION](docs/INSTALLATION.md); simply cloning a repository does not prove
+that a particular host loaded or executed a skill.
+
+## Evidence and execution
+
+[CAPABILITIES](docs/CAPABILITIES.md) specifies scoped, expiring observations.
+[HANDOFF_SPEC](docs/HANDOFF_SPEC.md) defines required fields and v1 migration.
+[EXECUTION_PROTOCOL](docs/EXECUTION_PROTOCOL.md) defines durable claims, terminal
+states, uncertain effects and scheduler checkpoints. `cost_router.ledger.Ledger`
+implements the local claim/state contract using SQLite. External adapters must use
+it before effects and implement provider idempotency or reconciliation. It does
+not promise exactly-once remote effects.
+
+## Economics
+
+The earlier target of roughly 50–80% less Work/Codex usage remains an unvalidated
+hypothesis. Displacing tasks can move cost to APIs, CI or local execution. Calling a
+paid provider through MCP does not make it free. Record an initial baseline before
+changing routes and compare matched task outcomes, quality and all costs.
+See [TOKEN_ECONOMICS](docs/TOKEN_ECONOMICS.md).
+
+## Project map
+
+| Path | Purpose |
+|---|---|
+| [SPEC.md](SPEC.md) | Implemented scope and acceptance requirements |
+| [cost_router/](cost_router/) | CLI, eligibility/cost evaluator, validation and local ledger |
+| [policy/](policy/) | Canonical versioned policy |
+| [schemas/](schemas/) | JSON Schema 2020-12 contracts; local references only |
+| [examples/](examples/) | Synthetic requests and complete handoff examples |
+| [tests/](tests/) | Canonical/negative fixtures and executable regression tests |
+| [docs/](docs/) | Architecture, protocol, capabilities, economics and integration plan |
+| [audits/2026-09-05/](audits/2026-09-05/) | Original audit, evidence, fixes and verification |
+
+Read the [roadmap](docs/ROADMAP.md) for integrations that are still external to this
+repository. The audit is historical; its [remediation record](audits/2026-09-05/REMEDIATION.md)
+records which contracts and behaviors were changed and what was actually tested.

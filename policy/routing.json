@@ -1,0 +1,8 @@
+{
+  "version": "2026-09-05.1",
+  "cost_unit": "usd_micro",
+  "tie_break_order": ["CHAT", "SCHEDULED_CHAT", "LOCAL_TOOL", "CODEX", "WORK", "EXTERNAL_API"],
+  "max_transfers": 4,
+  "min_transfer_savings_units": 0,
+  "max_capability_age_seconds": 3600
+}
