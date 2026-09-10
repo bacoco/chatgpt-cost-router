@@ -1,0 +1,26 @@
+{
+  "action": "git_pull",
+  "finished_at_unix": 1789070223.893922,
+  "host": "macbook",
+  "job_id": "job-fleet-macbook-pull-fix-20260910-2130",
+  "job_sha256": "b8244329d88941f5ccce63d6dd6e4db618d55f9f640bc614a03e6bf5c4d6f200",
+  "result": {
+    "argv": [
+      "git",
+      "pull",
+      "--ff-only"
+    ],
+    "cwd": "/Users/loic/codex-t30-broker-test",
+    "elapsed_seconds": 0.941,
+    "exit_code": 0,
+    "host": "macbook",
+    "stderr": "From https://github.com/bacoco/chatgpt-cost-router\n   b9fc14a..14ea8c5  main       -> origin/main\n",
+    "stderr_truncated": false,
+    "stdout": "Updating b9fc14a..14ea8c5\nFast-forward\n fleet_operator/macos.py            | 54 +++++++++++++++++++++++++++++++++++---\n tests/test_fleet_operator_macos.py | 13 ++++++++-\n 2 files changed, 62 insertions(+), 5 deletions(-)\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789070222.887211,
+  "status": "PASS",
+  "version": 1
+}
