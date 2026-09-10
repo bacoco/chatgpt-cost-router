@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "job_id": "job-t36-sparky-direct-codex-20260910",
+  "host": "sparky",
+  "action": "exec_write",
+  "args": {
+    "argv": ["bash", "-lc", "export PATH=/home/baconnier/.nvm/versions/node/v20.20.0/bin:$PATH; export CODEX_HOME=/home/baconnier/.codex; mkdir -p /tmp/t36-codex; codex exec --ephemeral --sandbox read-only --skip-git-repo-check --ignore-user-config -C /tmp/t36-codex 'Return exactly DIRECT_OK'"],
+    "timeout_seconds": 120
+  },
+  "expires_at_unix": 1789085000
+}
