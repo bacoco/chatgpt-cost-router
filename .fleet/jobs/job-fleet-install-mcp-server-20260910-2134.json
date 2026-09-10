@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "job_id": "job-fleet-install-mcp-server-20260910-2134",
+  "host": "macbook",
+  "action": "exec_write",
+  "args": {
+    "argv": ["python3", "scripts/fleet_operator_macos.py", "install-server", "--config", "/Users/loic/.config/chatgpt-cost-router/fleet-operator.json"],
+    "cwd": "/Users/loic/codex-t30-broker-test",
+    "timeout_seconds": 600,
+    "allow_destructive": false
+  },
+  "expires_at_unix": 1789100000
+}
