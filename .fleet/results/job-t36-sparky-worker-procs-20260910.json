@@ -1,0 +1,26 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789071353.410562,
+  "host": "sparky",
+  "job_id": "job-t36-sparky-worker-procs-20260910",
+  "job_sha256": "9505e6261742654fe354e3baba072c9f0a473f03acdd38972165b97106a57c93",
+  "result": {
+    "argv": [
+      "pgrep",
+      "-af",
+      "remote_worker_server.py|mesh_node_agent.py"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.461,
+    "exit_code": 1,
+    "host": "sparky",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071352.904433,
+  "status": "FAILED",
+  "version": 1
+}
