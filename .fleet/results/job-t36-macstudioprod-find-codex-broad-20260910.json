@@ -1,0 +1,28 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789072108.2375848,
+  "host": "macstudioprod",
+  "job_id": "job-t36-macstudioprod-find-codex-broad-20260910",
+  "job_sha256": "1fcf8c3fdf3def1b30e87471f63ae81209df0b3841db9a9e65bd392bf36bbc45",
+  "result": {
+    "argv": [
+      "find",
+      "/Users/macstudioprod",
+      "-path",
+      "*/@openai/codex/bin/codex.js",
+      "-print"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 40.013,
+    "exit_code": 124,
+    "host": "macstudioprod",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": true
+  },
+  "started_at_unix": 1789072068.169479,
+  "status": "FAILED",
+  "version": 1
+}
