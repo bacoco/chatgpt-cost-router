@@ -2,7 +2,7 @@
 
 Status: `IMPLEMENTING`
 
-Implementation branch: `feature/t30-two-worker-broker` (created from current `main` before code changes)
+Implementation branch: `feature/t30-two-worker-broker`.
 
 Build the smallest useful local broker around the already validated `codex exec` primitive and the two isolated authorized worker homes from T28B.
 
