@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "job_id": "job-fleet-read-ssh-config-20260910-2144",
+  "host": "macbook",
+  "action": "read_file",
+  "args": {"path": "/Users/loic/.ssh/config", "max_bytes": 32768},
+  "expires_at_unix": 1789100000
+}
