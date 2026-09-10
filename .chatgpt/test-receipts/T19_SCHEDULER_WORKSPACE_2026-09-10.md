@@ -1,0 +1,16 @@
+# T19 scheduler workspace receipt
+
+test=T19
+result=PASS
+authenticated_repo=bacoco/chatgpt-cost-router
+main_sha_observed_before_write=5a6652630629abe644afd19de44399bc36b4e567
+source_kit_sha=a1e172e20e0ba5f63d94abd1fb2e988a7ffb6736
+developer_mcp=GitHub — bacoco TEST
+workspace_files_read=.chatgpt/PROJECT.md,.chatgpt/CURRENT.md,.chatgpt/SCHEDULER.md
+references_verified=yes
+current_main_advanced_since_bootstrap=yes
+historical_bootstrap_branch=test/t22-self-bootstrap-20260910
+historical_bootstrap_branch_head=739d3ee5ca07f97add68926a7220bf3f96f08dbe
+Codex_used=no
+paid_API_used=no
+GitHub_Actions_used=no
