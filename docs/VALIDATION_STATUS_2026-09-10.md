@@ -32,7 +32,7 @@ T28B        two distinct authorized account workers           PASS
 T29         standalone parallel smoke                         DEFERRED_NOT_JUSTIFIED
 T30         two-worker local broker                           PASS — live alias dispatch verified
 T31A        quota/budget-aware selection logic                PASS — deterministic local tests
-T32A        private remote-worker transport code              PASS — local tests; live tailnet smoke pending
+T32         private remote worker over Tailscale Serve        PASS — live second-device dispatch
 
 GitHub Actions control plane                                 PASS
 GitHub hosted runner allocation                              BLOCKED_EXTERNAL_CAPACITY during observed test
@@ -64,24 +64,28 @@ Important boundary: automatic trustworthy ingestion of OpenAI's live 5-hour/week
 
 Specification: `docs/T31_QUOTA_AWARE_SELECTION.md`.
 
-## T32A — private remote worker transport code
+## T32 — private remote worker transport
 
 A loopback-only HTTP facade is implemented for use behind Tailscale Serve. It requires `Tailscale-User-Login` to match a local allowlist and separately limits which worker aliases may be called. Remote JSON accepts only `worker` and `prompt`; clients cannot supply local filesystem paths. Each call receives a temporary private task directory that is removed afterwards. Codex remains `--ephemeral --sandbox read-only`, paid-API environment variables are stripped by the existing broker, and returned JSON omits `CODEX_HOME`, task paths and Codex stderr/session ids.
 
 Six isolated tests pass without a model call: identity allowlisting, request schema/size limits, worker allowlisting, remote path redaction, temporary-workspace cleanup and fake Codex dispatch.
 
-This is not yet a live remote-transport PASS. One request must traverse Tailscale Serve from a second authenticated device/user to the Mac and return a bounded worker result. Do not use Tailscale Funnel or expose the backend directly.
+Live proof was then completed from a second Tailscale device. MagicDNS resolved the worker Mac and `tailscale ping` reached it. Through the Serve HTTPS endpoint, `/v1/health` returned `ok=true` with `transport=tailscale-serve`, `/v1/workers` exposed only allowlisted `openai-B` as ready, and one bounded remote `run` returned `REMOTE_OK`, provider `openai`, model `gpt-6-astra`, `4,610` reported tokens, `6.753 s`, and exit `0`. The returned telemetry confirmed `read-only`, `ephemeral`, and paid-API environment removal.
+
+Therefore T32 is PASS for **private second-device remote dispatch to a worker physically running on another Mac**. The live request used the owner's Tailscale identity. A separately shared external person's identity/ACL path remains untested and should not be conflated with the already-proven transport primitive.
 
 Specification: `docs/T32_REMOTE_WORKER.md`.
+Receipt: `.chatgpt/test-receipts/T32_REMOTE_WORKER_LIVE_2026-09-10.md`.
 
 ## Remaining gaps
 
 1. Automatic/reliable live 5-hour and weekly allowance ingestion per account.
-2. Live T32 Tailscale Serve smoke from a second authenticated device/user; transport code/local tests are complete.
-3. Always-on supervision/service packaging after live remote transport is proven.
-4. Useful broker-managed concurrency when an actual workload benefits from it.
-5. Claude/other-provider worker adapters plus provider-neutral handoff.
-6. Canonical Gmail Developer MCP in ChatGPT/Scheduled Tasks only if still operationally required.
-7. Repository creation through the tested GitHub Developer MCP remains blocked by the observed 403.
+2. Node registration/discovery so the control plane can route across local and remote worker hosts without hard-coded placement.
+3. Separately shared external-user Tailscale identity/ACL smoke when such a user is available.
+4. Always-on supervision/service packaging for remote nodes.
+5. Useful broker-managed concurrency when an actual workload benefits from it.
+6. Claude/other-provider worker adapters plus provider-neutral handoff.
+7. Canonical Gmail Developer MCP in ChatGPT/Scheduled Tasks only if still operationally required.
+8. Repository creation through the tested GitHub Developer MCP remains blocked by the observed 403.
 
 No paid OpenAI API was used for these validations.

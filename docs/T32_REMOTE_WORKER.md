@@ -1,6 +1,6 @@
 # T32 — private remote worker over Tailscale Serve
 
-Status: `CODE COMPLETE — LOCAL TESTS PASS; LIVE TAILNET SMOKE NEXT`
+Status: `PASS — LIVE SECOND-DEVICE TAILNET DISPATCH VERIFIED`
 
 ## Goal
 
@@ -83,4 +83,12 @@ Stop the dedicated listener with `bash scripts/stop_remote_worker.sh`.
 
 Six isolated unit tests cover identity allowlisting, request validation, worker allowlisting, path redaction, temporary-workspace cleanup, and a fake Codex dispatch. They make no model call and consume no Codex allowance.
 
-The remaining proof is one live request from a second Tailscale-authenticated device/user through Serve to the Mac, with one bounded read-only remote dispatch and result/telemetry returned.
+## Live verification — 2026-09-10
+
+PASS from a second Tailscale device. A Mac Studio on the same tailnet resolved the worker Mac through MagicDNS, `tailscale ping` reached it at its Tailscale address, and the remote client reached the HTTPS Serve endpoint. `GET /v1/health` returned `ok=true` with `transport=tailscale-serve`; `GET /v1/workers` exposed only the allowlisted `openai-B` worker as ChatGPT-authenticated and ready.
+
+One real remote dispatch then called `openai-B` through the remote facade. The response returned `REMOTE_OK`, provider `openai`, model `gpt-6-astra`, `4,610` reported tokens, `6.753 s`, and exit code `0`. It also confirmed `read-only`, `ephemeral`, and paid-API environment removal. No raw `CODEX_HOME`, local workspace path, Codex stderr, or session id was returned.
+
+This closes T32 for **second-device private remote transport and execution**. The live caller used the owner's existing Tailscale identity, so a separately shared external person's identity/ACL path (for example a partner using a different Tailscale login) remains a distinct operational smoke, not a prerequisite for the transport primitive itself.
+
+Durable receipt: `.chatgpt/test-receipts/T32_REMOTE_WORKER_LIVE_2026-09-10.md`.
