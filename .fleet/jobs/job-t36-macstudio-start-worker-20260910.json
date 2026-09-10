@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "job_id": "job-t36-macstudio-start-worker-20260910",
+  "host": "macstudio",
+  "action": "exec_write",
+  "args": {
+    "argv": ["bash", "-lc", "set -euo pipefail; cd /Users/macstudio/remote-worker-test; git pull --ff-only; U=$(tailscale status --json | python3 -c 'import json,sys; d=json.load(sys.stdin); uid=str(d[\"Self\"][\"UserID\"]); print(d[\"User\"][uid][\"LoginName\"])'); mkdir -p /Users/macstudio/.local/state/chatgpt-cost-router/t36-worker /Users/macstudio/codex-remote-worker-tasks; COST_ROUTER_ALLOWED_TAILSCALE_USERS=\"$U\" COST_ROUTER_REMOTE_WORKERS=openai-A COST_ROUTER_REMOTE_WORKSPACE_ROOT=/Users/macstudio/codex-remote-worker-tasks nohup python3 scripts/remote_worker_server.py --host 127.0.0.1 --port 8788 --registry examples/workers.json --codex-bin /Users/macstudio/.local/bin/codex >/Users/macstudio/.local/state/chatgpt-cost-router/t36-worker/server.log 2>&1 & echo $! >/Users/macstudio/.local/state/chatgpt-cost-router/t36-worker/server.pid; sleep 1; tailscale serve --bg --https=8445 8788; nohup python3 scripts/mesh_node_agent.py --control-url https://mac-studio.taildc96f0.ts.net:8444 --node-id macstudio-worker --node-url https://mac-studio.taildc96f0.ts.net:8445 --workers openai-A --registry examples/workers.json --interval 30 >/Users/macstudio/.local/state/chatgpt-cost-router/t36-worker/node.log 2>&1 & echo $! >/Users/macstudio/.local/state/chatgpt-cost-router/t36-worker/node.pid; sleep 3; cat /Users/macstudio/.local/state/chatgpt-cost-router/t36-worker/node.log"],
+    "timeout_seconds": 90
+  },
+  "expires_at_unix": 1789085000
+}
