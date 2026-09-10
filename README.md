@@ -40,7 +40,11 @@ python scripts/worker_broker.py probe
 python scripts/worker_broker.py run --worker openai-B --workspace /tmp/worker-task --prompt 'Return exactly WORKER_OK'
 ```
 
-The broker deliberately strips known paid-API-key environment variables from child Codex processes. It does not yet read 5-hour/weekly quota counters, run remotely, or schedule concurrent workers; those remain later mesh steps. See [T30_TWO_WORKER_BROKER](docs/T30_TWO_WORKER_BROKER.md).
+The broker deliberately strips known paid-API-key environment variables from child Codex processes. T31 adds a separate non-secret budget state for zero-model selection using trusted 5-hour/weekly observations when available; unknown quota remains unknown. See [T30_TWO_WORKER_BROKER](docs/T30_TWO_WORKER_BROKER.md) and [T31_QUOTA_AWARE_SELECTION](docs/T31_QUOTA_AWARE_SELECTION.md).
+
+### Private remote worker over Tailscale
+
+T32 adds a loopback-only HTTP facade intended to sit behind **Tailscale Serve**. It authorizes the Tailscale identity, exposes only explicitly allowed worker aliases, never accepts a client-supplied local workspace path, runs the existing read-only/ephemeral broker, and returns redacted telemetry. The backend refuses non-loopback binding; do not use Funnel or expose it directly to the LAN/Internet. Six isolated transport-boundary tests pass; one live second-device Tailscale smoke remains before calling the remote lane fully validated. See [T32_REMOTE_WORKER](docs/T32_REMOTE_WORKER.md).
 
 ## Try the executable example
 
