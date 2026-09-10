@@ -1,0 +1,27 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789071247.906555,
+  "host": "sparky",
+  "job_id": "job-t36-sparky-codex-auth-20260910",
+  "job_sha256": "2b2be31b5f539ea408d51849ca5b749352d626e4b7b5f66251e11d92eca44a03",
+  "result": {
+    "argv": [
+      "/home/baconnier/.nvm/versions/node/v20.20.0/bin/node",
+      "/home/baconnier/.nvm/versions/node/v20.20.0/lib/node_modules/@openai/codex/bin/codex.js",
+      "login",
+      "status"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.485,
+    "exit_code": 0,
+    "host": "sparky",
+    "stderr": "Logged in using ChatGPT\n",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071247.373485,
+  "status": "PASS",
+  "version": 1
+}
