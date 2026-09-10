@@ -1,20 +1,16 @@
 # T28B — distinct multi-account Codex workers
 
-Date: 2026-09-10
-Status: PASS
+Status: `PASS`
 
-Two isolated Codex worker homes on the same Mac were verified as two different authorized ChatGPT accounts.
+Two isolated Codex worker homes coexist on the same Mac:
 
-Evidence retained without sensitive identity data:
-- `openai-A` uses the default Codex home.
-- `openai-B` uses a separate `CODEX_HOME`.
-- both workers report `Logged in using ChatGPT`.
-- a local-only identity comparison verified that both the user identity and account identity differ between A and B; the underlying values, email addresses and authentication material are intentionally not stored in GitHub.
-- both accounts reported plan class `pro`.
-- worker B executed a bounded read-only `codex exec` successfully with model `gpt-6-astra`, exit 0, 4,432 reported tokens, and no work file created.
-- worker A remained authenticated after worker B execution.
-- paid API used: NO.
+- `openai-A`: default `CODEX_HOME`, ChatGPT-authenticated;
+- `openai-B`: `~/codex-worker-homes/openai-B`, separately ChatGPT-authenticated.
 
-This proves two distinct authorized OpenAI account identities can coexist as separately addressable Codex workers on one Mac without manual account swapping.
+The owner locally inspected non-secret identity claims without exposing any token. The local comparison proved that worker A and worker B have **different OpenAI user identities and different account/workspace identities**. Both accounts report plan class `pro`. No email address, token, credential, raw identifier or auth-derived hash is stored in this repository.
 
-Not yet proven: concurrent execution, independent 5-hour/weekly quota decrement, automatic quota-aware routing, or remote dispatch.
+Worker B then executed one bounded read-only `codex exec` call successfully with model `gpt-6-astra`, exit code `0`, `4,432` reported tokens, and no work file created. Worker A remained logged in afterwards, and worker B remained logged in under its isolated home.
+
+This proves two distinct authorized ChatGPT accounts can be addressed as separate Codex CLI workers on one Mac without manual account swapping. It does not yet prove concurrent execution, remote dispatch, quota decrement telemetry, or broker scheduling.
+
+Paid API used: no.
