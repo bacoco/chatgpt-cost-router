@@ -2,7 +2,7 @@
 
 This file is the **current status snapshot** for the 10 September ChatGPT Cost Router experiments.
 
-The larger `CHATGPT-CLOUD-COST-ROUTER-ANALYSIS-2026-09-10.md` was started before all tests completed and should be read as the architectural/experimental analysis. For the latest pass/fail state, use this file together with `EXPERIMENT_LOG_2026-09-10.md`.
+Use it together with `EXPERIMENT_LOG_2026-09-10.md`, `EXPERIMENT_LOG_ADDENDUM_2026-09-10_T05_T09.md` and `CLOUD_EXECUTION_LANE.md`. The large analysis document is a historical working record and contains earlier pending states that were later resolved.
 
 ## Current validated state
 
@@ -12,43 +12,69 @@ T02 — files / issues / PR / branches read                  PASS
 T03 — temporary issue create / read / close                PASS
 T04 — branch + bounded documentation write + commit + PR   PASS
 T05 — formal PR review workflow                            PASS
-T06 — autonomous defect discovery → deduplicated issue      PASS
+T06 — autonomous defect discovery → deduplicated issue     PASS
 T07 — Scheduled Task → GitHub Developer MCP read-only      PASS
 T08 — Scheduled write + second-run idempotency             PASS
 T09 — direct ChatGPT bounded patch + Python/shell tests    PASS
-T10+ — Codex worker path                                   NOT YET TESTED / NOT YET NEEDED
-Gmail Developer MCP                                        NOT YET TESTED
+GitHub Actions Developer MCP interactive control            PASS
+GitHub Actions hosted runner allocation                     BLOCKED — account free Actions allowance exhausted
+T15 — scheduler-chat manual continuation clean-profile      NOT YET FORMALLY TESTED
+T16 — fresh-chat recovery from GitHub checkpoint            NOT YET TESTED
+T17 — Scheduled Task → Actions MCP detailed result          PENDING CAPTURE
+Codex worker path                                            NOT YET TESTED / NOT YET NEEDED
+Gmail Developer MCP                                         NOT YET TESTED
 ```
 
-## T07 exact evidence
-
-The Scheduled Task used only `GitHub — bacoco TEST` and returned:
+## Proven cloud path
 
 ```text
-Authenticated GitHub login: bacoco
-Repository: bacoco/chatgpt-cost-router
-Repository root read: PASS
-Branches listed: PASS
-main SHA: 6273cb87b98e94a1e04d9d439dfa400bbbb321cc
-other branch: docs/chatgpt-cloud-cost-router-analysis-2026-09-10
-other branch SHA: ab5f66a556eab82bb7d80fcff71341f2dbbe7d13
-repository mutations: none
+ChatGPT Chat
+  -> GitHub Developer MCP
+  -> authenticated repo read/write
+  -> bounded branch/commit/PR
+  -> local Python/shell verification when feasible
+
+Scheduled Task
+  -> GitHub Developer MCP
+  -> authenticated read
+  -> controlled write
+  -> idempotent second run
 ```
 
-Therefore the critical statement now supported by evidence is:
+No Codex and no paid OpenAI API key were needed for T01–T09.
 
-> A ChatGPT Scheduled Task can invoke the custom GitHub Developer MCP and read authenticated GitHub repository state without Codex and without a paid OpenAI API key.
+## GitHub Actions MCP result
 
-## Current GitHub documentation PR
-
-The documentation work is on:
+A second Developer MCP was created with:
 
 ```text
-branch: docs/chatgpt-cloud-cost-router-analysis-2026-09-10
-PR: #2
+https://api.githubcopilot.com/mcp/x/actions
 ```
 
-The PR is intentionally **not merged automatically**. CI/check status must be treated independently from PR creation.
+It exposed `actions_get`, `actions_list`, `actions_run_trigger` and `get_job_logs`. ChatGPT successfully inspected workflow/run/job metadata and requested a failed-job rerun.
+
+This proves **control-plane access**, not runner availability.
+
+## GitHub runner/quota diagnosis
+
+The repository workflow is still reported as `active` by GitHub and `.github/workflows/ci.yml` still exists.
+
+However the account owner confirmed the free GitHub Actions allowance had reached zero. The observed jobs had:
+
+```text
+runner_id: 0
+runner_name: empty
+Ubuntu billable duration: 0 ms
+usable executed-step logs: absent/unavailable
+```
+
+The same pattern existed on the repository's first workflow run on `main`, before PR #2 and PR #5. Therefore those red hosted checks were not evidence that either PR broke the Python suite.
+
+Diagnostic issue #6 was updated with this account-level cause and closed. PR #5 was then merged after separate local verification; merge SHA:
+
+```text
+5e8d115f52446f507612a2f22f4926a09c4f1dc8
+```
 
 ## T08 exact evidence
 
@@ -61,13 +87,9 @@ Codex: not used
 paid OpenAI API key: not used
 ```
 
-## T05/T06/T09 exact evidence
+## T09 exact evidence
 
-T05 submitted a real COMMENT review on PR #2 after reading its actual changed-file set. The review recorded that the PR contained four documentation files only and that independently reconstructed local tests passed.
-
-T06 found a concrete cost/reliability defect in `.github/workflows/ci.yml`: both unrestricted `push` and `pull_request` were enabled. A deduplication search found no existing matching issue, then issue #4 was created.
-
-T09 fixed that issue on branch `fix/avoid-duplicate-ci-runs` with one line of workflow configuration, commit `312f8ce93f37381bc8928047b15944cb28921de6`, PR #5.
+The duplicate `push` + `pull_request` trigger was corrected on a separate branch/PR.
 
 Local verification before push:
 
@@ -80,15 +102,20 @@ Codex                                               NOT USED
 paid OpenAI API key                                 NOT USED
 ```
 
-## Current CI diagnosis
+The local environment was not byte-identical to GitHub Actions, and package installation into a fresh environment could not be reproduced because the ChatGPT container lacked usable outbound DNS for pip. That limitation remains explicit.
 
-PR #2 showed 4 checks because the workflow ran twice (push + pull_request). PR #5, after restricting `push` to `main`, showed exactly 2 matrix checks. Therefore the duplicate-execution defect is verified fixed.
+## Scheduler-chat continuation technique
 
-However PR #5 still showed `contracts (3.11)` failure and `contracts (3.12)` cancellation within roughly two seconds. Since the complete reconstructed test suite passes locally and schema generation is clean, the remaining CI failure is not demonstrated to be a code/test regression. Its exact GitHub Actions-level cause is still unknown because the currently exposed GitHub MCP toolset provides check-run status but not job log contents. Do not mark either PR MERGE_READY yet.
+The user reports an additional useful cloud workflow: open the chat associated with a completed Scheduled Task and continue doing substantial interactive work there.
 
-## Next critical tests / work
+This is incorporated into `CLOUD_EXECUTION_LANE.md` as the **scheduler bootstrap + interactive continuation** route. It is not yet marked formally PASS because a clean-profile test has not recorded exactly which context and Developer MCP capabilities carry into the manual follow-up.
 
-1. Obtain GitHub Actions job-log visibility and determine the exact early CI failure cause.
-2. Once CI is understood/green, merge the isolated CI fix first, then rebase/update documentation PR #2 and re-check it.
-3. Test a Gmail Developer MCP only if the standard Gmail connector remains forbidden in the required scheduler context.
-4. Only after the no-Codex route is exhausted, evaluate whether a Codex worker is actually needed.
+The design rule is already clear: durable state belongs in GitHub/checkpoints, not only in the scheduler chat.
+
+## Next cloud tests
+
+1. T15 — clean-profile scheduler-chat continuation with one harmless GitHub action.
+2. T16 — prove a fresh Chat can recover solely from a compact GitHub checkpoint.
+3. Capture the Scheduled Task → GitHub Actions MCP result before marking T17 PASS.
+4. Add an explicit Actions-runner/quota capability gate so the router never selects hosted CI when no runner can be allocated.
+5. Only after the cloud lane is characterized, build and compare the Codex desktop/CLI lane on macOS.
