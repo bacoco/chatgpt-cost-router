@@ -15,10 +15,16 @@
 - draft_delete: NOT_AVAILABLE — no dedicated safe draft-delete/discard action exposed
 - draft_cleanup: MANUAL_REQUIRED
 - send_capability_visible: YES
-- send_actually_tested: NO
-- email_sent: NO
+- send_actually_tested: YES — `Gmail.send_email` invoked exactly once to SELF after exact-subject Sent precheck returned 0
+- send_subject: `[T14 SEND TEST] Codex Mac Gmail capability validation`
+- send_precheck: PASS — exact-subject message did not already exist
+- send_result: PASS — SENT to authenticated self-address
+- send_verification: PASS — exact subject verified, Sent state verified, exact-subject Sent matches after operation = 1
+- send_deduplication: PASS — precheck prevented duplicate send path; exactly one message sent by this test
+- user_delivery_confirmation: PASS — user independently reports receiving the self-addressed message
+- email_sent: YES — exactly one self-addressed test message
 - paid_API_used: NO
 
-Result: `PASS` for Codex Mac Chat Gmail read/search/Sent/draft capability.
+Result: `PASS` for Codex Mac Chat Gmail read/search/Sent/draft/send capability, including one real deduplicated self-send and read-back verification.
 
-This is an alternate execution-surface proof only. It must not be used to claim that a Gmail Developer MCP is available from ChatGPT or Scheduled Tasks. The test draft remains in Drafts until manually deleted.
+This is an alternate execution-surface proof only. It must not be used to claim that a Gmail Developer MCP is available from ChatGPT or Scheduled Tasks. The earlier test draft remains in Drafts until manually deleted unless the user has already removed it.
