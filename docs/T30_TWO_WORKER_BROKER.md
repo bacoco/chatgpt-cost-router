@@ -2,6 +2,8 @@
 
 Status: `IMPLEMENTING`
 
+Implementation branch: `feature/t30-two-worker-broker`
+
 Build the smallest useful local broker around the already validated `codex exec` primitive and the two isolated authorized worker homes from T28B.
 
 Requirements:
