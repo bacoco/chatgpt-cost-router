@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "job_id": "job-fleet-macbook-brew-python-20260910-2126",
+  "host": "macbook",
+  "action": "exec_read",
+  "args": {
+    "argv": ["brew", "list", "--versions", "python@3.10", "python@3.11", "python@3.12", "python@3.13", "python@3.14"],
+    "timeout_seconds": 60
+  },
+  "expires_at_unix": 1789100000
+}
