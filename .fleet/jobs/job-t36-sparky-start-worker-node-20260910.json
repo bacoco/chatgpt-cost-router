@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "job_id": "job-t36-sparky-start-worker-node-20260910",
+  "host": "sparky",
+  "action": "exec_write",
+  "args": {
+    "argv": ["bash", "-lc", "set -euo pipefail; cd /home/baconnier; if [ -d chatgpt-cost-router/.git ]; then cd chatgpt-cost-router && git pull --ff-only; else git clone https://github.com/bacoco/chatgpt-cost-router.git && cd chatgpt-cost-router; fi; export PATH=/home/baconnier/.nvm/versions/node/v20.20.0/bin:$PATH; export COST_ROUTER_ALLOWED_TAILSCALE_USERS=\"$(tailscale status --json | python3 -c 'import json,sys; d=json.load(sys.stdin); uid=str(d[\"Self\"][\"UserID\"]); print(d[\"User\"][uid][\"LoginName\"])')\"; export COST_ROUTER_REMOTE_WORKERS=openai-A; bash scripts/start_remote_worker.sh; export COST_ROUTER_MESH_CONTROL_URL=https://mac-studio.taildc96f0.ts.net:8444; bash scripts/start_mesh_node.sh"],
+    "timeout_seconds": 120
+  },
+  "expires_at_unix": 1789085000
+}
