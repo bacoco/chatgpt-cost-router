@@ -1,0 +1,29 @@
+{
+  "action": "read_file",
+  "finished_at_unix": 1789070738.736078,
+  "host": "macbook",
+  "job_id": "job-fleet-read-ssh-config-20260910-2144",
+  "job_sha256": "2623b33087377fb222c3f3a756f9719e3c4871862ce1a96e3de0ec654e3c90ce",
+  "result": {
+    "argv": [
+      "head",
+      "-c",
+      "32768",
+      "--",
+      "/Users/loic/.ssh/config"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.007,
+    "exit_code": 0,
+    "host": "macbook",
+    "path": "/Users/loic/.ssh/config",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "Include \"/Users/loic/Library/Application Support/NVIDIA/Sync/config/ssh_config\"\n\nHost github.com\n\tAddKeysToAgent yes\n\tUseKeychain yes\n\tIdentityFile ~/.ssh/id_rsa\n\nHost sparky-rescue\n    HostName 100.98.112.93\n    User baconnier\n    IdentityFile \"/Users/loic/Library/Application Support/NVIDIA/Sync/config/nvsync.key\"\n    Port 22\n    ServerAliveInterval 15\n    ServerAliveCountMax 4\n    TCPKeepAlive yes\n\nHost iagen\n    Hostname 148.253.96.110\n    User lba\n    IdentityFile ~/.ssh/id_rsa\n    LocalForward 8888 localhost:8888\n    LocalForward 5678 localhost:5678\n    LocalForward 9091 localhost:9091\n    LocalForward 3100 localhost:3100\n    LocalForward 4000 localhost:4000\n    LocalForward 8000 localhost:8000\n    LocalForward 8001 localhost:8001\n    LocalForward 8081 localhost:8080\n    LocalForward 6379 localhost:6379\n    LocalForward 5556 localhost:5556\n    LocalForward 5173 localhost:5173\n    LocalForward 8070 localhost:8070\n    LocalForward 5001 localhost:5001\n    LocalForward 8050 localhost:8050\n    LocalForward 8055 localhost:8055\n    LocalForward 8051 localhost:8051\n    LocalForward 8052 localhost:8052\n    LocalForward 54321 localhost:54321\n\nHost vps\n    Hostname 100.105.178.88\n    User root\n    IdentityFile ~/.ssh/id_ed25519\n    ServerAliveInterval 60\n    ServerAliveCountMax 3\n    TCPKeepAlive yes\n\n\nHost spark\n    HostName 192.168.1.42\n    User baconnier\n\nHost macstudiodev\n    HostName 192.168.1.106\n    User macstudio\n    IdentityFile ~/.ssh/id_rsa\n    ServerAliveInterval 15\n    ServerAliveCountMax 4\n    TCPKeepAlive yes\n\nHost macstudiodev-ts\n    HostName 100.107.141.112\n    User macstudio\n    IdentityFile ~/.ssh/id_rsa\n    ServerAliveInterval 15\n    ServerAliveCountMax 4\n    TCPKeepAlive yes\n    ForwardAgent yes\nHost spark-ts\n    HostName 100.98.112.93\n    User baconnier\n\nHost macstudioprod\n    HostName 192.168.1.45\n    User macstudioprod\n    IdentityFile ~/.ssh/id_ed25519\n    IdentitiesOnly yes\n\nHost macstudioprod-ts\n    HostName 100.70.99.99\n    User macstudioprod\n    IdentityFile ~/.ssh/id_ed25519\n    IdentitiesOnly yes\n\nHost omen\n    HostName 192.168.1.1\n    User baconnier\n    ServerAliveInterval 15\n    ServerAliveCountMax 4\n    TCPKeepAlive yes\n\nHost omen-ts\n    HostName 100.100.190.62\n    User baconnier\n    ServerAliveInterval 15\n    ServerAliveCountMax 4\n    TCPKeepAlive yes\n\n\nHost sync-sparky-rescue\n\tHostname 100.98.112.93\n\tPort 22\n\tUser baconnier\n\tIdentityFile \"/Users/loic/Library/Application Support/NVIDIA/Sync/config/nvsync.key\"\n\nHost hostinger-codex\n    HostName 72.61.106.179\n    User root\n    IdentityFile ~/.ssh/id_ed25519_hostinger_codex\n    IdentitiesOnly yes\n    UserKnownHostsFile ~/.ssh/known_hosts_hostinger_codex\n    StrictHostKeyChecking yes\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789070738.692419,
+  "status": "PASS",
+  "version": 1
+}
