@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Iterable, Mapping
 
 from .worker_budget import WorkerBudget, load_budget_state, select_economic_worker
-from .workers import Worker, RemoteWorkerError if False else WorkerError, load_registry, probe, run_task, select_worker
+from .workers import Worker, WorkerError, load_registry, probe, run_task, select_worker
 
 
 class RemoteWorkerError(ValueError):
