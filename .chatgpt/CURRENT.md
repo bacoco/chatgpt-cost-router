@@ -54,17 +54,17 @@ T10 durable receipts:
 - T14 canonical: `BLOCKED_MISSING_CONNECTOR` — Gmail Developer MCP in ChatGPT/Scheduled Tasks remains separate from the validated Codex Mac Gmail route.
 - Repository creation from scratch through the tested GitHub Developer MCP remains blocked by observed `403 Resource not accessible by integration`.
 
-## Deferred synthesis
+## Surface synthesis
 
-`docs/SURFACE_CAPABILITY_MAP_TODO.md` covers ChatGPT.com Chat, Codex Mac Chat, Codex Mac Work, multiple OpenAI accounts, Codex CLI/terminal lanes, Claude/Claude Code or other terminal workers, provider-neutral GitHub handoffs, separate branches/worktrees, and separate quota/cost accounting per account/provider. GitHub remains the durable source of truth and transfer bus.
+`docs/SURFACE_CAPABILITY_MAP.md` is now the concise global map. It separates ChatGPT.com Chat, Codex Mac Chat, Codex CLI terminal, and Codex Mac Work; places GitHub at the centre as durable state/transfer bus; separates allowance/cost pools; and keeps multi-account OpenAI and Claude/other-provider lanes as future explicit handoffs. The original requirements remain in `docs/SURFACE_CAPABILITY_MAP_TODO.md`.
 
 ## Next safe action
 
-T10 local macOS Codex CLI characterization is complete. Next work should return to the remaining campaign gaps or the deferred surface/cost synthesis. Do not build the Ubuntu/cloud VM variant unless cross-machine always-on persistence becomes an actual requirement.
+Run a bounded **Codex Mac Work** capability test next. Do not infer Work capabilities from Codex Mac Chat or Codex CLI. Verify what Work can actually access (GitHub/files/browser/connectors/local shell), what durable state it uses, and whether it can consume/produce the repository handoff without mutation. Keep T14 canonical, multi-account/provider lanes, and the optional Ubuntu/cloud VM as separate later tests.
 
 Authoritative status: `docs/VALIDATION_STATUS_2026-09-10.md`.
 Beginner entry point: `docs/INSTALLATION_KIT_INDEX.md`.
-Deferred map: `docs/SURFACE_CAPABILITY_MAP_TODO.md`.
+Surface map: `docs/SURFACE_CAPABILITY_MAP.md`.
 
 Paid OpenAI API used for recorded validations: no.
 Hosted GitHub Actions runner used for recorded core validation: no.
