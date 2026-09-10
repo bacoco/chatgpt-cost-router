@@ -41,11 +41,11 @@ This is the concise operational map for `bacoco/chatgpt-cost-router` as of 2026-
 
                          ┌──────────────────────────┐
                          │ Codex Mac — Work         │
-                         │ capability matrix: ?     │
-                         │ GitHub/Gmail/shell: ?    │
-                         │ shared agentic pool:     │
-                         │ product-documented,      │
-                         │ not empirically mapped   │
+                         │ GitHub read/write ✅      │
+                         │ handoff read/return ✅    │
+                         │ Gmail search      ✅      │
+                         │ local shell/Python✅      │
+                         │ persistence       ?      │
                          └──────────────────────────┘
 ```
 
@@ -53,17 +53,17 @@ This is the concise operational map for `bacoco/chatgpt-cost-router` as of 2026-
 
 | Capability | ChatGPT.com Chat | Codex Mac Chat | Codex CLI Mac | Codex Mac Work | GitHub repo |
 |---|---|---|---|---|---|
-| Normal reasoning/chat | ✅ PASS | ✅ PASS | ✅ PASS | ? NOT TESTED | — |
-| GitHub read | ✅ PASS via Developer MCP | ? not separately classified | ✅ PASS via git | ? NOT TESTED | ✅ durable |
-| GitHub write / branch / PR | ✅ PASS | ? not separately classified | possible toolchain present; remote write not required by T10 | ? NOT TESTED | ✅ durable |
+| Normal reasoning/chat | ✅ PASS | ✅ PASS | ✅ PASS | ✅ PASS | — |
+| GitHub read | ✅ PASS via Developer MCP | ? not separately classified | ✅ PASS via git | ✅ PASS direct connector | ✅ durable |
+| GitHub write / branch / PR | ✅ PASS | ? not separately classified | possible toolchain present; remote write not required by T10 | ✅ write/commit to dedicated branch PASS; PR not tested | ✅ durable |
 | Scheduled Task | ✅ PASS | — | — | ? NOT TESTED | stores checkpoints/receipts |
 | Same-chat continuation after scheduler | ✅ PASS | — | — | ? NOT TESTED | durable checkpoint supports recovery |
 | Fresh-chat recovery from repo | ✅ PASS | ? | ✅ repo rediscovery/reconcile PASS | ? | ✅ source of truth |
-| Local shell / Python tests | ✅ PASS for bounded verification | ? mode-specific | ✅ PASS, 40/40 | ? NOT TESTED | stores code/evidence |
+| Local shell / Python tests | ✅ PASS for bounded verification | ? mode-specific | ✅ PASS, 40/40 | ✅ shell/Python commands PASS; full tests not part of T25 | stores code/evidence |
 | Persistent local workspace | no guarantee / treat ephemeral | ? NOT TESTED | ✅ PASS across independent sessions | ? NOT TESTED | ✅ remote durable state |
-| Gmail read/search/Sent | ⛔ canonical Developer-MCP path missing | ✅ PASS built-in Gmail | — | ? NOT TESTED | — |
+| Gmail read/search/Sent | ⛔ canonical Developer-MCP path missing | ✅ PASS built-in Gmail | — | ✅ search PASS; full read not tested | — |
 | Gmail draft/send | ⛔ canonical Developer-MCP path missing | ✅ PASS; one real deduplicated self-send | — | ? NOT TESTED | — |
-| Cloud↔Codex handoff | ✅ produce + verify | receiver mode not separately classified | can consume repo state; provider-neutral test later | ? | ✅ exact-SHA transfer bus |
+| Cloud↔Codex handoff | ✅ produce + verify | receiver mode not separately classified | can consume repo state; provider-neutral test later | ✅ handoff read + pushed return PASS (T26) | ✅ exact-SHA transfer bus |
 | Create new GitHub repo | ⛔ Developer MCP returned 403 | ? | possible via `gh`, not part of validated T10 | ? | existing repos validated |
 
 Legend: ✅ empirically verified; ⛔ blocked/unavailable in the tested context; ❌ explicitly unavailable action; ? not independently tested/classified.
@@ -78,7 +78,7 @@ Do not collapse these into one “token” number.
 | OpenAI agentic / Codex allowance | Applies to Codex/eligible agentic surfaces according to current product documentation; exact per-mode accounting is not fully empirically mapped here. |
 | Codex Mac Chat | Capability validated for Gmail; allowance consumption was not measured to useful precision. |
 | Codex CLI | Real ChatGPT-account-authenticated Codex CLI validated; treat as consuming the applicable Codex/agentic allowance, not paid API, unless account evidence says otherwise. |
-| Codex Mac Work | Keep separate from Mac Chat. Product documentation says eligible Work/Codex agentic usage shares an agentic allowance, but this mode still needs its own capability test. |
+| Codex Mac Work | T25/T26 empirically validate GitHub read, a pushed one-file GitHub return, Gmail search, local filesystem, shell and Python. Workspace persistence remains untested. Treat usage as part of the applicable Work/Codex agentic pool, not paid API, when signed in through ChatGPT. |
 | Additional OpenAI accounts A/B/C | Separate account pools. Never assume quota sharing across accounts. |
 | Claude / Anthropic | Separate provider/account allowance or billing. Measure independently. |
 | GitHub Actions | Independent GitHub runner capacity/cost. Control-plane MCP works; hosted runner allowance was exhausted during the observed test. |
@@ -95,17 +95,17 @@ ChatGPT.com first
   → local ChatGPT verification when sufficient
   → Codex Mac Chat for capabilities proven there (for example Gmail)
   → Codex CLI when persistent local engineering state / shell loops are useful
-  → Codex Work only after its own capability test
+  → Codex Work for verified connector/local-tool/handoff work (T25/T26)
   → another OpenAI account or Claude only through an explicit GitHub handoff
   → paid API only by explicit exception
 ```
 
 ## Still open
 
-- Codex Mac Work capability test.
+- Codex Mac Work persistence across separate Work sessions remains untested; core read/write handoff lane is PASS (T25/T26).
 - Canonical Gmail Developer MCP from ChatGPT/Scheduled Tasks, only if scheduler-native Gmail is still required.
 - Multi-account OpenAI handoff and concurrency tests.
 - Claude Code / terminal handoff and return verification.
-- Provider-neutral `TO_WORKER` / `RETURN_FROM_WORKER` layer.
+- Callable-worker primitive (`codex exec`) and then provider-neutral `TO_WORKER` / `RETURN_FROM_WORKER` layer.
 - Distinct Ubuntu/cloud always-on worker only if a real cross-machine requirement appears.
 - New-repository creation through the tested GitHub Developer MCP remains blocked by the observed 403; existing-repository work is validated.
