@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "task": {
+    "task_id": "fixture-03",
+    "goal": "Edit four files, open a PR and inspect its CI",
+    "current_surface": "CHAT",
+    "current_session_id": "chat-1",
+    "required_actions": [
+      {
+        "action": "github.edit",
+        "resource": "bacoco/example"
+      },
+      {
+        "action": "github.pr.create",
+        "resource": "bacoco/example"
+      },
+      {
+        "action": "github.ci.read",
+        "resource": "bacoco/example"
+      }
+    ],
+    "authorized_actions": [
+      {
+        "action": "github.edit",
+        "resource": "bacoco/example"
+      },
+      {
+        "action": "github.pr.create",
+        "resource": "bacoco/example"
+      },
+      {
+        "action": "github.ci.read",
+        "resource": "bacoco/example"
+      }
+    ],
+    "authorization_ref": "fixture:explicit-user-authorization",
+    "forbidden_surfaces": [],
+    "recurring": false,
+    "max_cost_units": null,
+    "max_duration_seconds": null,
+    "transfer_count": 0
+  },
+  "capabilities": {
+    "version": 1,
+    "manifest_id": "fixture-manifest",
+    "captured_at": "2026-09-05T00:00:00Z",
+    "observations": [
+      {
+        "surface": "CHAT",
+        "session_id": "chat-1",
+        "action": "github.edit",
+        "resource": "bacoco/example",
+        "status": "verified",
+        "observed_at": "2026-09-05T00:00:00Z",
+        "expires_at": "2026-09-05T01:00:00Z",
+        "evidence_ref": "fixture:synthetic-permission-probe-1",
+        "method": "permission-check"
+      },
+      {
+        "surface": "CHAT",
+        "session_id": "chat-1",
+        "action": "github.pr.create",
+        "resource": "bacoco/example",
+        "status": "verified",
+        "observed_at": "2026-09-05T00:00:00Z",
+        "expires_at": "2026-09-05T01:00:00Z",
+        "evidence_ref": "fixture:synthetic-permission-probe-2",
+        "method": "permission-check"
+      },
+      {
+        "surface": "CHAT",
+        "session_id": "chat-1",
+        "action": "github.ci.read",
+        "resource": "bacoco/example",
+        "status": "verified",
+        "observed_at": "2026-09-05T00:00:00Z",
+        "expires_at": "2026-09-05T01:00:00Z",
+        "evidence_ref": "fixture:synthetic-permission-probe-3",
+        "method": "permission-check"
+      }
+    ]
+  },
+  "candidates": [
+    {
+      "plan_id": "chat",
+      "cost_unit": "usd_micro",
+      "steps": [
+        {
+          "step_id": "chat-executor",
+          "role": "executor",
+          "surface": "CHAT",
+          "session_id": "chat-1",
+          "actions": [
+            {
+              "action": "github.edit",
+              "resource": "bacoco/example"
+            },
+            {
+              "action": "github.pr.create",
+              "resource": "bacoco/example"
+            },
+            {
+              "action": "github.ci.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "cost": {
+            "execution": 10,
+            "transfer": 0,
+            "retry": 0,
+            "ci": 0
+          },
+          "duration_seconds": 10,
+          "delivery": "manual",
+          "adapter_ref": null
+        }
+      ]
+    }
+  ]
+}

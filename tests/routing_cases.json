@@ -1,0 +1,1967 @@
+{
+  "version": 1,
+  "warning": "Synthetic fixtures, not capability attestations. R01-R10 normalize the original ten examples; R11-R20 exercise blocked outcomes.",
+  "cases": [
+    {
+      "id": "R01",
+      "description": "Read an arXiv paper and compare it to a repository",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-01",
+          "goal": "Read an arXiv paper and compare it to a repository",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "paper.read",
+              "resource": "arxiv:example"
+            },
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "paper.read",
+              "resource": "arxiv:example"
+            },
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "paper.read",
+              "resource": "arxiv:example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            },
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.read",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-2",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "paper.read",
+                    "resource": "arxiv:example"
+                  },
+                  {
+                    "action": "github.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 10,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "routed",
+        "route": "CHAT",
+        "selected_plan_id": "chat"
+      }
+    },
+    {
+      "id": "R02",
+      "description": "Create an authorized GitHub issue",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-02",
+          "goal": "Create an authorized GitHub issue",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "github.issue.create",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "github.issue.create",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.issue.create",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "github.issue.create",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 10,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "routed",
+        "route": "CHAT",
+        "selected_plan_id": "chat"
+      }
+    },
+    {
+      "id": "R03",
+      "description": "Edit four files, open a PR and inspect its CI",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-03",
+          "goal": "Edit four files, open a PR and inspect its CI",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "github.edit",
+              "resource": "bacoco/example"
+            },
+            {
+              "action": "github.pr.create",
+              "resource": "bacoco/example"
+            },
+            {
+              "action": "github.ci.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "github.edit",
+              "resource": "bacoco/example"
+            },
+            {
+              "action": "github.pr.create",
+              "resource": "bacoco/example"
+            },
+            {
+              "action": "github.ci.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.edit",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            },
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.pr.create",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-2",
+              "method": "permission-check"
+            },
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.ci.read",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-3",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "github.edit",
+                    "resource": "bacoco/example"
+                  },
+                  {
+                    "action": "github.pr.create",
+                    "resource": "bacoco/example"
+                  },
+                  {
+                    "action": "github.ci.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 10,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "routed",
+        "route": "CHAT",
+        "selected_plan_id": "chat"
+      }
+    },
+    {
+      "id": "R04",
+      "description": "Refactor 120 files with repeated local tests",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-04",
+          "goal": "Refactor 120 files with repeated local tests",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "workspace.edit",
+              "resource": "bacoco/example"
+            },
+            {
+              "action": "local.test",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "workspace.edit",
+              "resource": "bacoco/example"
+            },
+            {
+              "action": "local.test",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CODEX",
+              "session_id": "codex-1",
+              "action": "workspace.edit",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            },
+            {
+              "surface": "CODEX",
+              "session_id": "codex-1",
+              "action": "local.test",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-2",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "codex",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "codex-executor",
+                "role": "executor",
+                "surface": "CODEX",
+                "session_id": "codex-1",
+                "actions": [
+                  {
+                    "action": "workspace.edit",
+                    "resource": "bacoco/example"
+                  },
+                  {
+                    "action": "local.test",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 10,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "routed",
+        "route": "CODEX",
+        "selected_plan_id": "codex"
+      }
+    },
+    {
+      "id": "R05",
+      "description": "Monitor Spark benchmarks daily",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-05",
+          "goal": "Monitor Spark benchmarks daily",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "schedule.create",
+              "resource": "task:spark"
+            },
+            {
+              "action": "web.search",
+              "resource": "topic:spark"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "schedule.create",
+              "resource": "task:spark"
+            },
+            {
+              "action": "web.search",
+              "resource": "topic:spark"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": true,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "SCHEDULED_CHAT",
+              "session_id": "scheduled_chat-1",
+              "action": "schedule.create",
+              "resource": "task:spark",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            },
+            {
+              "surface": "SCHEDULED_CHAT",
+              "session_id": "scheduled_chat-1",
+              "action": "web.search",
+              "resource": "topic:spark",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-2",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "scheduled",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "scheduled_chat-scheduler",
+                "role": "scheduler",
+                "surface": "SCHEDULED_CHAT",
+                "session_id": "scheduled_chat-1",
+                "actions": [
+                  {
+                    "action": "schedule.create",
+                    "resource": "task:spark"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              },
+              {
+                "step_id": "scheduled_chat-executor",
+                "role": "executor",
+                "surface": "SCHEDULED_CHAT",
+                "session_id": "scheduled_chat-1",
+                "actions": [
+                  {
+                    "action": "web.search",
+                    "resource": "topic:spark"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "routed",
+        "route": "SCHEDULED_CHAT",
+        "selected_plan_id": "scheduled"
+      }
+    },
+    {
+      "id": "R06",
+      "description": "Run a ComfyUI workflow through an installed media adapter",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-06",
+          "goal": "Run a ComfyUI workflow through an installed media adapter",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "comfyui.run",
+              "resource": "machine:fixture-sparky"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "comfyui.run",
+              "resource": "machine:fixture-sparky"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "LOCAL_TOOL",
+              "session_id": "local_tool-1",
+              "action": "comfyui.run",
+              "resource": "machine:fixture-sparky",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "local_tool",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "local_tool-executor",
+                "role": "executor",
+                "surface": "LOCAL_TOOL",
+                "session_id": "local_tool-1",
+                "actions": [
+                  {
+                    "action": "comfyui.run",
+                    "resource": "machine:fixture-sparky"
+                  }
+                ],
+                "cost": {
+                  "execution": 10,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "adapter",
+                "adapter_ref": "fixture:media-mcp"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "routed",
+        "route": "LOCAL_TOOL",
+        "selected_plan_id": "local_tool"
+      }
+    },
+    {
+      "id": "R07",
+      "description": "Perform an authorized UI-only admin action",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-07",
+          "goal": "Perform an authorized UI-only admin action",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "browser.admin",
+              "resource": "service:fixture"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "browser.admin",
+              "resource": "service:fixture"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "WORK",
+              "session_id": "work-1",
+              "action": "browser.admin",
+              "resource": "service:fixture",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "work",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "work-executor",
+                "role": "executor",
+                "surface": "WORK",
+                "session_id": "work-1",
+                "actions": [
+                  {
+                    "action": "browser.admin",
+                    "resource": "service:fixture"
+                  }
+                ],
+                "cost": {
+                  "execution": 10,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "routed",
+        "route": "WORK",
+        "selected_plan_id": "work"
+      }
+    },
+    {
+      "id": "R08",
+      "description": "Read a private API hourly and compute its delta",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-08",
+          "goal": "Read a private API hourly and compute its delta",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "schedule.create",
+              "resource": "task:market"
+            },
+            {
+              "action": "market.read",
+              "resource": "feed:fixture"
+            },
+            {
+              "action": "delta.compute",
+              "resource": "state:fixture"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "schedule.create",
+              "resource": "task:market"
+            },
+            {
+              "action": "market.read",
+              "resource": "feed:fixture"
+            },
+            {
+              "action": "delta.compute",
+              "resource": "state:fixture"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": true,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "SCHEDULED_CHAT",
+              "session_id": "scheduled_chat-1",
+              "action": "schedule.create",
+              "resource": "task:market",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            },
+            {
+              "surface": "LOCAL_TOOL",
+              "session_id": "local_tool-1",
+              "action": "market.read",
+              "resource": "feed:fixture",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-2",
+              "method": "permission-check"
+            },
+            {
+              "surface": "LOCAL_TOOL",
+              "session_id": "local_tool-1",
+              "action": "delta.compute",
+              "resource": "state:fixture",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-3",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "scheduled-mcp",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "scheduled_chat-scheduler",
+                "role": "scheduler",
+                "surface": "SCHEDULED_CHAT",
+                "session_id": "scheduled_chat-1",
+                "actions": [
+                  {
+                    "action": "schedule.create",
+                    "resource": "task:market"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              },
+              {
+                "step_id": "local_tool-executor",
+                "role": "executor",
+                "surface": "LOCAL_TOOL",
+                "session_id": "local_tool-1",
+                "actions": [
+                  {
+                    "action": "market.read",
+                    "resource": "feed:fixture"
+                  },
+                  {
+                    "action": "delta.compute",
+                    "resource": "state:fixture"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "routed",
+        "route": "HYBRID",
+        "selected_plan_id": "scheduled-mcp"
+      }
+    },
+    {
+      "id": "R09",
+      "description": "Review implementation and write release notes",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-09",
+          "goal": "Review implementation and write release notes",
+          "current_surface": "CODEX",
+          "current_session_id": "codex-1",
+          "required_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.read",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            },
+            {
+              "surface": "CODEX",
+              "session_id": "codex-1",
+              "action": "github.read",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-2",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "github.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 10,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          },
+          {
+            "plan_id": "codex",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "codex-executor",
+                "role": "executor",
+                "surface": "CODEX",
+                "session_id": "codex-1",
+                "actions": [
+                  {
+                    "action": "github.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "routed",
+        "route": "CHAT",
+        "selected_plan_id": "chat"
+      }
+    },
+    {
+      "id": "R10",
+      "description": "Use three synchronous isolated workers",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-10",
+          "goal": "Use three synchronous isolated workers",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "agents.spawn_sync_isolated",
+              "resource": "task:three-workers"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "agents.spawn_sync_isolated",
+              "resource": "task:three-workers"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "WORK",
+              "session_id": "work-1",
+              "action": "agents.spawn_sync_isolated",
+              "resource": "task:three-workers",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            },
+            {
+              "surface": "CODEX",
+              "session_id": "codex-1",
+              "action": "agents.spawn_sync_isolated",
+              "resource": "task:three-workers",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-2",
+              "method": "permission-check"
+            },
+            {
+              "surface": "EXTERNAL_API",
+              "session_id": "external_api-1",
+              "action": "agents.spawn_sync_isolated",
+              "resource": "task:three-workers",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-3",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "work",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "work-executor",
+                "role": "executor",
+                "surface": "WORK",
+                "session_id": "work-1",
+                "actions": [
+                  {
+                    "action": "agents.spawn_sync_isolated",
+                    "resource": "task:three-workers"
+                  }
+                ],
+                "cost": {
+                  "execution": 30,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          },
+          {
+            "plan_id": "codex",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "codex-executor",
+                "role": "executor",
+                "surface": "CODEX",
+                "session_id": "codex-1",
+                "actions": [
+                  {
+                    "action": "agents.spawn_sync_isolated",
+                    "resource": "task:three-workers"
+                  }
+                ],
+                "cost": {
+                  "execution": 40,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          },
+          {
+            "plan_id": "sdk",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "external_api-executor",
+                "role": "executor",
+                "surface": "EXTERNAL_API",
+                "session_id": "external_api-1",
+                "actions": [
+                  {
+                    "action": "agents.spawn_sync_isolated",
+                    "resource": "task:three-workers"
+                  }
+                ],
+                "cost": {
+                  "execution": 50,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "routed",
+        "route": "WORK",
+        "selected_plan_id": "work"
+      }
+    },
+    {
+      "id": "R11",
+      "description": "No verified capabilities",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-11",
+          "goal": "No verified capabilities",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": []
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "github.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "blocked",
+        "route": null,
+        "selected_plan_id": null
+      }
+    },
+    {
+      "id": "R12",
+      "description": "User has not authorized the action",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-12",
+          "goal": "User has not authorized the action",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.read",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "github.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "blocked",
+        "route": null,
+        "selected_plan_id": null
+      }
+    },
+    {
+      "id": "R13",
+      "description": "Only available surface is forbidden",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-13",
+          "goal": "Only available surface is forbidden",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [
+            "CHAT"
+          ],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.read",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "github.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "blocked",
+        "route": null,
+        "selected_plan_id": null
+      }
+    },
+    {
+      "id": "R14",
+      "description": "Cost exceeds the maximum",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-14",
+          "goal": "Cost exceeds the maximum",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": 99,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.read",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "github.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "blocked",
+        "route": null,
+        "selected_plan_id": null
+      }
+    },
+    {
+      "id": "R15",
+      "description": "No comparable cost estimate",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-15",
+          "goal": "No comparable cost estimate",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.read",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "github.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": null,
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "blocked",
+        "route": null,
+        "selected_plan_id": null
+      }
+    },
+    {
+      "id": "R16",
+      "description": "Recurrence has no scheduler",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-16",
+          "goal": "Recurrence has no scheduler",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": true,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.read",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "github.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "blocked",
+        "route": null,
+        "selected_plan_id": null
+      }
+    },
+    {
+      "id": "R17",
+      "description": "Duration exceeds the maximum",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-17",
+          "goal": "Duration exceeds the maximum",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": 9,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.read",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "github.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "blocked",
+        "route": null,
+        "selected_plan_id": null
+      }
+    },
+    {
+      "id": "R18",
+      "description": "Capability unknown",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-18",
+          "goal": "Capability unknown",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.read",
+              "resource": "bacoco/example",
+              "status": "unknown",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "github.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "blocked",
+        "route": null,
+        "selected_plan_id": null
+      }
+    },
+    {
+      "id": "R19",
+      "description": "Capability expires at evaluation time",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-19",
+          "goal": "Capability expires at evaluation time",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.read",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T00:30:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": [
+          {
+            "plan_id": "chat",
+            "cost_unit": "usd_micro",
+            "steps": [
+              {
+                "step_id": "chat-executor",
+                "role": "executor",
+                "surface": "CHAT",
+                "session_id": "chat-1",
+                "actions": [
+                  {
+                    "action": "github.read",
+                    "resource": "bacoco/example"
+                  }
+                ],
+                "cost": {
+                  "execution": 100,
+                  "transfer": 0,
+                  "retry": 0,
+                  "ci": 0
+                },
+                "duration_seconds": 10,
+                "delivery": "manual",
+                "adapter_ref": null
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": "blocked",
+        "route": null,
+        "selected_plan_id": null
+      }
+    },
+    {
+      "id": "R20",
+      "description": "No proposed plan",
+      "as_of": "2026-09-05T00:30:00Z",
+      "evidence_kind": "synthetic-fixture",
+      "input": {
+        "version": 1,
+        "task": {
+          "task_id": "fixture-20",
+          "goal": "No proposed plan",
+          "current_surface": "CHAT",
+          "current_session_id": "chat-1",
+          "required_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorized_actions": [
+            {
+              "action": "github.read",
+              "resource": "bacoco/example"
+            }
+          ],
+          "authorization_ref": "fixture:explicit-user-authorization",
+          "forbidden_surfaces": [],
+          "recurring": false,
+          "max_cost_units": null,
+          "max_duration_seconds": null,
+          "transfer_count": 0
+        },
+        "capabilities": {
+          "version": 1,
+          "manifest_id": "fixture-manifest",
+          "captured_at": "2026-09-05T00:00:00Z",
+          "observations": [
+            {
+              "surface": "CHAT",
+              "session_id": "chat-1",
+              "action": "github.read",
+              "resource": "bacoco/example",
+              "status": "verified",
+              "observed_at": "2026-09-05T00:00:00Z",
+              "expires_at": "2026-09-05T01:00:00Z",
+              "evidence_ref": "fixture:synthetic-permission-probe-1",
+              "method": "permission-check"
+            }
+          ]
+        },
+        "candidates": []
+      },
+      "expected": {
+        "status": "blocked",
+        "route": null,
+        "selected_plan_id": null
+      }
+    }
+  ]
+}

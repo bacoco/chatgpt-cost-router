@@ -1,0 +1,150 @@
+test_canonical_example_is_valid (test_audit_regressions.AuditRegressions.test_canonical_example_is_valid) ... ok
+test_native_skills_have_discoverable_metadata (test_audit_regressions.AuditRegressions.test_native_skills_have_discoverable_metadata) ...
+  test_native_skills_have_discoverable_metadata (test_audit_regressions.AuditRegressions.test_native_skills_have_discoverable_metadata) (skill='capability-router') ... FAIL
+  test_native_skills_have_discoverable_metadata (test_audit_regressions.AuditRegressions.test_native_skills_have_discoverable_metadata) (skill='surface-handoff') ... FAIL
+test_reject_blank_objective (test_audit_regressions.AuditRegressions.test_reject_blank_objective) ...
+  test_reject_blank_objective (test_audit_regressions.AuditRegressions.test_reject_blank_objective) (goal='') ... FAIL
+  test_reject_blank_objective (test_audit_regressions.AuditRegressions.test_reject_blank_objective) (goal='   ') ... FAIL
+  test_reject_blank_objective (test_audit_regressions.AuditRegressions.test_reject_blank_objective) (goal='\n\t') ... FAIL
+test_reject_empty_success_criteria (test_audit_regressions.AuditRegressions.test_reject_empty_success_criteria) ...
+  test_reject_empty_success_criteria (test_audit_regressions.AuditRegressions.test_reject_empty_success_criteria) (criteria=[]) ... FAIL
+  test_reject_empty_success_criteria (test_audit_regressions.AuditRegressions.test_reject_empty_success_criteria) (criteria=['']) ... FAIL
+  test_reject_empty_success_criteria (test_audit_regressions.AuditRegressions.test_reject_empty_success_criteria) (criteria=['  ']) ... FAIL
+test_reject_missing_or_unknown_version (test_audit_regressions.AuditRegressions.test_reject_missing_or_unknown_version) ... ok
+test_reject_wrong_known_control_types (test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types) ...
+  test_reject_wrong_known_control_types (test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types) (field='constraints') ... FAIL
+  test_reject_wrong_known_control_types (test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types) (field='tests') ... FAIL
+  test_reject_wrong_known_control_types (test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types) (field='repo') ... FAIL
+  test_reject_wrong_known_control_types (test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types) (field='return_to_chat_when') ... FAIL
+  test_reject_wrong_known_control_types (test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types) (field='files') ... FAIL
+
+======================================================================
+FAIL: test_native_skills_have_discoverable_metadata (test_audit_regressions.AuditRegressions.test_native_skills_have_discoverable_metadata) (skill='capability-router')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 33, in test_native_skills_have_discoverable_metadata
+    self.assertIsNotNone(match)
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_native_skills_have_discoverable_metadata (test_audit_regressions.AuditRegressions.test_native_skills_have_discoverable_metadata) (skill='surface-handoff')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 33, in test_native_skills_have_discoverable_metadata
+    self.assertIsNotNone(match)
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_reject_blank_objective (test_audit_regressions.AuditRegressions.test_reject_blank_objective) (goal='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 47, in test_reject_blank_objective
+    self.rejected('goal', text)
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 23, in rejected
+    self.assertFalse(self.validator.is_valid(packet), field)
+AssertionError: True is not false : goal
+
+======================================================================
+FAIL: test_reject_blank_objective (test_audit_regressions.AuditRegressions.test_reject_blank_objective) (goal='   ')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 47, in test_reject_blank_objective
+    self.rejected('goal', text)
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 23, in rejected
+    self.assertFalse(self.validator.is_valid(packet), field)
+AssertionError: True is not false : goal
+
+======================================================================
+FAIL: test_reject_blank_objective (test_audit_regressions.AuditRegressions.test_reject_blank_objective) (goal='\n\t')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 47, in test_reject_blank_objective
+    self.rejected('goal', text)
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 23, in rejected
+    self.assertFalse(self.validator.is_valid(packet), field)
+AssertionError: True is not false : goal
+
+======================================================================
+FAIL: test_reject_empty_success_criteria (test_audit_regressions.AuditRegressions.test_reject_empty_success_criteria) (criteria=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 52, in test_reject_empty_success_criteria
+    self.rejected('success_criteria', criteria)
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 23, in rejected
+    self.assertFalse(self.validator.is_valid(packet), field)
+AssertionError: True is not false : success_criteria
+
+======================================================================
+FAIL: test_reject_empty_success_criteria (test_audit_regressions.AuditRegressions.test_reject_empty_success_criteria) (criteria=[''])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 52, in test_reject_empty_success_criteria
+    self.rejected('success_criteria', criteria)
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 23, in rejected
+    self.assertFalse(self.validator.is_valid(packet), field)
+AssertionError: True is not false : success_criteria
+
+======================================================================
+FAIL: test_reject_empty_success_criteria (test_audit_regressions.AuditRegressions.test_reject_empty_success_criteria) (criteria=['  '])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 52, in test_reject_empty_success_criteria
+    self.rejected('success_criteria', criteria)
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 23, in rejected
+    self.assertFalse(self.validator.is_valid(packet), field)
+AssertionError: True is not false : success_criteria
+
+======================================================================
+FAIL: test_reject_wrong_known_control_types (test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types) (field='constraints')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 42, in test_reject_wrong_known_control_types
+    self.rejected(field, value)
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 23, in rejected
+    self.assertFalse(self.validator.is_valid(packet), field)
+AssertionError: True is not false : constraints
+
+======================================================================
+FAIL: test_reject_wrong_known_control_types (test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types) (field='tests')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 42, in test_reject_wrong_known_control_types
+    self.rejected(field, value)
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 23, in rejected
+    self.assertFalse(self.validator.is_valid(packet), field)
+AssertionError: True is not false : tests
+
+======================================================================
+FAIL: test_reject_wrong_known_control_types (test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types) (field='repo')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 42, in test_reject_wrong_known_control_types
+    self.rejected(field, value)
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 23, in rejected
+    self.assertFalse(self.validator.is_valid(packet), field)
+AssertionError: True is not false : repo
+
+======================================================================
+FAIL: test_reject_wrong_known_control_types (test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types) (field='return_to_chat_when')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 42, in test_reject_wrong_known_control_types
+    self.rejected(field, value)
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 23, in rejected
+    self.assertFalse(self.validator.is_valid(packet), field)
+AssertionError: True is not false : return_to_chat_when
+
+======================================================================
+FAIL: test_reject_wrong_known_control_types (test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types) (field='files')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 42, in test_reject_wrong_known_control_types
+    self.rejected(field, value)
+  File "/workspace/scratch/5db99d7ec2d2/chatgpt-cost-router/tests/test_audit_regressions.py", line 23, in rejected
+    self.assertFalse(self.validator.is_valid(packet), field)
+AssertionError: True is not false : files
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.003s
+
+FAILED (failures=13)

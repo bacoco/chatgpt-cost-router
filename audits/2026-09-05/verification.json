@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "timestamp": "2026-09-05T05:18:33.432131+00:00",
+  "base_commit": "ca763e51842cb1b53452fb41464232600572c6cd",
+  "scope": "Repository remediation, new local evaluator and operation ledger",
+  "measured": {
+    "python": "Python 3.12.13",
+    "unittest_methods": 39,
+    "unittest_failures": 0,
+    "routing_fixtures": 20,
+    "routing_fixture_agreement": 20,
+    "original_regression_assertion_failures": 13,
+    "official_skill_metadata_validators": {
+      "capability-router": "passed",
+      "surface-handoff": "passed"
+    },
+    "native_discovery_symlink_targets": "verified; host discovery not exercised",
+    "document_relative_links_checked": 51,
+    "generated_schemas": "reproduced without drift",
+    "handoff_examples": "delegation and completed return validated",
+    "compilation": "passed",
+    "git_diff_check": "passed"
+  },
+  "independent_review": {
+    "runtime": "One policy-update/completion lifecycle defect found, fixed and independently re-verified. No further material defect identified within reviewed scope.",
+    "skill_forward_tests": [
+      "Unverified private repository access blocks routing",
+      "Local-session evidence cannot authorize scheduled-session work",
+      "Old-commit test evidence cannot prove completion at a new commit"
+    ],
+    "live_external_calls": false
+  },
+  "lanes": {
+    "audit": {
+      "status": "ran",
+      "method": "source review plus independent runtime validation"
+    },
+    "logic": {
+      "status": "ran",
+      "method": "cost/capability and state-machine counterexamples; scope and commit proof checks"
+    },
+    "process": {
+      "status": "ran",
+      "method": "executed before/after regressions, 20 synthetic routes and local ledger concurrency/restart tests"
+    },
+    "visual": {
+      "status": "not-applicable",
+      "reason": "No application UI; original static review dashboard preserved as historical evidence"
+    },
+    "crawl": {
+      "status": "not-applicable",
+      "reason": "No hosted application or crawl target"
+    }
+  },
+  "limitations": [
+    "No external adapters are implemented",
+    "No paid provider, real scheduler, external effect or live destination preflight tested",
+    "No cross-machine scheduler locking or process-kill crash test",
+    "No field economic savings measured",
+    "Local Python version measured; GitHub matrix results belong to the commit checks"
+  ],
+  "input_sha256": {
+    ".github/workflows/ci.yml": "0a933ec0a46cbc8f802352278579087c1ea810848b9178e291e98d94df7bf1e7",
+    "cost_router/__init__.py": "983a530f81ae7670514b93aedc0f33277d93b78db5a0b404937516a7532b60e2",
+    "cost_router/__main__.py": "2dccfc8a188f9e7ef045cbf4b444a4a2490652a336528eda2edd43fbc39c2d8b",
+    "cost_router/capabilities.py": "700cb0c54dd7d807f1dc14907d6829ea829a8d7b88ed12c117f0779461a02983",
+    "cost_router/handoff.py": "4ae6d65f671b6424f3b836e68c588847257f158271bc215a228add9c15e9f932",
+    "cost_router/ledger.py": "d9286e0a57495e6169d3107a29d10a9beeceec16f71459fb9733f105762d64f6",
+    "cost_router/router.py": "30fcc2f9c7617c8bbedee7ef45c446d5f77f03ca617eb5c806e150dbe9c6b491",
+    "cost_router/validation.py": "c7c35f5db4b66e0c1677127a680fd1f40c0394534b2fec507ff8ecef5ef618c8",
+    "examples/capabilities-unverified.json": "b0930e8c7fe715aead4c1075ade4876125caf88109772d574ac516e951b8c3e4",
+    "examples/completed-return.json": "7533dad8063395972e8db324a156fbb2b7b7706f7e6c8da8fb8d2d32d141d98f",
+    "examples/handoff.json": "1a93b9564e6fc1538492cf5683a9b3a6c820160f6635227a25906870d111e0bf",
+    "examples/request.json": "785e1a6e56e8f8117a41db8a51abefc62a3722ee254c641bef9b940f52e7a1d2",
+    "policy/routing.json": "f73a2629c43198e782e79cbede08ff6f6bf694a82a225f637ea0a0d4b6221db5",
+    "requirements-dev.txt": "b584915d405f33e936df02c20bf6ba7f063b5d1956c18105d02c9cd71448a027",
+    "requirements.txt": "44ff0dc2f1e40311b8239e83146749ab9d9cee2a650e699f5464755d552ee20d",
+    "schemas/capabilities.schema.json": "28b1fac4176dc1e7cbab03df3d399494e438c335860641bb3f70d8c29bf085aa",
+    "schemas/common.schema.json": "038e3d4eea4eb93d7d385b1da82aff1cd99256db9ada8a8901cda0f7735cd4e5",
+    "schemas/decision.schema.json": "62b77f2dfc77719d4a9ed386e6e576bbbee38d3806fad88d0ef225f018d3167b",
+    "schemas/handoff.schema.json": "68476d70b4489bb74500694fe474640a73f32f481b18167aac404282cb0027a3",
+    "schemas/request.schema.json": "d24840096420a0098dda0bb0ca3464ea75034b9eaceaa2a7d7572cb219c38eb8",
+    "scripts/build_schemas.py": "6ac48d66fdb12d2375fed16c64e786b08ccce24d3cb030f3ba5714e021a9db8b",
+    "skills/capability-router/SKILL.md": "ad94830f674fd9a03aaeb86d59f592c949a112db641439b293e3159ab86d4627",
+    "skills/surface-handoff/SKILL.md": "2cd95a9e4a7d1ac9b72ea0eeb19faec30783d2416148bf852c48a3cb593f44f6",
+    "tests/routing_cases.json": "3524e673ebe2dc913f0d2007e7ab3adf293bb3ca2d9b893b5a36df01adc78d32",
+    "tests/support.py": "97ea7d87feceb96b22fc49180f4f0afd99bbc276850fc8feac14d1704ab391e4",
+    "tests/test_audit_regressions.py": "9eadd9f8096df132bd1d184b2890daa007a22a975babe16d536ef4c1c8eb6f75",
+    "tests/test_cli.py": "57fc1fa63c76a63ffe0f6230d55b33026b4b26418f0010d6b49cf7677b6ebf89",
+    "tests/test_handoff_ledger.py": "7e913c8067cfdfd265d210fff8077090ac7f232e69e717214fa17f2f6f5a12e1",
+    "tests/test_router.py": "c6ee0b5847aaec08e89d22a3384e5c862a5d813219dba62137f2c777686361c8"
+  },
+  "original_artifact_sha256": {
+    "original-audit.md": "4396ff9558650ac5e92827d826c3ba66bd8f0de51944c5c3d11095cef5b43979",
+    "original-audit-evidence.zip": "165901a1bce7434dbfb844b91adfc5003fe4f57aee929e3710db36126d637a17",
+    "original-shipguard.html": "52ca7bd9116397c2e4111d4486ea1809fff033258e643a845a7612d5f7ac9095"
+  }
+}

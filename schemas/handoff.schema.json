@@ -1,0 +1,470 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cost-router.invalid/schemas/handoff.schema.json",
+  "title": "Handoff",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": 2
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "handoff_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "operation_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "parent_handoff_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "direction": {
+      "enum": [
+        "delegation",
+        "return"
+      ]
+    },
+    "status": {
+      "enum": [
+        "ready",
+        "completed",
+        "failed",
+        "blocked"
+      ]
+    },
+    "from_surface": {
+      "enum": [
+        "CHAT",
+        "SCHEDULED_CHAT",
+        "LOCAL_TOOL",
+        "CODEX",
+        "WORK",
+        "EXTERNAL_API"
+      ]
+    },
+    "from_session_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "recommended_surface": {
+      "enum": [
+        "CHAT",
+        "SCHEDULED_CHAT",
+        "LOCAL_TOOL",
+        "CODEX",
+        "WORK",
+        "EXTERNAL_API"
+      ]
+    },
+    "target_session_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "policy_version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "policy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "done": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/text"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "remaining": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/text"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "repo": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[^/\\s]+/[^/\\s]+$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "branch": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "commit_sha": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/sha"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/text"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/text"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/action"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "authorized_actions": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/action"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "authorization_ref": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "forbidden_surfaces": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "CHAT",
+          "SCHEDULED_CHAT",
+          "LOCAL_TOOL",
+          "CODEX",
+          "WORK",
+          "EXTERNAL_API"
+        ]
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "cost_unit": {
+      "const": "usd_micro"
+    },
+    "estimated_cost_units": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "max_cost_units": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/evidence"
+      },
+      "minItems": 0
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "command": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "result": {
+            "enum": [
+              "pass",
+              "fail",
+              "not-run"
+            ]
+          },
+          "evidence_ref": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "commit_sha": {
+            "anyOf": [
+              {
+                "$ref": "common.schema.json#/$defs/sha"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "command",
+          "result",
+          "evidence_ref",
+          "commit_sha"
+        ]
+      },
+      "minItems": 0
+    },
+    "success_criteria": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/text"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "verification": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/verification"
+      },
+      "minItems": 0
+    },
+    "escalation_reason": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "return_to_chat_when": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/text"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "version",
+    "task_id",
+    "handoff_id",
+    "operation_id",
+    "parent_handoff_id",
+    "direction",
+    "status",
+    "from_surface",
+    "from_session_id",
+    "recommended_surface",
+    "target_session_id",
+    "policy_version",
+    "policy_sha256",
+    "created_at",
+    "goal",
+    "done",
+    "remaining",
+    "repo",
+    "branch",
+    "commit_sha",
+    "files",
+    "constraints",
+    "actions",
+    "authorized_actions",
+    "authorization_ref",
+    "forbidden_surfaces",
+    "cost_unit",
+    "estimated_cost_units",
+    "max_cost_units",
+    "evidence",
+    "tests",
+    "success_criteria",
+    "verification",
+    "escalation_reason",
+    "return_to_chat_when",
+    "extensions"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "direction": {
+            "const": "delegation"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "const": "ready"
+          },
+          "remaining": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "minItems": 1
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/action"
+            },
+            "minItems": 1
+          },
+          "return_to_chat_when": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "direction": {
+            "const": "return"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "enum": [
+              "completed",
+              "failed",
+              "blocked"
+            ]
+          },
+          "parent_handoff_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "actions": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "completed"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "remaining": {
+            "maxItems": 0
+          },
+          "verification": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/verification"
+            },
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "repo": {
+            "type": "string"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "branch": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "commit_sha": {
+            "$ref": "common.schema.json#/$defs/sha"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "branch": {
+            "type": "null"
+          },
+          "commit_sha": {
+            "type": "null"
+          },
+          "files": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ]
+}

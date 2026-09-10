@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-10",
+  "inference_status": "BLOCKED_BEFORE_RUNNER",
+  "planned_model_completions": 72,
+  "completed_model_completions": 0,
+  "measured_effect_of_prompt": null,
+  "local_grader_self_tests_passed": 41,
+  "grader_tests_are_model_evaluations": false,
+  "github_run_id": 34466688329,
+  "github_job_id": 102836807816,
+  "observed_job_conclusion": "failure",
+  "observed_job_steps": [],
+  "observed_runner_id": 0,
+  "root_cause": "NOT_ESTABLISHED",
+  "main_modified": false,
+  "experimental_workflow_removed_from_active_workflows": true,
+  "future_execution_scheduled": false
+}
