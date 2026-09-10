@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "job_id": "job-fleet-read-mesh-config-20260910-2140",
+  "host": "macbook",
+  "action": "read_file",
+  "args": {"path": "/Users/loic/.config/chatgpt-cost-router/mesh-node.json", "max_bytes": 8192},
+  "expires_at_unix": 1789100000
+}
