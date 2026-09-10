@@ -38,6 +38,10 @@ Only if the owner intentionally has another authorized ChatGPT account to use as
 
 Before retrying T28B, log out only the isolated worker B and authenticate it deliberately with the second authorized account. Do not change or log out the default worker A.
 
+### T28B attempt 2 — 2026-09-10
+
+`CANCELLED_BEFORE_AUTH`, not PASS and not a failure. Worker B was successfully logged out while worker A remained `Logged in using ChatGPT`. A fresh `codex login --device-auth` flow was started for worker B, but the owner interrupted it before completing browser/device authorization. Final status was therefore: worker A still logged in; worker B `Not logged in`. No second-account claim can be made from this attempt. A new device-auth flow must be started to retry because device codes are one-time and short-lived.
+
 ## Safety / policy
 
 Use only accounts the owner is authorized to use and only within the provider's normal terms and limits. The worker pool is for capability/cost routing and avoiding manual account swapping; it must not be used to evade a suspension, safety enforcement, account restriction, or provider-imposed prohibition. Never store credentials in GitHub.
