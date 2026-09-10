@@ -1,0 +1,26 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789071330.189586,
+  "host": "sparky",
+  "job_id": "job-t36-sparky-checkout-20260910",
+  "job_sha256": "61d68f0c15ddad17c5ce0df436f681d0c18aa68a26b0424f128a72ede214c201",
+  "result": {
+    "argv": [
+      "ls",
+      "-ld",
+      "/home/baconnier/chatgpt-cost-router"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.31,
+    "exit_code": 2,
+    "host": "sparky",
+    "stderr": "ls: cannot access '/home/baconnier/chatgpt-cost-router': No such file or directory\n",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071329.831827,
+  "status": "FAILED",
+  "version": 1
+}
