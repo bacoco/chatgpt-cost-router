@@ -44,7 +44,9 @@ T25 — Codex Mac Work capability characterization             PASS
 T26 — Codex Mac Work -> GitHub durable return                PASS — independently reverified
 T27 — callable Codex CLI worker primitive                    PASS — headless codex exec via ChatGPT login
 T28A — CODEX_HOME auth/state isolation                        PASS
-T28B — second-account worker                                  INCONCLUSIVE_SAME_ACCOUNT — retry required
+T28B — distinct second-account worker                         PASS — two isolated authorized accounts
+T29 — standalone parallel smoke                               DEFERRED_NOT_JUSTIFIED
+T30 — two-worker local broker                                 PARTIAL — code + local unit tests PASS; live broker smoke next
 
 GitHub Actions Developer MCP interactive/read control        PASS
 GitHub Actions hosted runner allocation                     BLOCKED_EXTERNAL_CAPACITY — free Actions allowance exhausted during observed test
@@ -52,181 +54,25 @@ Repository creation through Developer MCP                   BLOCKED — create_r
 Paid OpenAI API                                             NOT USED
 ```
 
-## T20 / T23 / T24 exact evidence
+## Recent worker evidence
 
-Original Cloud handoff:
+T27 proved a normal controller shell can call ChatGPT-authenticated Codex non-interactively with `codex exec`, exit 0, read-only sandbox, no work files and per-call token reporting.
 
-```text
-branch: test/t20-cloud-to-codex-handoff-20260910
-handoff: .chatgpt/handoffs/T20/TO_CODEX.md
-handoff commit: be8b29f191b877072e1def641aa3aeec51ec2ab8
-```
+T28A proved a fresh alternate `CODEX_HOME` does not inherit the default Codex login.
 
-A real Codex session consumed that exact handoff. Attempt 1 preserved the environment block because `python` was absent and both literal commands exited 127. After explicit authorization to use Python 3, Codex reported Python 3.9.6 and ran:
+T28B attempt 1 used the same ChatGPT account and was correctly marked inconclusive. Worker B was then logged out, a second device-auth flow was completed with a different authorized ChatGPT account, and worker B executed a bounded read-only `codex exec` successfully (`gpt-6-astra`, exit 0, 4,432 reported tokens, no work file created) while worker A remained logged in. A local comparison of non-secret identity claims proved different OpenAI user and account/workspace identities. No email address, token, raw identifier or auth-derived hash is retained in GitHub. Therefore T28B is PASS for two distinct addressable local Codex workers.
 
-```text
-python3 -m unittest discover -s tests -v
--> 40 tests passed, exit 0, 1.462s
+## T30 — two-worker broker
 
-python3 scripts/build_schemas.py
--> exit 0, no output, no file changes
-```
-
-Codex pushed `.chatgpt/handoffs/T20/RETURN_FROM_CODEX.md` in final return commit `16bb9c9dc5d691334c57897d7145df1a16b83d00`. T24 independently verified through `GitHub — bacoco TEST` that the only post-handoff changed file across the blocked and passing Codex commits is that return artifact, with no PR on the handoff branch.
-
-Durable receipts:
-
-```text
-.chatgpt/test-receipts/T20_CLOUD_TO_CODEX_HANDOFF_READY_2026-09-10.md
-.chatgpt/test-receipts/T23_CODEX_EXECUTION_2026-09-10.md
-.chatgpt/test-receipts/T24_CODEX_RETURN_VERIFICATION_2026-09-10.md
-```
-
-## T14-alt — Codex Mac Chat standard Gmail connector
-
-A real Codex Mac Chat session tested the built-in `Gmail` connector in that surface. This is **not** evidence for Gmail Developer MCP availability inside ChatGPT or Scheduled Tasks.
-
-Observed/executed:
-
-```text
-Gmail profile/authentication                 PASS
-recent search newer_than:7d                 PASS — 3 results under a 3-result limit
-Sent search in:sent newer_than:7d           PASS — 3 results under a 3-result limit
-message read                                PASS
-draft create                                PASS — exactly one self-addressed test draft
-draft read-back                             PASS — exact subject + DRAFT label verified
-exact-subject Sent search                   PASS — 0 results, confirming test draft not sent
-draft delete/discard                        NOT AVAILABLE — no dedicated safe action exposed
-send capability                             PASS — Gmail.send_email executed once to SELF after exact-subject dedup precheck
-send verification                           PASS — exact subject, Sent state, 1 exact-subject Sent match; user confirmed receipt
-paid API                                    NOT USED
-```
-
-Draft test subject: `[T14 TEST] Codex Mac Gmail capability validation`. The earlier draft requires manual cleanup if it is still present because no dedicated safe discard/delete-draft action was exposed.
-
-Send test subject: `[T14 SEND TEST] Codex Mac Gmail capability validation`. Precheck found no exact-subject Sent message; Codex invoked `Gmail.send_email` exactly once to the authenticated self-address, then verified exact subject, Sent state, and exactly one matching Sent message. The user independently confirmed receiving the email.
-
-Durable receipt:
-
-```text
-.chatgpt/test-receipts/T14_CODEX_MAC_GMAIL_2026-09-10.md
-```
-
-This establishes a useful alternative route for Gmail work from Codex Mac Chat. It does not close canonical T14, whose definition remains a Gmail Developer MCP usable in a developer-MCP/scheduler-compatible ChatGPT context.
-
-## T10 — Codex CLI local persistent worker
-
-The local macOS Codex CLI lane is now empirically validated as a persistent engineering workspace across independent sessions.
-
-Evidence sequence:
-
-```text
-T10A  PASS — Codex CLI 0.153.4; macOS arm64; ChatGPT-account login reported;
-             git/gh/Python/Node available; controlled marker created.
-
-T10B  PASS — new independent Codex CLI session rediscovered exactly one marker
-             under HOME and verified exact 100-byte content and SHA-256.
-
-T10C1 PASS — persistent checkout created at
-             /Users/loic/codex-t10-persistence-test/chatgpt-cost-router
-             main/origin-main = 230e247cdd838f64a51b745df36fad6a8e73ec71,
-             40/40 tests PASS, schema generation PASS, clean tree.
-
-T10C2 PASS — third independent Codex CLI session rediscovered the persisted
-             checkout/state without prior chat history, re-ran 40/40 tests and
-             schema generation successfully, then fetched exactly once:
-             local HEAD stayed 230e247cdd838f64a51b745df36fad6a8e73ec71
-             origin/main advanced to 48c42bdd71ddb00e95104fc695447585b81567dd
-             working tree remained clean and unchanged.
-```
-
-This proves same-Mac filesystem/workspace persistence, local Git state recovery, repeatable local verification, and safe comparison with newer remote state without overwriting the local checkout. It does **not** prove conversational memory, cross-account persistence, cross-machine persistence, or an always-on Ubuntu/cloud VM.
-
-Durable receipts:
-
-```text
-.chatgpt/test-receipts/T10A_CODEX_CLI_ENVIRONMENT_2026-09-10.md
-.chatgpt/test-receipts/T10B_CODEX_CLI_PERSISTENCE_2026-09-10.md
-.chatgpt/test-receipts/T10C1_CODEX_CLI_REPO_STATE_2026-09-10.md
-.chatgpt/test-receipts/T10C2_CODEX_CLI_REPO_RECOVERY_2026-09-10.md
-```
-
-## T25 / T26 — Codex Mac Work evidence
-
-T25 independently characterized the Work surface rather than inferring it from Codex Mac Chat or CLI. Direct GitHub read, Gmail search, local filesystem, shell, and Python were actually executed. The Work UI also exposed a broad plugin catalog; catalog visibility/installability is not treated as evidence that a connector is installed, invokable, or executed.
-
-T26 then tested the missing durable-return capability. Codex Mac Work read the historical T20 handoff from branch `test/t20-cloud-to-codex-handoff-20260910`, verified handoff commit `be8b29f191b877072e1def641aa3aeec51ec2ab8`, and wrote exactly one file on dedicated branch `test/t26-work-return-20260910`.
-
-ChatGPT independently reverified GitHub commit `290a40a87511c2696f37dc45fa885ef02bbdf647`:
-- commit message: `test: record T26 Codex Mac Work return [skip ci]`;
-- exactly one changed file: `.chatgpt/test-receipts/T26_WORK_RETURN.md`;
-- file status: added;
-- 18 additions, no other changed files;
-- the file records the expected source handoff and no forbidden effects / no paid API.
-
-Therefore T26 is PASS for **Work -> GitHub pushed durable return**. This does not yet prove Work workspace persistence across sessions.
-
-Durable Cloud-side verification receipt:
-`.chatgpt/test-receipts/T26_WORK_RETURN_VERIFICATION_2026-09-10.md`
-
-## T27 — callable Codex CLI worker primitive
-
-From a normal macOS terminal outside an interactive Codex session, `codex-cli 0.153.4` reported `Logged in using ChatGPT`. `codex exec` was available and one bounded invocation ran with model `gpt-6-astra`, provider `openai`, `approval: never`, and sandbox `read-only`. It returned exactly the requested four worker lines, exited `0`, and the temporary directory remained empty before and after. The invocation reported `10,215` tokens used. No paid API was used.
-
-`codex mcp` and `codex mcp-server` are also present in this CLI version, but T27 does not claim their reliability because they were only discovered via `--help`, not used as transports.
-
-This proves an external controller/scheduler/service can call the existing ChatGPT-authenticated Codex CLI non-interactively. It does not yet prove remote dispatch, multi-account isolation, daemon reliability, concurrency, or quota-aware routing.
-
-Durable receipt: `.chatgpt/test-receipts/T27_CALLABLE_CODEX_CLI_WORKER_2026-09-10.md`.
-
-## T28 — isolated worker identities
-
-T28A proved that a fresh alternate `CODEX_HOME` does not inherit the default Codex login: the default worker remained `Logged in using ChatGPT`, while `~/codex-worker-homes/openai-B` initially reported `Not logged in` with exit code 1.
-
-T28B attempt 1 then authenticated the isolated home and successfully ran one read-only `codex exec` worker call (`gpt-6-astra`, exit 0, 4,432 reported tokens, no work file created) while the default worker remained logged in. The owner subsequently confirmed that the isolated worker had been authenticated with the **same ChatGPT account** as the default worker. The attempt is therefore `INCONCLUSIVE_SAME_ACCOUNT`, not PASS for multi-account routing. It proves simultaneous isolated Codex state containers can be addressed, but not independent account identity or quota pools.
-
-Durable receipts/specification:
-- `.chatgpt/test-receipts/T28A_CODEX_HOME_ISOLATION_2026-09-10.md`
-- `docs/T28_CODEX_HOME_ISOLATION.md`
-
-## Proven execution path
-
-```text
-ChatGPT / Scheduled Task
-  -> GitHub Developer MCP
-  -> durable .chatgpt workspace/checkpoint
-  -> scheduled read/write + idempotency
-  -> scheduler-associated chat continuation
-  -> fresh-chat recovery from GitHub
-  -> exact Cloud TO_CODEX handoff
-  -> real Codex bounded execution
-  -> durable RETURN_FROM_CODEX
-  -> ChatGPT independent GitHub verification
-
-Codex Mac Chat
-  -> built-in Gmail connector
-  -> authenticated search/read
-  -> Sent search
-  -> draft create/read-back
-  -> deduplicated self-send
-  -> Sent verification + user receipt confirmation
-
-Codex CLI on Mac
-  -> ChatGPT-account authenticated CLI
-  -> persistent local filesystem/workspace across sessions
-  -> git/gh/Python/Node toolchain
-  -> repeatable local tests
-  -> fetch/reconcile remote metadata without overwriting local state
-  -> headless `codex exec` callable worker (T27)
-```
+The first broker implementation is now present: a non-secret worker registry, explicit/automatic selection, ChatGPT login probing under each worker's `CODEX_HOME`, forced `--ephemeral --sandbox read-only` Codex execution, removal of known paid-API-key environment variables, and per-call parsing of model/provider/tokens/duration/exit code. Five isolated unit tests using a fake Codex process passed locally, plus Python compilation checks. This does not yet count as a live broker PASS; one real broker dispatch remains required.
 
 ## Remaining gaps
 
-1. **T14 canonical:** connect/test a real Gmail Developer MCP in a compatible ChatGPT/Scheduled-Task context. Codex Mac standard Gmail is separately PASS for read/search/Sent/draft/send, including a real deduplicated self-send and independent user receipt confirmation.
-2. **T13:** quota/cost behavior remains `PARTIAL_STOPPED`; preserve S0/S1 and do not deliberately burn quota merely to move a coarse percentage display.
-3. **T10 local Mac CLI:** PASS. A distinct Ubuntu/cloud persistent-VM variant remains not formally tested and is optional; run it only if cross-machine or always-on remote persistence becomes operationally useful.
-4. **T11/T12:** original persistent-worker/MCP design remains deferred. T27 now proves the smaller non-interactive `codex exec` worker primitive; add a daemon/MCP layer only if remote/always-on dispatch needs it.
-5. **Worker mesh:** T28A auth/state isolation is PASS. T28B attempt 1 used the same ChatGPT account in both isolated homes and is inconclusive for independent accounts/quotas; retry with a genuinely second authorized account. Registration, dispatch, quota-aware routing, remote nodes and cross-provider workers remain unvalidated.
-6. Repository creation from scratch through the tested GitHub Developer MCP remains blocked by the observed 403; work on an existing repo is independently validated.
+1. **T14 canonical:** connect/test a real Gmail Developer MCP in a compatible ChatGPT/Scheduled-Task context only if scheduler-native Gmail is still required.
+2. **T13:** quota/cost behavior remains `PARTIAL_STOPPED`; do not burn allowance merely to move a coarse percentage display.
+3. **T10-VM:** remote/always-on variant remains optional and untested.
+4. **T11/T12:** daemon/MCP worker remains deferred; add only if remote dispatch actually needs it.
+5. **Worker mesh:** T28A/T28B are PASS for two distinct isolated local OpenAI workers. T30 broker code and fake-process unit tests are complete; one live broker dispatch remains before calling the dispatcher lane PASS. Quota-aware routing, remote nodes, useful concurrency and cross-provider workers remain unvalidated.
+6. Repository creation from scratch through the tested GitHub Developer MCP remains blocked by the observed 403; existing-repository work is validated.
 
 No paid OpenAI API was used for these validations.

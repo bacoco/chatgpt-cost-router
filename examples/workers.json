@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "workers": [
+    {
+      "id": "openai-A",
+      "provider": "openai",
+      "adapter": "codex-exec",
+      "codex_home": "~/.codex",
+      "cost_class": "included",
+      "priority": 10,
+      "enabled": true
+    },
+    {
+      "id": "openai-B",
+      "provider": "openai",
+      "adapter": "codex-exec",
+      "codex_home": "~/codex-worker-homes/openai-B",
+      "cost_class": "included",
+      "priority": 20,
+      "enabled": true
+    }
+  ]
+}

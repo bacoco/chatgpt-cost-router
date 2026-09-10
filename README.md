@@ -30,6 +30,18 @@ Start with [INSTALLATION_KIT_INDEX](docs/INSTALLATION_KIT_INDEX.md). The cloud l
 
 Current empirical status: authenticated GitHub MCP read/write, Scheduled Task GitHub access, scheduled write deduplication, bounded ChatGPT code changes, Actions control-plane access, scheduler-associated-chat continuation, literal fresh-chat recovery, repo workspace consumption and one-prompt self-bootstrap have been tested. The full **ChatGPT Cloud -> Codex -> ChatGPT** GitHub handoff round trip is also validated: ChatGPT persisted an exact handoff, a real Codex session executed only the bounded remainder and pushed `RETURN_FROM_CODEX.md`, and ChatGPT independently re-verified the exact return commit and diff from GitHub. Separately, **Codex Mac Chat + the built-in Gmail connector** is empirically validated for authenticated search/read, Sent search, draft creation/read-back and one real deduplicated self-send. The canonical Gmail Developer-MCP/Scheduled-Task path remains a separate unverified surface. Remaining gaps are narrower: quota measurement, the optional persistent-VM/worker experiments, and Developer-MCP Gmail if scheduler-native Gmail is still required; see [VALIDATION_STATUS](docs/VALIDATION_STATUS_2026-09-10.md).
 
+## Two-worker Codex broker prototype
+
+A minimal local broker now supports isolated ChatGPT-authenticated Codex workers without API keys. The example registry contains `openai-A` and `openai-B`, each with its own `CODEX_HOME`. It can list/probe workers, select one explicitly or choose the cheapest ready worker, then invoke `codex exec` in `--ephemeral --sandbox read-only` mode while collecting model/provider/token/duration telemetry.
+
+```bash
+python scripts/worker_broker.py list
+python scripts/worker_broker.py probe
+python scripts/worker_broker.py run --worker openai-B --workspace /tmp/worker-task --prompt 'Return exactly WORKER_OK'
+```
+
+The broker deliberately strips known paid-API-key environment variables from child Codex processes. It does not yet read 5-hour/weekly quota counters, run remotely, or schedule concurrent workers; those remain later mesh steps. See [T30_TWO_WORKER_BROKER](docs/T30_TWO_WORKER_BROKER.md).
+
 ## Try the executable example
 
 Requires Python 3.11 or newer. Run from this checkout:

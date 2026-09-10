@@ -1,19 +1,34 @@
 # T30 — two-worker broker prototype
 
-Status: `IMPLEMENTING`
+Status: `CODE_COMPLETE_LOCAL_TESTS_PASS — REAL TWO-WORKER SMOKE NEXT`
 
-Build the smallest useful local broker around the already validated `codex exec` primitive and the two isolated authorized worker homes from T28B.
+The first useful broker layer is implemented as:
 
-Requirements:
+- `cost_router/workers.py` — registry, safe environment isolation, readiness probe, worker selection, `codex exec` invocation and telemetry parsing;
+- `scripts/worker_broker.py` — human/controller CLI;
+- `examples/workers.json` — non-secret example descriptors for `openai-A` and `openai-B`;
+- `tests/test_workers.py` — fake-process tests that consume no Codex allowance.
 
-- registry contains non-secret worker descriptors only;
-- explicit addressing of `openai-A` or `openai-B`;
-- `auto` selection probes configured workers and prefers the cheapest enabled ready worker by cost class / priority;
-- every Codex process receives only its own `CODEX_HOME`;
-- known paid API key environment variables are removed from the child process environment;
-- initial prototype runs Codex only with `--ephemeral --sandbox read-only`;
-- capture exit code, selected worker, model, provider, reported tokens and elapsed time;
-- no daemon, remote listener, credential copying, quota circumvention or GitHub mutation is required;
-- unit tests must fake the Codex process and must not consume Codex allowance.
+Safety properties:
 
-T29 standalone parallel smoke is deferred. Useful concurrency will be tested later through the broker when there is real routing/collision value.
+- each child receives only its selected `CODEX_HOME`;
+- known paid API key environment variables are removed before Codex is spawned;
+- execution is fixed to `--ephemeral --sandbox read-only`;
+- explicit worker selection does not probe unrelated workers;
+- `auto` ranks enabled workers by cost class, priority and id, probing until one is ChatGPT-authenticated and ready;
+- no credentials, email addresses or auth-derived identifiers are stored in the registry.
+
+Telemetry returned per task: selected worker, provider, model, reported tokens, elapsed seconds, exit code, stdout/stderr, sandbox/ephemeral flags and selection probes.
+
+Local verification performed before repository write:
+
+```text
+python3 -m unittest discover -s isolated-tests -v
+5 tests PASS
+python3 -m py_compile workers.py worker_broker.py test_workers.py
+PASS
+```
+
+These tests fake the Codex process and therefore prove broker logic, not a live broker-to-worker call. The next bounded step is one real call through the broker to `openai-B`, followed by one `auto` selection call if the explicit call succeeds. Do not add concurrency, a daemon, MCP server or remote listener before that path is verified.
+
+T29 standalone parallel smoke remains `DEFERRED_NOT_JUSTIFIED`; useful concurrency will be exercised later through the broker.
