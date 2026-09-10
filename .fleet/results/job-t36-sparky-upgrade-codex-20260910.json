@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789071932.511453,
+  "host": "sparky",
+  "job_id": "job-t36-sparky-upgrade-codex-20260910",
+  "job_sha256": "2e36c5e25cb52ad3cd8a59902de71784249f775a4ac332280febd9d2ebcdb93a",
+  "result": {
+    "argv": [
+      "bash",
+      "-lc",
+      "export PATH=/home/baconnier/.nvm/versions/node/v20.20.0/bin:$PATH; npm install -g @openai/codex@latest && codex --version"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 11.295,
+    "exit_code": 0,
+    "host": "sparky",
+    "stderr": "npm notice\nnpm notice New major version of npm available! 10.8.2 -> 12.0.2\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2\nnpm notice To update run: npm install -g npm@12.0.2\nnpm notice\n",
+    "stderr_truncated": false,
+    "stdout": "\nchanged 2 packages in 11s\ncodex-cli 0.154.0\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071921.147817,
+  "status": "PASS",
+  "version": 1
+}
