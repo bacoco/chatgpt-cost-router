@@ -1,0 +1,9 @@
+{
+  "error": "command is not allowlisted for read execution on macstudio: codex",
+  "finished_at_unix": 1789072065.307007,
+  "job_id": "job-t36-macstudio-codex-version-20260910",
+  "job_sha256": "395beb96d943e502b4cbc5f749751319e1790b0645feb56a957bd72c956eb756",
+  "started_at_unix": 1789072065.249985,
+  "status": "ERROR",
+  "version": 1
+}
