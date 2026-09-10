@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "job_id": "job-t36-mesh-two-workers-20260910",
+  "host": "macstudio",
+  "action": "exec_read",
+  "args": {
+    "argv": ["python3", "scripts/mesh_client.py", "--url", "https://mac-studio.taildc96f0.ts.net:8444", "workers"],
+    "cwd": "/Users/macstudio/remote-worker-test",
+    "timeout_seconds": 30
+  },
+  "expires_at_unix": 1789085000
+}
