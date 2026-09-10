@@ -149,6 +149,7 @@ def run_task(
     run: Run = subprocess.run,
     codex_bin: str = "codex",
     clock: Callable[[], float] = time.monotonic,
+    ignore_user_config: bool = False,
 ) -> dict:
     if not prompt.strip():
         raise WorkerError("prompt must not be empty")
@@ -162,6 +163,10 @@ def run_task(
         "--sandbox",
         "read-only",
         "--skip-git-repo-check",
+    ]
+    if ignore_user_config:
+        command.append("--ignore-user-config")
+    command += [
         "-C",
         str(root),
         prompt,
