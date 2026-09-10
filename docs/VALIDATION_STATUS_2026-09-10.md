@@ -35,7 +35,8 @@ T31A        quota/budget-aware selection logic                PASS — determini
 T32         private remote worker over Tailscale Serve        PASS — live second-device dispatch
 T33         automatic node registry / cross-node mesh routing PASS — live two-machine auto dispatch
 T34         macOS LaunchAgent supervision/recovery            PASS — live forced-crash recovery
-T35A        Fleet Operator SSH/MCP + GitHub relay code         PASS — 22 isolated tests; live gateway pending
+T35A        Fleet Operator SSH/MCP + GitHub relay code         PASS — local policy tests
+T35B        autonomous Fleet Operator GitHub relay             PASS — MacBook + remote Mac Studio
 
 GitHub Actions control plane                                  PASS
 GitHub hosted runner allocation                               BLOCKED_EXTERNAL_CAPACITY during observed test
@@ -87,23 +88,35 @@ A loopback-only MCP 2.x Streamable HTTP server exposes truthful read-only and wr
 
 Because the current ChatGPT Pro product boundary does not provide full custom-MCP write actions, T35A also implements a GitHub command-relay compatibility lane. A supervised gateway can poll versioned jobs only from `fleet/commands`, validate action/expiry/filename, reject replay with a local ledger, execute through the same FleetRunner policy, persist a local result first, and push a sanitized deterministic result branch `fleet/results/<job_id>`. This does not execute PR/issue text or arbitrary branches and does not invoke a model/API.
 
-Twenty-two isolated Fleet Operator tests pass and all new Python files compile. These tests do **not** prove a real SSH connection, Secure MCP Tunnel connection, GitHub result push, or ChatGPT invocation. Live gateway bootstrap plus one ChatGPT-created/ChatGPT-read relay job is still required before the no-copy/paste lane is PASS.
+At the T35A checkpoint, twenty-two isolated Fleet Operator tests passed and all new Python files compiled. Those local tests alone did not prove a real SSH connection, GitHub result push, or ChatGPT invocation; T35B below closes the relay/SSH proof while Secure MCP Tunnel remains separate.
 
 Specification: `docs/FLEET_OPERATOR_PLUGIN.md`.
 Relay: `docs/FLEET_OPERATOR_RELAY.md`.
 Receipt: `.chatgpt/test-receipts/T35A_FLEET_OPERATOR_CODE_2026-09-10.md`.
 
+## T35B — live autonomous Fleet Operator relay
+
+The one-time gateway bootstrap partially failed while installing the MCP dependency because the default Xcode `python3` was Python 3.9.6 and the current MCP Python SDK requires Python 3.10+. Crucially, the relay LaunchAgent had already installed and remained live.
+
+ChatGPT then used the relay itself, with no additional user terminal command, to execute a `status` job on the local `macbook` alias and read the deterministic result branch back from GitHub. The result was `PASS` and returned the real Darwin host status. ChatGPT next submitted the same bounded `status` action to the `macstudio` alias; that also returned `PASS`, proving the gateway's SSH/Tailscale path to the second machine.
+
+ChatGPT used the live relay to inspect the MacBook Python runtime and found Xcode Python 3.9.6 plus Homebrew Python 3.11.14. Commit `14ea8c5bc0e0d39d7b04577dec7994e3939471fd` changed Fleet Operator packaging to select Python >=3.10 automatically. ChatGPT remotely pulled that fix, then remotely ran the Fleet Operator regression suite: 23 tests passed. ChatGPT then remotely invoked the MCP-server installer; `mcp==2.2.0` installed successfully into a Python 3.11 virtualenv. A final autonomous status job reported the server `installed=true`, `loaded=true`, relay `installed=true`, `loaded=true`, and loopback MCP port 8810 open.
+
+Therefore T35B is PASS for bounded no-copy/paste machine control through the GitHub relay, including one remote SSH/Tailscale host. The direct custom-MCP app path is not yet a ChatGPT-callable PASS: Secure MCP Tunnel and custom-app attachment are still pending, and full custom-MCP write actions remain plan/workspace limited.
+
+Receipt: `.chatgpt/test-receipts/T35B_FLEET_OPERATOR_LIVE_2026-09-10.md`.
+
 ## Remaining gaps
 
-1. Live Fleet Operator gateway bootstrap plus one autonomous GitHub-relay job/result round trip.
-2. Direct ChatGPT MCP write actions remain product-plan/workspace limited; current Pro custom MCP is read/fetch only.
+1. Direct ChatGPT MCP app attachment still needs Secure MCP Tunnel setup in a supported workspace; full write actions remain product-plan/workspace limited.
+2. Expand the local Fleet Operator host registry to additional machines when their SSH/Tailscale endpoints are known.
 3. Automatic/reliable live 5-hour and weekly allowance ingestion per account.
 4. Separately shared external-user Tailscale identity/ACL smoke when available.
 5. A second simultaneously live worker-bearing node for real multi-node selection/load distribution.
 6. Full logout/login or machine reboot lifecycle recovery for LaunchAgents, if operationally worth testing.
-7. Useful broker-managed concurrency when a real workload benefits from it.
+7. Useful broker-managed concurrency when an actual workload benefits from it.
 8. Claude/other-provider worker adapters plus provider-neutral handoff.
 9. Canonical Gmail Developer MCP only if operationally required.
 10. Repository creation through the tested GitHub Developer MCP remains blocked by the observed 403.
 
-No paid OpenAI API/model call was used for T35A local validation.
+No paid OpenAI API/model call was used for T35A or T35B validation.
