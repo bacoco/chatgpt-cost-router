@@ -28,7 +28,7 @@ The bootstrap protocol installs a bounded `.chatgpt/` project workspace, initial
 
 Start with [INSTALLATION_KIT_INDEX](docs/INSTALLATION_KIT_INDEX.md). The cloud lane and its evidence are documented in [CLOUD_EXECUTION_LANE](docs/CLOUD_EXECUTION_LANE.md). The repo-workspace convention is in [REPO_SCHEDULER_WORKSPACE](docs/REPO_SCHEDULER_WORKSPACE.md), and the bidirectional Codex handoff is in [CHATGPT_TO_CODEX_HANDOFF](docs/CHATGPT_TO_CODEX_HANDOFF.md).
 
-Current empirical status: authenticated GitHub MCP read/write, Scheduled Task GitHub access, scheduled write deduplication, bounded ChatGPT code changes, Actions control-plane access, independent-context checkpoint recovery, the repo-specific scheduler workspace, the hosted-runner capability gate, and the one-prompt workspace dogfood bootstrap have been tested. The Cloud → Codex handoff has also been persisted and read back at an exact GitHub SHA; the real Codex execution/return portion remains blocked while Codex capacity is unavailable. Scheduler-chat clean-profile continuation and a literal fresh-chat recovery remain separate manual tests. See [VALIDATION_STATUS](docs/VALIDATION_STATUS_2026-09-10.md).
+Current empirical status: authenticated GitHub MCP read/write, Scheduled Task GitHub access, scheduled write deduplication, bounded ChatGPT code changes, Actions control-plane access, scheduler-associated-chat continuation, literal fresh-chat recovery, repo workspace consumption and one-prompt self-bootstrap have been tested. The Cloud -> Codex half of the handoff is also validated at an exact persisted SHA. The remaining end-to-end gap is real Codex execution/return while Codex capacity is unavailable; see [VALIDATION_STATUS](docs/VALIDATION_STATUS_2026-09-10.md).
 
 ## Try the executable example
 
@@ -82,7 +82,7 @@ one actual receiving surface and session.
   verifiable result artifact/commit so ChatGPT can re-read and continue safely.
 
 The three workflow skills deliberately build on `surface-handoff` instead of duplicating
-their protocol. GitHub is the canonical source for their definitions. OpenAI Skills are
+its protocol. GitHub is the canonical source for their definitions. OpenAI Skills are
 portable across supporting products, but installation/sync can differ by surface, so a
 repo-backed skill must still be re-read or installed where it will execute.
 
