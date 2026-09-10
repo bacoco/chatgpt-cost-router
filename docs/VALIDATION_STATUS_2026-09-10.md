@@ -11,11 +11,11 @@ T01 — GitHub Developer MCP identity + repository read       PASS
 T02 — files / issues / PR / branches read                  PASS
 T03 — temporary issue create / read / close                PASS
 T04 — branch + bounded documentation write + commit + PR   PASS
-T05 — formal PR review workflow                            NOT YET TESTED
-T06 — autonomous bug discovery → deduplicated issue        NOT YET TESTED
+T05 — formal PR review workflow                            PASS
+T06 — autonomous defect discovery → deduplicated issue      PASS
 T07 — Scheduled Task → GitHub Developer MCP read-only      PASS
-T08 — Scheduled write + second-run idempotency             NOT YET TESTED
-T09 — direct ChatGPT code patch + Python/shell tests       NOT YET TESTED
+T08 — Scheduled write + second-run idempotency             PASS
+T09 — direct ChatGPT bounded patch + Python/shell tests    PASS
 T10+ — Codex worker path                                   NOT YET TESTED / NOT YET NEEDED
 Gmail Developer MCP                                        NOT YET TESTED
 ```
@@ -50,13 +50,45 @@ PR: #2
 
 The PR is intentionally **not merged automatically**. CI/check status must be treated independently from PR creation.
 
-## Current CI state observed after documentation updates
+## T08 exact evidence
 
-The latest check runs were not green: `contracts` jobs showed failure/cancellation states. This must be investigated before merge. The project must not claim `MERGE_READY` merely because documentation changes and the PR itself were created successfully.
+```text
+run 1: exact marker absent → issue #3 CREATED
+run 2: exact marker present → DEDUPLICATED #3
+duplicate artifacts: 0
+marker cleanup: issue #3 closed
+Codex: not used
+paid OpenAI API key: not used
+```
 
-## Next critical tests
+## T05/T06/T09 exact evidence
 
-1. T08 — scheduled write with explicit deduplication, executed twice.
-2. T09 — a bounded real code change by normal ChatGPT, with local Python/shell verification and a PR, without Codex.
-3. Determine the current CI failure cause before merging PR #2.
-4. Test a Gmail Developer MCP only if the standard Gmail connector remains forbidden in the required scheduler context.
+T05 submitted a real COMMENT review on PR #2 after reading its actual changed-file set. The review recorded that the PR contained four documentation files only and that independently reconstructed local tests passed.
+
+T06 found a concrete cost/reliability defect in `.github/workflows/ci.yml`: both unrestricted `push` and `pull_request` were enabled. A deduplication search found no existing matching issue, then issue #4 was created.
+
+T09 fixed that issue on branch `fix/avoid-duplicate-ci-runs` with one line of workflow configuration, commit `312f8ce93f37381bc8928047b15944cb28921de6`, PR #5.
+
+Local verification before push:
+
+```text
+workflow trigger structure                         PASS
+python -m unittest discover -s tests -v            PASS (39/39)
+python scripts/build_schemas.py                     PASS / no schema drift
+documented synthetic CLI replay                    PASS
+Codex                                               NOT USED
+paid OpenAI API key                                 NOT USED
+```
+
+## Current CI diagnosis
+
+PR #2 showed 4 checks because the workflow ran twice (push + pull_request). PR #5, after restricting `push` to `main`, showed exactly 2 matrix checks. Therefore the duplicate-execution defect is verified fixed.
+
+However PR #5 still showed `contracts (3.11)` failure and `contracts (3.12)` cancellation within roughly two seconds. Since the complete reconstructed test suite passes locally and schema generation is clean, the remaining CI failure is not demonstrated to be a code/test regression. Its exact GitHub Actions-level cause is still unknown because the currently exposed GitHub MCP toolset provides check-run status but not job log contents. Do not mark either PR MERGE_READY yet.
+
+## Next critical tests / work
+
+1. Obtain GitHub Actions job-log visibility and determine the exact early CI failure cause.
+2. Once CI is understood/green, merge the isolated CI fix first, then rebase/update documentation PR #2 and re-check it.
+3. Test a Gmail Developer MCP only if the standard Gmail connector remains forbidden in the required scheduler context.
+4. Only after the no-Codex route is exhausted, evaluate whether a Codex worker is actually needed.
