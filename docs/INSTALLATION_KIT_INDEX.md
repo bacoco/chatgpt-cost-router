@@ -152,12 +152,16 @@ All three live under `skills/` and use the existing `surface-handoff` contract f
 
 ## Current phase boundary
 
-The ChatGPT cloud lane is now empirically validated for authenticated GitHub MCP read/write, Scheduled Task GitHub access, scheduled idempotency, repo-backed workspace consumption, scheduler-associated-chat continuation, literal fresh-chat recovery from GitHub checkpoint state, and one-prompt project self-bootstrap. The Cloud -> Codex handoff half is also validated through exact-SHA persistence and read-back.
+The ChatGPT cloud lane is empirically validated for authenticated GitHub MCP read/write, Scheduled Task GitHub access, scheduled idempotency, repo-backed workspace consumption, scheduler-associated-chat continuation, literal fresh-chat recovery from GitHub checkpoint state, and one-prompt project self-bootstrap.
 
-The remaining end-to-end gaps are deliberately narrow:
+The full **ChatGPT Cloud -> Codex -> ChatGPT** handoff is also validated end to end. ChatGPT persisted `TO_CODEX.md` at exact commit `be8b29f191b877072e1def641aa3aeec51ec2ab8`. A real Codex session consumed it, preserved an initial blocked attempt where the `python` alias was absent, then used Python 3.9.6 to run 40/40 unit tests and schema generation successfully. Codex pushed `RETURN_FROM_CODEX.md` at `16bb9c9dc5d691334c57897d7145df1a16b83d00`, after which ChatGPT independently verified the branch history and that both post-handoff commits touched only the return artifact.
 
-- real Codex execution and return verification for T23/T24/full T20 while Codex capacity is exhausted;
+The remaining gaps are deliberately narrow:
+
 - Gmail Developer MCP testing for T14 because that connector is not present in this developer-MCP-restricted context;
-- T11/T12 remain intentionally deferred until a persistent Codex Worker is justified by measured need.
+- T13 quota-pool measurement remains partial;
+- T10's distinct persistent-VM proof is not formally tested and should be run only if still operationally relevant;
+- T11/T12 remain intentionally deferred until a persistent Codex Worker is justified by measured need;
+- repository creation from scratch through the tested Developer MCP remains blocked by the observed 403, while work on existing repositories is validated.
 
-Do not regenerate the existing T20 handoff while `test/t20-cloud-to-codex-handoff-20260910` remains valid at `be8b29f191b877072e1def641aa3aeec51ec2ab8`. Use `VALIDATION_STATUS_2026-09-10.md` and `.chatgpt/CURRENT.md` for the current state rather than historical pending lines in older experiment documents.
+Preserve the completed T20 handoff branch and receipts as evidence. Use `VALIDATION_STATUS_2026-09-10.md` and `.chatgpt/CURRENT.md` for current state rather than historical pending lines in older experiment documents.
