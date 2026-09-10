@@ -1,12 +1,12 @@
 # T30 — two-worker broker prototype
 
-Status: `CODE_COMPLETE_LOCAL_TESTS_PASS — REAL TWO-WORKER SMOKE NEXT`
+Status: `PASS — LIVE TWO-WORKER BROKER PATH VALIDATED`
 
 The first useful broker layer is implemented as:
 
 - `cost_router/workers.py` — registry, safe environment isolation, readiness probe, worker selection, `codex exec` invocation and telemetry parsing;
-- `scripts/worker_broker.py` — human/controller CLI with `list`, `probe`, zero-token `select`, and `run`;
-- `examples/workers.json` — non-secret example descriptors for `openai-A` and `openai-B`;
+- `scripts/worker_broker.py` — controller CLI with `list`, `probe`, zero-model `select`, and `run`;
+- `examples/workers.json` — non-secret descriptors for `openai-A` and `openai-B`;
 - `tests/test_workers.py` — fake-process tests that consume no Codex allowance.
 
 Safety properties:
@@ -20,17 +20,12 @@ Safety properties:
 
 Telemetry returned per task: selected worker, provider, model, reported tokens, elapsed seconds, exit code, stdout/stderr, sandbox/ephemeral flags and selection probes.
 
-Local verification performed before repository write:
+## Live validation
 
-```text
-python3 -m unittest discover -s isolated-tests -v
-5 tests PASS
-python3 -m py_compile workers.py worker_broker.py test_workers.py
-PASS
-zero-token select with a fake ChatGPT-authenticated Codex binary
-PASS — selected openai-A
-```
+A real checkout pinned to `d4da83ada93df28bfdc80064c41f532827567880` ran **45/45 repository tests PASS**. Live broker `probe` saw both `openai-A` and `openai-B` ready. Zero-model `select` chose `openai-A`. A real explicit dispatch through the broker to `openai-B` returned `BROKER_OK`, model `gpt-6-astra`, `4,607` reported tokens, `5.527 s`, and exit code `0`. The child had paid-API environment variables stripped, used `read-only` + `ephemeral`, and left the bounded workspace empty.
 
-These tests fake the Codex process and therefore prove broker logic, not a live broker-to-worker call. The next bounded step is a live zero-token `select` against both configured homes followed by one real call through the broker to `openai-B`. The `select` command only runs `codex login status`; it does not invoke a model. Do not add concurrency, a daemon, MCP server or remote listener before that path is verified.
+Durable receipt: `.chatgpt/test-receipts/T30_TWO_WORKER_BROKER_LIVE_2026-09-10.md`.
 
-T29 standalone parallel smoke remains `DEFERRED_NOT_JUSTIFIED`; useful concurrency will be exercised later through the broker.
+This proves alias-based local dispatch across two isolated ChatGPT-authenticated Codex workers without manual account swapping. It does **not** yet prove remote transport, concurrent execution, or automatic provider-quota discovery.
+
+T29 standalone parallel smoke remains `DEFERRED_NOT_JUSTIFIED`; useful concurrency can be exercised later through the broker when it serves an operational need.
