@@ -1,6 +1,6 @@
 # T33 — automatic worker-node registration and cross-node mesh routing
 
-Status: `CODE COMPLETE — LOCAL TESTS PASS; LIVE TWO-NODE REGISTRATION/DISPATCH NEXT`
+Status: `PASS — LIVE TWO-MACHINE REGISTRATION + AUTO DISPATCH VERIFIED`
 
 ## Goal
 
@@ -59,6 +59,18 @@ Seven isolated T33 tests pass without a model call:
 
 Python compilation and Bash syntax checks for the new server/agent/client/start/stop files pass.
 
-## Live proof still required
+## Live proof — 2026-09-10
 
-Use one Mac as control plane and the already-running T32 Mac as a node. Start the mesh control plane on dedicated Serve port 8444, run one node registration/heartbeat from the worker Mac, verify `nodes`/`workers`, then send one bounded mesh `run`. PASS requires the control plane to resolve the worker's node dynamically and return the T32 result. This is useful model spend because it validates the new cross-node routing layer rather than Codex itself.
+PASS. A Mac Studio ran the mesh control plane behind Tailscale Serve on dedicated HTTPS port `8444`. The MacBook worker host started the heartbeat agent and registered itself as node `macbook-pro-de-loic`, advertising only the already-approved `openai-B` worker through its T32 Serve endpoint. The registration reported `ready=true`, `auth=chatgpt`, `cost_class=included`, and unknown 5-hour/weekly quota observations rather than inventing values.
+
+From the control-plane machine, `nodes` returned that live node with a fresh heartbeat age of about 2.5 seconds and `workers` exposed the namespaced worker `macbook-pro-de-loic/openai-B`. A subsequent mesh `run --worker auto` dynamically resolved that worker and returned:
+
+```text
+MESH_OK
+worker_alias=openai-B
+paid_api_used=NO
+```
+
+Observed execution telemetry: provider `openai`, model `gpt-6-astra`, `4,612` reported tokens, `5.888 s`, exit code `0`, `read-only`, `ephemeral`, paid-API environment removed.
+
+This closes T33 for automatic node registration/discovery plus cross-machine automatic dispatch. It does not prove useful multi-node load balancing yet because only one live worker node was registered in this smoke. A second live worker-bearing node is the next proof if actual multi-node selection is required.
