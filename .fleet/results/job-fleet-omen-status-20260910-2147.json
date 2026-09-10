@@ -1,0 +1,25 @@
+{
+  "action": "status",
+  "finished_at_unix": 1789070868.6014059,
+  "host": "omen",
+  "job_id": "job-fleet-omen-status-20260910-2147",
+  "job_sha256": "c62180c9a1cabeafda49094ead5f15440079ec57cfff6cf5728d1eb3ac1a0358",
+  "result": {
+    "argv": [
+      "uname",
+      "-a"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 10.068,
+    "exit_code": 255,
+    "host": "omen",
+    "stderr": "ssh: connect to host 100.100.190.62 port 22: Operation timed out\r\n",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789070858.495005,
+  "status": "FAILED",
+  "version": 1
+}
