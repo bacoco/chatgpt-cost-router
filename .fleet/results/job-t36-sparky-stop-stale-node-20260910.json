@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789072210.722987,
+  "host": "sparky",
+  "job_id": "job-t36-sparky-stop-stale-node-20260910",
+  "job_sha256": "5ec688694782f023b3e166519eda8ee025e18d814c53c946d4b946df662006a1",
+  "result": {
+    "argv": [
+      "bash",
+      "-lc",
+      "cd /home/baconnier/chatgpt-cost-router; bash scripts/stop_mesh_node.sh || true; bash scripts/stop_remote_worker.sh || true"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.395,
+    "exit_code": 0,
+    "host": "sparky",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "stopped mesh node agent pid 3913205\nstopped remote worker backend pid 3969441\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789072210.2891982,
+  "status": "PASS",
+  "version": 1
+}
