@@ -1,7 +1,7 @@
 # Current project checkpoint
 
 Task: T28 isolated multi-account Codex worker identity after T27 callable-worker validation
-Status: WORKER_IDENTITY_ISOLATION_VALIDATED — core surfaces plus callable Codex CLI are validated, and T28A proves a separate `CODEX_HOME` isolates Codex authentication/state from the default worker. A second authorized account has not yet been authenticated into the isolated worker.
+Status: WORKER_IDENTITY_ISOLATION_VALIDATED — core surfaces plus callable Codex CLI are validated, and T28A proves a separate `CODEX_HOME` isolates Codex authentication/state from the default worker. T28B attempt 1 authenticated the isolated worker, but the owner confirmed it used the same ChatGPT account as worker A; therefore multi-account separation remains unproven.
 
 Repository: `bacoco/chatgpt-cost-router`
 Default branch: `main`
@@ -21,6 +21,7 @@ Source-kit SHA: `a1e172e20e0ba5f63d94abd1fb2e988a7ffb6736`
 - T26: PASS after independent GitHub verification. Work read the historical T20 handoff and pushed exactly one allowed return file on `test/t26-work-return-20260910` in commit `290a40a87511c2696f37dc45fa885ef02bbdf647`.
 - T27: PASS — from a normal macOS shell, `codex exec` 0.153.4 ran non-interactively using the existing ChatGPT login, model `gpt-6-astra`, provider `openai`, `read-only` sandbox and `approval: never`; it returned the requested worker response, exited 0, left the empty work directory unchanged, and reported `10,215` tokens used. `codex mcp` and `codex mcp-server` are present but were only discovered via help.
 - T28A: PASS — the default worker reported `Logged in using ChatGPT` before and after, while fresh `CODEX_HOME=~/codex-worker-homes/openai-B` reported `Not logged in` with exit code 1 and did not inherit the default credentials. No credentials were copied; the isolated home contained only `tmp/` after the check.
+- T28B attempt 1: `INCONCLUSIVE_SAME_ACCOUNT` — isolated worker B authenticated successfully and one read-only `codex exec` returned `WORKER_OK` with exit 0 and 4,432 reported tokens while A remained logged in, but the owner confirmed B was authenticated to the same ChatGPT account as A. This is not evidence of independent account quotas.
 
 ## Cost / quota decision
 
@@ -32,12 +33,12 @@ T13 remains `PARTIAL_STOPPED`, not FAIL. S0 -> S1 showed no observable change at
 - T11/T12: original persistent Worker MCP design remains deferred. T27 proves the smaller callable `codex exec` primitive; only add a daemon/MCP layer if remote/always-on dispatch needs it.
 - T13: `PARTIAL_STOPPED`.
 - T14 canonical: `BLOCKED_MISSING_CONNECTOR` for Gmail Developer MCP in ChatGPT/Scheduled Tasks; Codex Mac Gmail remains separately PASS.
-- Worker mesh: T28A identity isolation is PASS. A second authorized OpenAI account, multi-worker dispatch/concurrency, quota-aware routing, remote nodes and Claude handoffs remain to validate.
+- Worker mesh: T28A identity isolation is PASS. T28B attempt 1 used the same account in both isolated homes and is inconclusive for multi-account routing. A genuinely second authorized OpenAI account, multi-worker dispatch/concurrency, quota-aware routing, remote nodes and Claude handoffs remain to validate.
 - Repository creation from scratch through the tested GitHub Developer MCP remains blocked by observed `403 Resource not accessible by integration`.
 
 ## Next safe action
 
-T28A is complete. Next, if a second authorized ChatGPT account is intentionally available, run **T28B**: authenticate only `CODEX_HOME=~/codex-worker-homes/openai-B`, confirm both worker homes remain independently logged in, then run one bounded read-only `codex exec` under alias `openai-B`. Do not copy credentials between homes and do not disturb the default worker.
+T28A is complete. Retry **T28B** with a genuinely second authorized ChatGPT account: first log out only `CODEX_HOME=~/codex-worker-homes/openai-B`, verify the default worker A remains logged in, then authenticate B deliberately with the second account (prefer `codex login --device-auth` and an incognito/separate browser profile to avoid automatic reuse of account A). Confirm both homes remain logged in, then run one bounded read-only `codex exec` under alias `openai-B`. Do not copy credentials between homes and do not disturb the default worker.
 
 Specification: `docs/T28_CODEX_HOME_ISOLATION.md`.
 T28A receipt: `.chatgpt/test-receipts/T28A_CODEX_HOME_ISOLATION_2026-09-10.md`.

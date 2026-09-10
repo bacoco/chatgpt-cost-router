@@ -43,6 +43,8 @@ T24 — codex-to-cloud return verified back in ChatGPT        PASS
 T25 — Codex Mac Work capability characterization             PASS
 T26 — Codex Mac Work -> GitHub durable return                PASS — independently reverified
 T27 — callable Codex CLI worker primitive                    PASS — headless codex exec via ChatGPT login
+T28A — CODEX_HOME auth/state isolation                        PASS
+T28B — second-account worker                                  INCONCLUSIVE_SAME_ACCOUNT — retry required
 
 GitHub Actions Developer MCP interactive/read control        PASS
 GitHub Actions hosted runner allocation                     BLOCKED_EXTERNAL_CAPACITY — free Actions allowance exhausted during observed test
@@ -177,6 +179,16 @@ This proves an external controller/scheduler/service can call the existing ChatG
 
 Durable receipt: `.chatgpt/test-receipts/T27_CALLABLE_CODEX_CLI_WORKER_2026-09-10.md`.
 
+## T28 — isolated worker identities
+
+T28A proved that a fresh alternate `CODEX_HOME` does not inherit the default Codex login: the default worker remained `Logged in using ChatGPT`, while `~/codex-worker-homes/openai-B` initially reported `Not logged in` with exit code 1.
+
+T28B attempt 1 then authenticated the isolated home and successfully ran one read-only `codex exec` worker call (`gpt-6-astra`, exit 0, 4,432 reported tokens, no work file created) while the default worker remained logged in. The owner subsequently confirmed that the isolated worker had been authenticated with the **same ChatGPT account** as the default worker. The attempt is therefore `INCONCLUSIVE_SAME_ACCOUNT`, not PASS for multi-account routing. It proves simultaneous isolated Codex state containers can be addressed, but not independent account identity or quota pools.
+
+Durable receipts/specification:
+- `.chatgpt/test-receipts/T28A_CODEX_HOME_ISOLATION_2026-09-10.md`
+- `docs/T28_CODEX_HOME_ISOLATION.md`
+
 ## Proven execution path
 
 ```text
@@ -214,7 +226,7 @@ Codex CLI on Mac
 2. **T13:** quota/cost behavior remains `PARTIAL_STOPPED`; preserve S0/S1 and do not deliberately burn quota merely to move a coarse percentage display.
 3. **T10 local Mac CLI:** PASS. A distinct Ubuntu/cloud persistent-VM variant remains not formally tested and is optional; run it only if cross-machine or always-on remote persistence becomes operationally useful.
 4. **T11/T12:** original persistent-worker/MCP design remains deferred. T27 now proves the smaller non-interactive `codex exec` worker primitive; add a daemon/MCP layer only if remote/always-on dispatch needs it.
-5. **Worker mesh:** multi-account/provider registration, dispatch, quota-aware routing and remote nodes are planned but not yet implemented or validated. T28 is the next bounded test: isolate worker identity/auth state with a separate `CODEX_HOME`.
+5. **Worker mesh:** T28A auth/state isolation is PASS. T28B attempt 1 used the same ChatGPT account in both isolated homes and is inconclusive for independent accounts/quotas; retry with a genuinely second authorized account. Registration, dispatch, quota-aware routing, remote nodes and cross-provider workers remain unvalidated.
 6. Repository creation from scratch through the tested GitHub Developer MCP remains blocked by the observed 403; work on an existing repo is independently validated.
 
 No paid OpenAI API was used for these validations.

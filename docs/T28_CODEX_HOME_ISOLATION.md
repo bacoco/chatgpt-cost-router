@@ -32,6 +32,12 @@ Only if the owner intentionally has another authorized ChatGPT account to use as
 4. Run one bounded read-only `codex exec` under `openai-B` and record model, exit code, reported tokens, and exact worker alias returned.
 5. Re-check `openai-A` afterwards to show its auth remains intact.
 
+### T28B attempt 1 — 2026-09-10
+
+`INCONCLUSIVE_SAME_ACCOUNT`, not PASS. The isolated `openai-B` home was successfully authenticated and executed one bounded `codex exec` call (`gpt-6-astra`, exit 0, 4,432 reported tokens, no work file created) while the default worker remained logged in before and after. However, the owner then confirmed that the browser login used the **same ChatGPT account** as worker A. Therefore this attempt proves concurrent isolated auth state and callability of two `CODEX_HOME` instances, but **does not prove two independent OpenAI accounts or two independent quota pools**.
+
+Before retrying T28B, log out only the isolated worker B and authenticate it deliberately with the second authorized account. Do not change or log out the default worker A.
+
 ## Safety / policy
 
 Use only accounts the owner is authorized to use and only within the provider's normal terms and limits. The worker pool is for capability/cost routing and avoiding manual account swapping; it must not be used to evade a suspension, safety enforcement, account restriction, or provider-imposed prohibition. Never store credentials in GitHub.
