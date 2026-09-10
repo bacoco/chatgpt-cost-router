@@ -18,7 +18,8 @@ Produce one concise global diagram plus a small matrix that makes the execution 
    - local repository/shell capabilities actually observed.
 3. **Codex Mac — Work**
    - keep separate from Codex Mac Chat;
-   - test and record capabilities independently rather than inferring them from Chat mode.
+   - test and record capabilities independently rather than inferring them from Chat mode;
+   - distinguish plugin/connectors that are merely **VISIBLE / INSTALLABLE** from those that are **INSTALLED / INVOKABLE / EXECUTED**; the Work UI can expose a broad plugin catalog even when none is currently connected.
 4. **GitHub repository — centre of the diagram**
    - durable source of truth;
    - `.chatgpt/` checkpoint/workspace;
@@ -75,6 +76,42 @@ TO_WORKER.md / handoff.json
 
 Receiver-specific skills may adapt tool syntax, but must preserve the same task identity, SHA, scope, evidence and authorization. A return from Claude/Codex/another worker is always a claim that the originating surface re-verifies against GitHub.
 
+## Worker mesh / resource fabric to design later
+
+Treat every usable execution surface as a worker/resource node that can register with a neutral control plane. The goal is a capability-aware, quota-aware mesh rather than one hard-coded agent.
+
+Candidate nodes include:
+
+- ChatGPT.com Chat / Scheduled Tasks;
+- Codex Mac Chat;
+- Codex Mac Work;
+- Codex CLI on one or more local Macs;
+- Codex CLI on remote/always-on machines or cloud VMs;
+- additional OpenAI accounts with independent included quota;
+- Claude / Claude Code / other verified terminal workers;
+- optional owned hardware workers.
+
+Each node should advertise a non-secret descriptor such as:
+
+```text
+worker_id
+provider / account_alias / product / mode
+location = local | remote | cloud
+capabilities = git, github, shell, python, browser, gmail, plugins, ...
+state_model = ephemeral | local-persistent | remote-persistent
+availability = ready | busy | offline | quota_exhausted
+allowance_remaining = observable value or UNKNOWN
+incremental_cost_class = included | external-free-tier | paid-credit | paid-api | compute-cost
+permissions / forbidden_actions
+last_verified_at
+```
+
+A broker/control plane should select the cheapest sufficiently capable available node, reserve bounded work, create an exact-SHA GitHub handoff, and require a verifiable return. Prefer included/subscription quota and owned resources before paid API. Never route solely on nominal model quality when a cheaper verified node is sufficient.
+
+GitHub remains the neutral durable coordination bus for project state, claims, branches/worktrees, handoffs and receipts; the control plane/registry may hold only transient availability and routing metadata. Parallel workers must own separate branches/worktrees or explicit non-overlapping operations and must detect stale SHAs before merge/reconciliation.
+
+Future questions to test: worker registration/discovery, heartbeat/lease expiry, quota exhaustion failover, account switching, cross-provider handoff, conflict arbitration, local-vs-remote data constraints, and whether Scheduled Tasks can act as lightweight dispatchers without creating uncontrolled recursive schedulers.
+
 ## For each surface show
 
 - GitHub read/write/branch/PR capability;
@@ -108,6 +145,7 @@ Mark “no paid API used” where empirically verified, but do not claim “zero
 - T17/T18: GitHub Actions control plane vs hosted runner-capacity distinction.
 - T20/T23/T24: real ChatGPT Cloud -> GitHub -> Codex -> GitHub -> ChatGPT round trip.
 - T14-alt: Codex Mac Chat + built-in Gmail read/search/Sent/draft/send, including one real deduplicated self-send.
+- T25: Codex Mac Work characterized for direct GitHub read, Gmail search, local filesystem, shell and Python; Work persistence and effective GitHub commit/push remain unverified.
 - Canonical T14: Gmail Developer MCP in ChatGPT/Scheduled-Task context remains separate.
 
 ## Desired final output
