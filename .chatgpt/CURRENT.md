@@ -1,7 +1,7 @@
 # Current project checkpoint
 
 Task: consolidate validated Cloud/Codex/GitHub and Codex-Mac Gmail capabilities
-Status: CORE_ROUND_TRIP_VALIDATED — scheduler/chat/GitHub workspace recovery plus a real bounded ChatGPT Cloud -> Codex -> ChatGPT GitHub handoff round trip are verified. Codex Mac Chat also has a separately verified standard-Gmail route for read/search/Sent/draft operations.
+Status: CORE_ROUND_TRIP_VALIDATED — scheduler/chat/GitHub workspace recovery plus a real bounded ChatGPT Cloud -> Codex -> ChatGPT GitHub handoff round trip are verified. Codex Mac Chat also has a separately verified standard-Gmail route for read/search/Sent/draft/send operations.
 
 Repository: `bacoco/chatgpt-cost-router`
 Default branch: `main`
@@ -26,7 +26,7 @@ Source-kit SHA used by the workspace bootstrap: `a1e172e20e0ba5f63d94abd1fb2e988
   - T24: PASS — ChatGPT verified exact pushed return, branch history, changed-file scope and absence of a PR.
 - T21 workflow skill/frontmatter structure: PASS.
 - T22 project-workspace self-bootstrap: PASS.
-- T14-alt Codex Mac Chat + built-in Gmail: PASS for authenticated search/read, Sent search, draft creation and read-back; send is exposed but was intentionally not executed; no dedicated safe draft-delete action was exposed.
+- T14-alt Codex Mac Chat + built-in Gmail: PASS for authenticated search/read, Sent search, draft creation/read-back, and one real deduplicated self-send via `Gmail.send_email`; exact subject/Sent state were reverified and the user independently confirmed receipt. No dedicated safe draft-delete action was exposed for the earlier test draft.
 - T13 remains PARTIAL: representative zero-paid-API routes and one real Codex execution are recorded, but allowance/quota-pool interaction remains unmeasured.
 
 ## Durable receipts on main
@@ -48,22 +48,21 @@ Source-kit SHA used by the workspace bootstrap: `a1e172e20e0ba5f63d94abd1fb2e988
 - T10: `NOT_YET_FORMALLY_TESTED` — distinct persistent-VM Codex proof was not run; T23 proves the real GitHub handoff path, not that persistent-VM design.
 - T11/T12: `DEFERRED_NOT_JUSTIFIED` — do not build a persistent Codex Worker merely to satisfy test numbers.
 - T13: `PARTIAL` — quota/allowance-pool interaction remains unmeasured.
-- T14 canonical: `BLOCKED_MISSING_CONNECTOR` — no Gmail Developer MCP is available in this developer-MCP-restricted ChatGPT conversation. Separately, Codex Mac Chat can use the standard Gmail connector for read/search/Sent/draft operations; send is visible but not yet executed.
+- T14 canonical: `BLOCKED_MISSING_CONNECTOR` — no Gmail Developer MCP is available in this developer-MCP-restricted ChatGPT conversation. Separately, Codex Mac Chat standard Gmail is empirically PASS for read/search/Sent/draft/send including one real deduplicated self-send; this does not prove scheduler/Developer-MCP Gmail.
 - Repository creation from scratch through the tested GitHub Developer MCP remains blocked by the observed `403 Resource not accessible by integration`.
 
 ## Next safe actions
 
-1. Manually delete the exact T14 test draft `[T14 TEST] Codex Mac Gmail capability validation` from Gmail Drafts; no safe dedicated draft-delete action was exposed in the tested Codex Mac connector.
-2. If scheduler/ChatGPT-native Gmail is still required, connect an actual Gmail Developer MCP and test bounded allowlisted operations. Codex Mac Chat is already a validated alternative for read/search/Sent/draft.
-3. If desired, separately test Gmail send from Codex Mac with an explicit self-addressed, deduplicated test; do not infer send success merely from tool visibility.
-4. T13: run matched tasks if economic/quota measurement is still desired.
-5. T10: run persistent-VM Codex proof only if that architecture remains operationally relevant.
-6. Keep T11/T12 deferred unless measured limitations justify a persistent worker.
+1. Manually delete the exact draft `[T14 TEST] Codex Mac Gmail capability validation` from Gmail Drafts if it is still present; no safe dedicated draft-delete action was exposed in the tested Codex Mac connector.
+2. If scheduler/ChatGPT-native Gmail is still required, connect an actual Gmail Developer MCP and test bounded allowlisted operations. Codex Mac Chat is already a validated alternative for read/search/Sent/draft/send.
+3. T13: run matched tasks if economic/quota measurement is still desired.
+4. T10: run persistent-VM Codex proof only if that architecture remains operationally relevant.
+5. Keep T11/T12 deferred unless measured limitations justify a persistent worker.
 
 Authoritative status: `docs/VALIDATION_STATUS_2026-09-10.md`.
 Beginner entry point: `docs/INSTALLATION_KIT_INDEX.md`.
 
 Codex used for T23: yes — ChatGPT-account Codex session; no paid API.
-Codex Mac Gmail test: yes — standard Gmail connector; no email sent.
+Codex Mac Gmail test: yes — standard Gmail connector; one self-addressed email sent and verified; no paid API.
 Paid OpenAI API used: no.
 Hosted GitHub Actions runner used: no.
