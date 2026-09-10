@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "ssh_bin": "/usr/bin/ssh",
+  "connect_timeout_seconds": 10,
+  "default_timeout_seconds": 60,
+  "max_timeout_seconds": 900,
+  "max_output_bytes": 262144,
+  "hosts": {
+    "gateway": {
+      "transport": "local",
+      "allowed_roots": ["/Users/example/work"],
+      "read_commands": ["uname", "hostname", "git", "python3", "head", "tail", "launchctl", "tailscale"],
+      "write_commands": ["git", "python3", "bash", "launchctl"],
+      "tags": ["gateway", "mac"]
+    },
+    "worker-1": {
+      "transport": "ssh",
+      "ssh_target": "user@worker-1.example.ts.net",
+      "port": 22,
+      "allowed_roots": ["/Users/user/work"],
+      "read_commands": ["uname", "hostname", "git", "python3", "head", "tail", "launchctl", "tailscale"],
+      "write_commands": ["git", "python3", "bash", "launchctl"],
+      "tags": ["remote", "mac"]
+    }
+  }
+}

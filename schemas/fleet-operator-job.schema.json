@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/bacoco/chatgpt-cost-router/schemas/fleet-operator-job.schema.json",
+  "title": "Fleet Operator relay job",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "job_id", "host", "action", "args", "expires_at_unix"],
+  "properties": {
+    "version": {"const": 1},
+    "job_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{8,80}$"},
+    "host": {"type": "string", "minLength": 1, "maxLength": 64},
+    "action": {"enum": ["status", "exec_read", "exec_write", "read_file", "git_pull"]},
+    "args": {"type": "object"},
+    "expires_at_unix": {"type": "number"}
+  }
+}
