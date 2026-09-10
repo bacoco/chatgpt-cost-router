@@ -21,6 +21,13 @@ class LaunchdTests(unittest.TestCase):
         spec.loader.exec_module(module)
         return module
 
+    def load_node_agent(self):
+        path = Path(__file__).resolve().parents[1] / "scripts/mesh_node_agent.py"
+        spec = importlib.util.spec_from_file_location("mesh_node_agent", path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+
     def fake_repo(self, root: Path) -> Path:
         repo = root / "repo"
         for rel in (
@@ -133,6 +140,19 @@ class LaunchdTests(unittest.TestCase):
             args = exec_python.call_args.args
             self.assertIn("--registry", args[2])
             self.assertIn("/repo/examples/workers.json", args[2])
+
+    def test_mesh_node_agent_accepts_and_forwards_codex_bin(self):
+        module = self.load_node_agent()
+        with patch.object(module, "tailscale_self", return_value=("node", "node.example.ts.net")), \
+             patch.object(module, "build_local_registration", return_value={"version": 1}) as build, \
+             patch.object(module, "post_json", return_value={"registered": True}):
+            self.assertEqual(module.main([
+                "--control-url", "https://control.example.ts.net:8444",
+                "--workers", "openai-B",
+                "--codex-bin", "/opt/codex/bin/codex",
+                "--once",
+            ]), 0)
+        self.assertEqual(build.call_args.kwargs["codex_bin"], "/opt/codex/bin/codex")
 
 
 if __name__ == "__main__":
