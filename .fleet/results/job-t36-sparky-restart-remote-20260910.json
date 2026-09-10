@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789071918.1833742,
+  "host": "sparky",
+  "job_id": "job-t36-sparky-restart-remote-20260910",
+  "job_sha256": "813fa30fd7bc5c96810abc14a43d19d6c80492e47b0bf512710961a5e7ea4746",
+  "result": {
+    "argv": [
+      "bash",
+      "-lc",
+      "export PATH=/home/baconnier/.nvm/versions/node/v20.20.0/bin:$PATH; cd /home/baconnier/chatgpt-cost-router; bash scripts/stop_remote_worker.sh; export COST_ROUTER_ALLOWED_TAILSCALE_USERS=\"$(tailscale status --json | python3 -c 'import json,sys; d=json.load(sys.stdin); uid=str(d[\"Self\"][\"UserID\"]); print(d[\"User\"][uid][\"LoginName\"])')\"; export COST_ROUTER_REMOTE_WORKERS=openai-A; bash scripts/start_remote_worker.sh"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 1.421,
+    "exit_code": 0,
+    "host": "sparky",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "stopped remote worker backend pid 3913173\nremote worker backend started: pid 3969441\nAvailable within your tailnet:\n\nhttps://spark-lolo.taildc96f0.ts.net:8443/\n|-- proxy http://127.0.0.1:8787\n\nServe started and running in the background.\nTo disable the proxy, run: tailscale serve --https=8443 off\n--- Tailscale Serve status ---\n|-- tcp://spark-lolo.taildc96f0.ts.net:8188 (tailnet only)\n|-- tcp://100.98.112.93:8188\n|-- tcp://[fd7a:115c:a1e0::bc01:70a0]:8188\n|--> tcp://127.0.0.1:8188\n|-- tcp://spark-lolo.taildc96f0.ts.net:1235 (tailnet only)\n|-- tcp://100.98.112.93:1235\n|-- tcp://[fd7a:115c:a1e0::bc01:70a0]:1235\n|--> tcp://127.0.0.1:1235\n\nhttps://spark-lolo.taildc96f0.ts.net (tailnet only)\n|-- / proxy http://127.0.0.1:8188\n\nhttps://spark-lolo.taildc96f0.ts.net:8443 (tailnet only)\n|-- / proxy http://127.0.0.1:8787\n\n--- Local state ---\nbackend=http://127.0.0.1:8787\ntailscale_https_port=8443\nallowed_workers=openai-A\nlog=/home/baconnier/.local/state/chatgpt-cost-router/remote-worker/server.log\nDo not use Tailscale Funnel for this service.\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071916.7264168,
+  "status": "PASS",
+  "version": 1
+}
