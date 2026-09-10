@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "budgets": [
+    {
+      "worker": "openai-A",
+      "status": "unknown",
+      "five_hour_remaining_pct": null,
+      "weekly_remaining_pct": null,
+      "reported_tokens_5h": null,
+      "reported_tokens_weekly": null
+    },
+    {
+      "worker": "openai-B",
+      "status": "unknown",
+      "five_hour_remaining_pct": null,
+      "weekly_remaining_pct": null,
+      "reported_tokens_5h": null,
+      "reported_tokens_weekly": null
+    }
+  ]
+}
