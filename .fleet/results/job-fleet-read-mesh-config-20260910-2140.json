@@ -1,0 +1,29 @@
+{
+  "action": "read_file",
+  "finished_at_unix": 1789070651.428916,
+  "host": "macbook",
+  "job_id": "job-fleet-read-mesh-config-20260910-2140",
+  "job_sha256": "259c3a0b6e6a5c9eabf91f4011d37c6668dc2974d4518df79e4947e74da09ced",
+  "result": {
+    "argv": [
+      "head",
+      "-c",
+      "8192",
+      "--",
+      "/Users/loic/.config/chatgpt-cost-router/mesh-node.json"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.011,
+    "exit_code": 0,
+    "host": "macbook",
+    "path": "/Users/loic/.config/chatgpt-cost-router/mesh-node.json",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "{\n  \"codex_bin\": \"/Users/loic/.nvm/versions/node/v22.16.0/lib/node_modules/@openai/codex/bin/codex.js\",\n  \"control_url\": \"https://mac-studio.taildc96f0.ts.net:8444\",\n  \"heartbeat_seconds\": 30,\n  \"repo\": \"/Users/loic/codex-t30-broker-test\",\n  \"tailscale_bin\": \"/usr/local/bin/tailscale\",\n  \"version\": 1,\n  \"worker_port\": 8443,\n  \"workers\": \"openai-B\"\n}\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789070651.365808,
+  "status": "PASS",
+  "version": 1
+}
