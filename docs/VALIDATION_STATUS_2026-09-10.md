@@ -27,7 +27,7 @@ T11 — Codex Worker MCP                                      DEFERRED_NOT_JUSTI
 T12 — Scheduler -> Codex Worker                             DEFERRED_NOT_JUSTIFIED
 T13 — cost/quota experiment                                 PARTIAL
 T14 — Gmail Developer MCP                                   BLOCKED_MISSING_CONNECTOR
-T14-alt — Codex Mac Chat + standard Gmail connector         PASS read/search/Sent/draft; send visible, not executed
+T14-alt — Codex Mac Chat + standard Gmail connector         PASS — read/search/Sent/draft/send; real self-send verified
 T15 — scheduler-chat manual continuation                    PASS
 T16 — literal fresh-chat recovery from GitHub checkpoint   PASS
 T16A — independent-context recovery from checkpoint         PASS
@@ -91,11 +91,14 @@ draft create                                PASS — exactly one self-addressed 
 draft read-back                             PASS — exact subject + DRAFT label verified
 exact-subject Sent search                   PASS — 0 results, confirming test draft not sent
 draft delete/discard                        NOT AVAILABLE — no dedicated safe action exposed
-send capability                             AVAILABLE/VISIBLE — NOT EXECUTED
+send capability                             PASS — Gmail.send_email executed once to SELF after exact-subject dedup precheck
+send verification                           PASS — exact subject, Sent state, 1 exact-subject Sent match; user confirmed receipt
 paid API                                    NOT USED
 ```
 
-Test draft subject: `[T14 TEST] Codex Mac Gmail capability validation`. The draft remains in Gmail Drafts and requires manual cleanup because the tested connector exposed no dedicated safe discard/delete-draft action.
+Draft test subject: `[T14 TEST] Codex Mac Gmail capability validation`. The earlier draft requires manual cleanup if it is still present because no dedicated safe discard/delete-draft action was exposed.
+
+Send test subject: `[T14 SEND TEST] Codex Mac Gmail capability validation`. Precheck found no exact-subject Sent message; Codex invoked `Gmail.send_email` exactly once to the authenticated self-address, then verified exact subject, Sent state, and exactly one matching Sent message. The user independently confirmed receiving the email.
 
 Durable receipt:
 
@@ -123,12 +126,14 @@ Codex Mac Chat
   -> built-in Gmail connector
   -> authenticated search/read
   -> Sent search
-  -> reversible draft create/read-back
+  -> draft create/read-back
+  -> deduplicated self-send
+  -> Sent verification + user receipt confirmation
 ```
 
 ## Remaining gaps
 
-1. **T14 canonical:** connect/test a real Gmail Developer MCP in a compatible ChatGPT/Scheduled-Task context. Codex Mac standard Gmail is separately PASS for read/search/Sent/draft; send is visible but intentionally untested.
+1. **T14 canonical:** connect/test a real Gmail Developer MCP in a compatible ChatGPT/Scheduled-Task context. Codex Mac standard Gmail is separately PASS for read/search/Sent/draft/send, including a real deduplicated self-send and independent user receipt confirmation.
 2. **T13:** quota/cost behavior remains PARTIAL until matched tasks measure allowance-pool behavior over time.
 3. **T10:** distinct persistent-VM Codex proof remains not formally tested; T23 proves the handoff path, not that architecture.
 4. **T11/T12:** intentionally deferred until evidence justifies a persistent Codex Worker.
