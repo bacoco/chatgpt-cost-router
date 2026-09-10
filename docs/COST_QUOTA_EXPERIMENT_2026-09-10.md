@@ -116,3 +116,47 @@ Deferred to the surface-map campaign. Repeat equivalent bounded tasks with accou
 ## Completion rule
 
 T13 can become `PASS` only when at least one reproducible before/after allowance measurement is captured for the relevant agentic surface and the conclusion is limited to what that measurement proves. If the product does not expose a numerical metric, T13 remains `PARTIAL` with a documented `NOT_OBSERVABLE` limitation rather than inventing token consumption.
+
+## T13-M1 empirical sample — S0 and ChatGPT.com leg
+
+### S0 — before matched task
+
+User-provided Usage & billing screenshot captured at visible local time `2026-09-10 17:51` shows:
+
+```text
+credits_balance_eur: 0
+automatic_reload: off
+
+general_weekly_usage_limit:
+  remaining: 99%
+  reset_shown: Sep 17, 2026, 4:55 PM
+
+GPT-5.3-Codex-Spark_5_hour_usage_limit:
+  remaining: 100%
+  reset_shown: 22:51
+
+GPT-5.3-Codex-Spark_weekly_usage_limit:
+  remaining: 100%
+  reset_shown: Sep 17, 2026, 5:51 PM
+
+full_reset:
+  expires_shown: 10/5, 6:19 AM GMT+2
+```
+
+These labels/percentages are recorded exactly as displayed. Do not infer that the general weekly limit and the model-specific limits are the same pool merely from this screenshot.
+
+### ChatGPT.com Chat matched task
+
+The pinned T13-M1 read task was executed in the current ChatGPT.com Chat against exact repository commit `0cb7ff63464258fd9484db2f1485df4dd6b2bd73`, using only `GitHub — bacoco TEST` reads.
+
+Observed five facts:
+
+1. `T20`: PASS — full ChatGPT Cloud -> Codex -> ChatGPT round trip validated.
+2. `T13`: PARTIAL — empirical quota/allowance measurement still active.
+3. canonical `T14`: BLOCKED_MISSING_CONNECTOR — Gmail Developer MCP unavailable in the tested ChatGPT/Scheduled-Task context.
+4. `T14-alt`: PASS — Codex Mac Chat standard Gmail route validated for read/search/Sent/draft/send including one deduplicated self-send.
+5. durable state role: the GitHub repository is the persistent source of truth / transfer bus for `.chatgpt` checkpoints, handoffs, branch/commit state and receipts.
+
+No repository mutation, GitHub Actions run, Codex execution, or paid API was used for this matched read leg.
+
+Next measurement point: capture `S1` from the same Usage & billing view immediately after this ChatGPT.com task, before running the matched Codex Mac Chat task.
