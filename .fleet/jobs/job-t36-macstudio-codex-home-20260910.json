@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "job_id": "job-t36-macstudio-codex-home-20260910",
+  "host": "macstudio",
+  "action": "exec_read",
+  "args": {
+    "argv": ["ls", "-ld", "/Users/macstudio/.codex"],
+    "timeout_seconds": 20
+  },
+  "expires_at_unix": 1789085000
+}

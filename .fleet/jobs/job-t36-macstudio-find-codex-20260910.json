@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "job_id": "job-t36-macstudio-find-codex-20260910",
+  "host": "macstudio",
+  "action": "exec_read",
+  "args": {
+    "argv": ["find", "/Users/macstudio/.nvm", "-path", "*/@openai/codex/bin/codex.js", "-print"],
+    "timeout_seconds": 30
+  },
+  "expires_at_unix": 1789085000
+}
