@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "job_id": "job-fleet-expand-safe-hosts-20260910-2146",
+  "host": "macbook",
+  "action": "exec_write",
+  "args": {
+    "argv": ["python3", "scripts/fleet_operator_macos.py", "init-config", "--local-host", "macbook", "/Users/loic", "--ssh-host", "macstudio", "macstudio@100.107.141.112", "/Users/macstudio", "--ssh-host", "macstudioprod", "macstudioprod@100.70.99.99", "/Users/macstudioprod", "--ssh-host", "sparky", "baconnier@100.98.112.93", "/home/baconnier", "--ssh-host", "omen", "baconnier@100.100.190.62", "/home/baconnier"],
+    "cwd": "/Users/loic/codex-t30-broker-test",
+    "timeout_seconds": 60,
+    "allow_destructive": false
+  },
+  "expires_at_unix": 1789100000
+}
