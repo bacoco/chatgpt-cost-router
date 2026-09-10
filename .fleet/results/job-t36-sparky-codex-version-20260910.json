@@ -1,0 +1,26 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789071850.470575,
+  "host": "sparky",
+  "job_id": "job-t36-sparky-codex-version-20260910",
+  "job_sha256": "371878eb792fdaa7867a4c08d12a36dd6121ec3235eb789c17dc262dd5932234",
+  "result": {
+    "argv": [
+      "/home/baconnier/.nvm/versions/node/v20.20.0/bin/node",
+      "/home/baconnier/.nvm/versions/node/v20.20.0/lib/node_modules/@openai/codex/bin/codex.js",
+      "--version"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.418,
+    "exit_code": 0,
+    "host": "sparky",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "codex-cli 0.124.0\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071850.0004501,
+  "status": "PASS",
+  "version": 1
+}
