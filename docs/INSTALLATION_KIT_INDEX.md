@@ -156,12 +156,16 @@ The ChatGPT cloud lane is empirically validated for authenticated GitHub MCP rea
 
 The full **ChatGPT Cloud -> Codex -> ChatGPT** handoff is also validated end to end. ChatGPT persisted `TO_CODEX.md` at exact commit `be8b29f191b877072e1def641aa3aeec51ec2ab8`. A real Codex session consumed it, preserved an initial blocked attempt where the `python` alias was absent, then used Python 3.9.6 to run 40/40 unit tests and schema generation successfully. Codex pushed `RETURN_FROM_CODEX.md` at `16bb9c9dc5d691334c57897d7145df1a16b83d00`, after which ChatGPT independently verified the branch history and that both post-handoff commits touched only the return artifact.
 
+A separate Codex Mac Chat test also validated the built-in Gmail connector for authenticated search/read, Sent search, draft creation/read-back and a real deduplicated self-send. This does **not** prove Gmail availability from ChatGPT.com Scheduled Tasks or a Developer-MCP-restricted ChatGPT context.
+
 The remaining gaps are deliberately narrow:
 
-- Gmail Developer MCP testing for T14 because that connector is not present in this developer-MCP-restricted context;
+- canonical Gmail Developer MCP testing for T14, only if scheduler/ChatGPT-native Gmail is still required;
 - T13 quota-pool measurement remains partial;
 - T10's distinct persistent-VM proof is not formally tested and should be run only if still operationally relevant;
 - T11/T12 remain intentionally deferred until a persistent Codex Worker is justified by measured need;
 - repository creation from scratch through the tested Developer MCP remains blocked by the observed 403, while work on existing repositories is validated.
+
+A future synthesis is tracked in `SURFACE_CAPABILITY_MAP_TODO.md`: compare ChatGPT.com Chat, Codex Mac Chat and Codex Mac Work around GitHub as durable state, showing verified capabilities, unavailable paths, handoffs and whether each path consumes ChatGPT/Codex allowance, GitHub Actions capacity or paid API spend.
 
 Preserve the completed T20 handoff branch and receipts as evidence. Use `VALIDATION_STATUS_2026-09-10.md` and `.chatgpt/CURRENT.md` for current state rather than historical pending lines in older experiment documents.

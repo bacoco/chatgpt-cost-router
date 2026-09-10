@@ -59,6 +59,10 @@ Source-kit SHA used by the workspace bootstrap: `a1e172e20e0ba5f63d94abd1fb2e988
 4. T10: run persistent-VM Codex proof only if that architecture remains operationally relevant.
 5. Keep T11/T12 deferred unless measured limitations justify a persistent worker.
 
+## Deferred synthesis task
+
+Create the concise global surface/capability map described in `docs/SURFACE_CAPABILITY_MAP_TODO.md`. It must distinguish ChatGPT.com Chat, Codex Mac Chat, and Codex Mac Work; place the GitHub repository in the middle as durable state/transfer bus; show what is empirically verified vs unavailable/not tested on each surface; and show allowance/cost semantics separately (ChatGPT allowance, Codex allowance, GitHub Actions capacity, paid API). This is intentionally deferred until the current validation work is finished.
+
 Authoritative status: `docs/VALIDATION_STATUS_2026-09-10.md`.
 Beginner entry point: `docs/INSTALLATION_KIT_INDEX.md`.
 
