@@ -133,8 +133,23 @@ project scheduler / Chat
 -> ChatGPT review/continuation
 ```
 
+## Canonical workflow skills
+
+The repeatable workflow is now encoded as repository-backed skills, not only prose prompts:
+
+```text
+project-workspace-bootstrap
+  -> prepares TARGET_REPO + .chatgpt workspace + project scheduler
+
+cloud-to-codex-handoff
+  -> persists remaining work + exact SHA + short Codex prompt
+
+codex-to-cloud-return
+  -> returns result/tests/SHA to GitHub for ChatGPT verification
+```
+
+All three live under `skills/` and use the existing `surface-handoff` contract for versioned transfer semantics. The simplest human entry point remains `PROJECT_BOOTSTRAP_PROMPT.md`: replace only `TARGET_REPO`.
+
 ## Current phase boundary
 
-This kit currently documents the **ChatGPT cloud lane**.
-
-The equivalent **Codex desktop/CLI lane on macOS** is deliberately a later phase and must not be mixed into the cloud installation instructions until it has been separately tested.
+The ChatGPT cloud lane is implemented as documentation and repository-backed workflow skills, but it is not yet fully validated end to end. The scheduler-chat clean-profile continuation, fresh-chat recovery, one-prompt target-repo bootstrap, and full Cloud → Codex → Cloud round trip remain explicit tests before calling the installation kit final.
