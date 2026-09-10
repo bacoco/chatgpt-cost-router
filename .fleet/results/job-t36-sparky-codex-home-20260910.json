@@ -1,0 +1,26 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789071124.063068,
+  "host": "sparky",
+  "job_id": "job-t36-sparky-codex-home-20260910",
+  "job_sha256": "1ccb588856caea9c8b7771208825044d3c78741d52f9355a737c6f3706787c1f",
+  "result": {
+    "argv": [
+      "ls",
+      "-ld",
+      "/home/baconnier/.codex"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.439,
+    "exit_code": 0,
+    "host": "sparky",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "drwxrwxr-x 14 baconnier baconnier 4096 Jul 19 14:02 /home/baconnier/.codex\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071123.569482,
+  "status": "PASS",
+  "version": 1
+}
