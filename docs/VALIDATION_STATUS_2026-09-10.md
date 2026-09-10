@@ -42,6 +42,7 @@ T23 — cloud-to-codex handoff executed with real Codex       PASS
 T24 — codex-to-cloud return verified back in ChatGPT        PASS
 T25 — Codex Mac Work capability characterization             PASS
 T26 — Codex Mac Work -> GitHub durable return                PASS — independently reverified
+T27 — callable Codex CLI worker primitive                    PASS — headless codex exec via ChatGPT login
 
 GitHub Actions Developer MCP interactive/read control        PASS
 GitHub Actions hosted runner allocation                     BLOCKED_EXTERNAL_CAPACITY — free Actions allowance exhausted during observed test
@@ -166,6 +167,16 @@ Therefore T26 is PASS for **Work -> GitHub pushed durable return**. This does no
 Durable Cloud-side verification receipt:
 `.chatgpt/test-receipts/T26_WORK_RETURN_VERIFICATION_2026-09-10.md`
 
+## T27 — callable Codex CLI worker primitive
+
+From a normal macOS terminal outside an interactive Codex session, `codex-cli 0.153.4` reported `Logged in using ChatGPT`. `codex exec` was available and one bounded invocation ran with model `gpt-6-astra`, provider `openai`, `approval: never`, and sandbox `read-only`. It returned exactly the requested four worker lines, exited `0`, and the temporary directory remained empty before and after. The invocation reported `10,215` tokens used. No paid API was used.
+
+`codex mcp` and `codex mcp-server` are also present in this CLI version, but T27 does not claim their reliability because they were only discovered via `--help`, not used as transports.
+
+This proves an external controller/scheduler/service can call the existing ChatGPT-authenticated Codex CLI non-interactively. It does not yet prove remote dispatch, multi-account isolation, daemon reliability, concurrency, or quota-aware routing.
+
+Durable receipt: `.chatgpt/test-receipts/T27_CALLABLE_CODEX_CLI_WORKER_2026-09-10.md`.
+
 ## Proven execution path
 
 ```text
@@ -194,6 +205,7 @@ Codex CLI on Mac
   -> git/gh/Python/Node toolchain
   -> repeatable local tests
   -> fetch/reconcile remote metadata without overwriting local state
+  -> headless `codex exec` callable worker (T27)
 ```
 
 ## Remaining gaps
@@ -201,8 +213,8 @@ Codex CLI on Mac
 1. **T14 canonical:** connect/test a real Gmail Developer MCP in a compatible ChatGPT/Scheduled-Task context. Codex Mac standard Gmail is separately PASS for read/search/Sent/draft/send, including a real deduplicated self-send and independent user receipt confirmation.
 2. **T13:** quota/cost behavior remains `PARTIAL_STOPPED`; preserve S0/S1 and do not deliberately burn quota merely to move a coarse percentage display.
 3. **T10 local Mac CLI:** PASS. A distinct Ubuntu/cloud persistent-VM variant remains not formally tested and is optional; run it only if cross-machine or always-on remote persistence becomes operationally useful.
-4. **T11/T12:** original persistent-worker/MCP design remains deferred; first prove the smaller T27 non-interactive Codex CLI worker primitive before deciding whether a daemon/MCP layer is justified.
-5. **Worker mesh:** multi-account/provider registration, dispatch, quota-aware routing and remote nodes are planned but not yet implemented or validated.
+4. **T11/T12:** original persistent-worker/MCP design remains deferred. T27 now proves the smaller non-interactive `codex exec` worker primitive; add a daemon/MCP layer only if remote/always-on dispatch needs it.
+5. **Worker mesh:** multi-account/provider registration, dispatch, quota-aware routing and remote nodes are planned but not yet implemented or validated. T28 is the next bounded test: isolate worker identity/auth state with a separate `CODEX_HOME`.
 6. Repository creation from scratch through the tested GitHub Developer MCP remains blocked by the observed 403; work on an existing repo is independently validated.
 
 No paid OpenAI API was used for these validations.
