@@ -37,6 +37,7 @@ T33         automatic node registry / cross-node mesh routing PASS — live two-
 T34         macOS LaunchAgent supervision/recovery            PASS — live forced-crash recovery
 T35A        Fleet Operator SSH/MCP + GitHub relay code         PASS — local policy tests
 T35B        autonomous Fleet Operator GitHub relay             PASS — MacBook + remote Mac Studio
+T36         two live worker nodes / automatic selection        PASS — MacBook + Mac Studio
 
 GitHub Actions control plane                                  PASS
 GitHub hosted runner allocation                               BLOCKED_EXTERNAL_CAPACITY during observed test
@@ -106,17 +107,29 @@ Therefore T35B is PASS for bounded no-copy/paste machine control through the Git
 
 Receipt: `.chatgpt/test-receipts/T35B_FLEET_OPERATOR_LIVE_2026-09-10.md`.
 
+## T36 — live two-node automatic worker selection
+
+ChatGPT used the already-live Fleet Operator relay to perform the entire T36 expansion without further user terminal commands. The gateway verified remote access to the second Mac Studio and DGX Spark, inspected their Codex installations, and attempted to use Sparky as the second worker-bearing node. Sparky registered successfully and advertised `openai-A`, but a real bounded dispatch exposed a stale ChatGPT refresh credential: Codex returned HTTP 401 / `refresh_token_reused`. Upgrading Sparky from Codex 0.124.0 to 0.154.0 did not change that account-state failure, so Sparky was stopped as an active mesh node rather than left falsely healthy.
+
+The Mac Studio development machine already had Codex 0.153.2 and a valid `Logged in using ChatGPT` session. Fleet Operator then started a private T32 worker endpoint for `openai-A` on a dedicated tailnet-only Serve port and registered node `macstudio-worker` with the existing Mac Studio control plane. Final inventory showed exactly the two intended live ready workers: `macbook-pro-de-loic/openai-B` at priority 20 and `macstudio-worker/openai-A` at priority 10, both `included`, both with quota headroom still `unknown`.
+
+A live `run --worker auto` then selected `macstudio-worker/openai-A` according to the existing ranking rule and returned exactly `MULTINODE_OK`. Telemetry: provider `openai`, model `gpt-6-astra`, 4,896 reported tokens, 14.644 s worker elapsed time, exit 0, read-only sandbox, ephemeral execution, and paid-API environment removed. Therefore T36 is PASS for **real selection among two simultaneously live worker-bearing physical machines**. It does not yet prove load distribution under concurrent jobs or trustworthy provider-quota ingestion.
+
+Important lesson: `codex login status` alone is not a sufficient liveness check for a long-lived worker because it can report a logged-in state while the refresh token is no longer usable. Future health logic must quarantine a worker after an authentication failure instead of continuing to advertise it as ready.
+
+Receipt: `.chatgpt/test-receipts/T36_TWO_NODE_MESH_LIVE_2026-09-10.md`.
+
 ## Remaining gaps
 
-1. Direct ChatGPT MCP app attachment still needs Secure MCP Tunnel setup in a supported workspace; full write actions remain product-plan/workspace limited.
-2. Expand the local Fleet Operator host registry to additional machines when their SSH/Tailscale endpoints are known.
+1. Quarantine/health feedback after real worker authentication failures; `codex login status` alone is insufficient.
+2. Harden Fleet Operator `exec_read` with command-aware argument policy before treating interpreter/tool allowlists as strongly read-only.
 3. Automatic/reliable live 5-hour and weekly allowance ingestion per account.
-4. Separately shared external-user Tailscale identity/ACL smoke when available.
-5. A second simultaneously live worker-bearing node for real multi-node selection/load distribution.
+4. Direct ChatGPT MCP app attachment still needs Secure MCP Tunnel setup in a supported workspace; full write actions remain product-plan/workspace limited.
+5. Separately shared external-user Tailscale identity/ACL smoke when available.
 6. Full logout/login or machine reboot lifecycle recovery for LaunchAgents, if operationally worth testing.
-7. Useful broker-managed concurrency when an actual workload benefits from it.
+7. Useful broker-managed concurrency/load distribution under simultaneous jobs.
 8. Claude/other-provider worker adapters plus provider-neutral handoff.
 9. Canonical Gmail Developer MCP only if operationally required.
 10. Repository creation through the tested GitHub Developer MCP remains blocked by the observed 403.
 
-No paid OpenAI API/model call was used for T35A or T35B validation.
+No paid OpenAI API was used for T35/T36 validation. T36 used one successful ChatGPT-authenticated Codex call for the final multi-node routing proof; failed Sparky attempts terminated at ChatGPT authentication.
