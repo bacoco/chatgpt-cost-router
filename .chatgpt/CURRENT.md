@@ -1,59 +1,65 @@
 # Current project checkpoint
 
-Task: consolidate cloud-first validation after T15/T16
-Status: CLOUD_LANE_VALIDATED — scheduler-associated-chat continuation and literal fresh-chat recovery are now both verified; remaining gaps require external Codex capacity, a missing Gmail Developer MCP, or intentionally deferred worker infrastructure
+Task: consolidate completed Cloud -> Codex -> Cloud validation after T23/T24
+Status: CORE_ROUND_TRIP_VALIDATED — scheduler/chat/GitHub workspace recovery plus a real bounded ChatGPT Cloud -> Codex -> ChatGPT GitHub handoff round trip are verified.
 
 Repository: `bacoco/chatgpt-cost-router`
 Default branch: `main`
-Main SHA observed before T15/T16 receipt writes: `33ca2c8f6934f8217d028900721ad0f9648dd982`
+Main SHA observed before this consolidation write: `ca0376c249d5fc553bad72592d0de3988c6c1580`
 Source-kit SHA used by the workspace bootstrap: `a1e172e20e0ba5f63d94abd1fb2e988a7ffb6736`
 
 ## Validated
 
 - T01-T09: PASS where applicable.
-- T15 scheduler-associated-chat manual continuation: PASS; the user continued inside the Scheduled Task's own chat and that same chat successfully read current `main` through `GitHub — bacoco TEST`.
-- T16 literal fresh-chat recovery from repository + `.chatgpt/CURRENT.md` only: PASS.
-- T16A independent-context recovery from `.chatgpt/CURRENT.md`: PASS.
-- T17 Scheduled Task -> `GitHub Actions — bacoco TEST` read-only control-plane validation: PASS.
-- T18 hosted Actions capability gate: PASS; PR #10 merged and reconstructed local suite recorded 40/40 PASS.
+- T15 scheduler-associated-chat continuation: PASS.
+- T16 literal fresh-chat recovery: PASS.
+- T16A independent-context recovery: PASS.
+- T17 Scheduled Task -> GitHub Actions Developer MCP read-only control-plane validation: PASS.
+- T18 hosted Actions capability gate: PASS.
 - T19 repo-specific Scheduled Task workspace consumption: PASS.
+- T20 full ChatGPT Cloud -> Codex -> ChatGPT round trip: PASS.
+  - handoff branch: `test/t20-cloud-to-codex-handoff-20260910`
+  - handoff commit: `be8b29f191b877072e1def641aa3aeec51ec2ab8`
+  - Codex blocked-attempt commit: `de7d7cb6ee5aff2094c8572181d99739f24e3566`
+  - final Codex return commit: `16bb9c9dc5d691334c57897d7145df1a16b83d00`
+  - T23: PASS — Python 3.9.6, 40/40 tests, `build_schemas` exit 0.
+  - T24: PASS — ChatGPT verified the exact pushed return, branch history, changed-file scope and absence of a PR for the handoff branch.
 - T21 workflow skill/frontmatter structure: PASS.
-- T22 project-workspace self-bootstrap: PASS; PR #9 merged, seven installed paths re-verified, receipt persisted.
-- T20 Cloud -> Codex handoff generation/read-back: PASS for the cloud half only.
-  - branch: `test/t20-cloud-to-codex-handoff-20260910`
-  - handoff: `.chatgpt/handoffs/T20/TO_CODEX.md`
-  - exact handoff commit: `be8b29f191b877072e1def641aa3aeec51ec2ab8`
-- T13 representative no-paid-API route ledger: recorded in `docs/COST_QUOTA_EXPERIMENT_2026-09-10.md`; quota interaction remains partial.
+- T22 project-workspace self-bootstrap: PASS.
+- T13 remains PARTIAL: representative zero-paid-API routes and one real Codex execution are recorded, but allowance/quota-pool interaction remains unmeasured.
 
 ## Durable receipts on main
 
 - `.chatgpt/test-receipts/T14_GMAIL_DEVELOPER_MCP_BLOCKED_2026-09-10.md`
-- `.chatgpt/test-receipts/T15_SCHEDULER_CHAT_CONTINUATION_PENDING_2026-09-10.md` — legacy filename retained; content now records PASS
+- `.chatgpt/test-receipts/T15_SCHEDULER_CHAT_CONTINUATION_PENDING_2026-09-10.md` — legacy filename; content records PASS
 - `.chatgpt/test-receipts/T16_FRESH_CHAT_RECOVERY_2026-09-10.md`
 - `.chatgpt/test-receipts/T16A_INDEPENDENT_CONTEXT_RECOVERY_2026-09-10.md`
 - `.chatgpt/test-receipts/T17_ACTIONS_MCP_2026-09-10.md`
 - `.chatgpt/test-receipts/T19_SCHEDULER_WORKSPACE_2026-09-10.md`
 - `.chatgpt/test-receipts/T20_CLOUD_TO_CODEX_HANDOFF_READY_2026-09-10.md`
 - `.chatgpt/test-receipts/T22_PROJECT_WORKSPACE_BOOTSTRAP_2026-09-10.md`
+- `.chatgpt/test-receipts/T23_CODEX_EXECUTION_2026-09-10.md`
+- `.chatgpt/test-receipts/T24_CODEX_RETURN_VERIFICATION_2026-09-10.md`
 
-## Remaining gaps — do not misreport as failures
+## Remaining gaps
 
-- T10: `BLOCKED_EXTERNAL_CAPACITY` — current Codex token allowance exhausted.
-- T11/T12: `DEFERRED_NOT_JUSTIFIED` — persistent Codex Worker/MCP is optional and should not be built merely to satisfy a test number.
-- T14: `BLOCKED_MISSING_CONNECTOR` — this developer-MCP-restricted conversation has no Gmail Developer MCP; a standard Gmail probe was rejected and not used as substitute evidence.
-- Full T20 / T23 / T24: `BLOCKED_EXTERNAL_CAPACITY` until a real Codex session can consume the already-persisted T20 handoff and return `RETURN_FROM_CODEX.md` for ChatGPT verification.
-- Repository creation from scratch through the tested GitHub Developer MCP remains blocked by real `403 Resource not accessible by integration` responses.
+- T10: `NOT_YET_FORMALLY_TESTED` — the distinct persistent-VM Codex proof was not run; T23 proves the real GitHub handoff path, not that persistent-VM design.
+- T11/T12: `DEFERRED_NOT_JUSTIFIED` — do not build a persistent Codex Worker merely to satisfy test numbers.
+- T13: `PARTIAL` — quota/allowance-pool interaction remains unmeasured.
+- T14: `BLOCKED_MISSING_CONNECTOR` — no Gmail Developer MCP is available in this developer-MCP-restricted conversation.
+- Repository creation from scratch through the tested GitHub Developer MCP remains blocked by the observed `403 Resource not accessible by integration`.
 
 ## Next safe actions
 
-1. Do not regenerate the T20 handoff while branch `test/t20-cloud-to-codex-handoff-20260910` still points to `be8b29f191b877072e1def641aa3aeec51ec2ab8` and remains valid.
-2. When Codex capacity returns, execute only the bounded T23 instructions already in `.chatgpt/handoffs/T20/TO_CODEX.md`; then perform T24 by re-reading the return artifact and exact GitHub diff/tests.
-3. For T14, connect an actual Gmail Developer MCP before testing the specified safe operations.
-4. Keep T11/T12 deferred unless measured cloud limitations make a persistent worker economically or operationally justified.
+1. T14: connect an actual Gmail Developer MCP and test only bounded allowlisted operations.
+2. T13: if economic measurement is still desired, run matched tasks and record quota behavior without assuming shared pools.
+3. T10: run the separate persistent-VM Codex proof only if that architecture is still operationally relevant.
+4. Keep T11/T12 deferred unless measured limitations justify a persistent worker.
+5. Preserve the completed T20 branch and receipts as historical evidence; do not rewrite them.
 
 Authoritative status: `docs/VALIDATION_STATUS_2026-09-10.md`.
 Beginner entry point: `docs/INSTALLATION_KIT_INDEX.md`.
 
-Codex used for this consolidation: no
-Paid OpenAI API used: no
-Hosted GitHub Actions runner used: no
+Codex used for T23: yes — ChatGPT-account Codex session; no paid API.
+Paid OpenAI API used: no.
+Hosted GitHub Actions runner used: no.
