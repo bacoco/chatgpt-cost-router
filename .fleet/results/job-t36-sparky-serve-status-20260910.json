@@ -1,0 +1,26 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789071349.740892,
+  "host": "sparky",
+  "job_id": "job-t36-sparky-serve-status-20260910",
+  "job_sha256": "d7d5c3d22e07b7ab350b42dc47193d224fa007aa2e0b6ee9b7c14399910254be",
+  "result": {
+    "argv": [
+      "tailscale",
+      "serve",
+      "status"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.385,
+    "exit_code": 0,
+    "host": "sparky",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "|-- tcp://spark-lolo.taildc96f0.ts.net:1235 (tailnet only)\n|-- tcp://100.98.112.93:1235\n|-- tcp://[fd7a:115c:a1e0::bc01:70a0]:1235\n|--> tcp://127.0.0.1:1235\n|-- tcp://spark-lolo.taildc96f0.ts.net:8188 (tailnet only)\n|-- tcp://100.98.112.93:8188\n|-- tcp://[fd7a:115c:a1e0::bc01:70a0]:8188\n|--> tcp://127.0.0.1:8188\n\nhttps://spark-lolo.taildc96f0.ts.net (tailnet only)\n|-- / proxy http://127.0.0.1:8188\n\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071349.3196428,
+  "status": "PASS",
+  "version": 1
+}
