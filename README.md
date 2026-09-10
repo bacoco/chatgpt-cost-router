@@ -6,9 +6,29 @@ alone does not require Work. Owned hardware is an option when its actual capabil
 and costs fit the task.
 
 The repository now contains a deterministic recommendation engine, versioned JSON
-contracts, two repository-backed skills, a durable local operation ledger and tests.
+contracts, five repository-backed skills, a durable local operation ledger and tests.
 It evaluates caller-supplied plans. It does not discover host tools, launch another
 ChatGPT surface, operate hardware, send messages or implement remote MCP gateways.
+
+
+## Cloud-first project bootstrap
+
+This repository is also the **source installation kit** for a practical ChatGPT cloud workflow. The operational goal is to do as much project work as possible with normal ChatGPT + Developer MCPs, use Scheduled Tasks as project launchers/automation when useful, keep durable state in GitHub, and hand only the remaining specialist work to Codex.
+
+For a new or existing GitHub project, the shortest entry point is [PROJECT_BOOTSTRAP_PROMPT](docs/PROJECT_BOOTSTRAP_PROMPT.md). Replace only the target repository:
+
+```text
+TARGET_REPO=<owner>/<repo>
+
+Bootstrap this repository using the current `main` of `bacoco/chatgpt-cost-router`.
+Read and execute `docs/PROJECT_BOOTSTRAP_PROTOCOL.md` at one pinned source SHA.
+```
+
+The bootstrap protocol installs a bounded `.chatgpt/` project workspace, initializes a durable checkpoint, and creates or reuses a repo-specific Scheduled Task/workspace entry point. When ChatGPT reaches a real capability boundary, the project is handed to Codex through a GitHub `TO_CODEX.md` packet and Codex returns through `RETURN_FROM_CODEX.md`; no full chat transcript needs to be copied.
+
+Start with [INSTALLATION_KIT_INDEX](docs/INSTALLATION_KIT_INDEX.md). The cloud lane and its evidence are documented in [CLOUD_EXECUTION_LANE](docs/CLOUD_EXECUTION_LANE.md). The repo-workspace convention is in [REPO_SCHEDULER_WORKSPACE](docs/REPO_SCHEDULER_WORKSPACE.md), and the bidirectional Codex handoff is in [CHATGPT_TO_CODEX_HANDOFF](docs/CHATGPT_TO_CODEX_HANDOFF.md).
+
+Current empirical status: authenticated GitHub MCP read/write, Scheduled Task GitHub access, scheduled write deduplication, bounded ChatGPT code changes and Actions control-plane access have been tested. The one-prompt bootstrap, scheduler-chat continuation on a clean profile, fresh-chat recovery and full ChatGPT → Codex → ChatGPT round trip still have explicit validation tests pending; see [VALIDATION_STATUS](docs/VALIDATION_STATUS_2026-09-10.md).
 
 ## Try the executable example
 
@@ -51,11 +71,24 @@ one actual receiving surface and session.
 
 - [capability-router](skills/capability-router/SKILL.md): classify the remaining task,
   assemble evidence and plans, then evaluate them.
-- [surface-handoff](skills/surface-handoff/SKILL.md): prepare a v2 delegation or return
-  envelope preserving scope, state and proofs.
+- [surface-handoff](skills/surface-handoff/SKILL.md): low-level v2 delegation/return
+  contract preserving scope, state and proofs.
+- [project-workspace-bootstrap](skills/project-workspace-bootstrap/SKILL.md): take a
+  `TARGET_REPO`, install/reconcile the `.chatgpt/` project workspace and create or reuse
+  a repo-specific Scheduled Task launcher.
+- [cloud-to-codex-handoff](skills/cloud-to-codex-handoff/SKILL.md): persist only the
+  remaining work in GitHub and emit a short Codex takeover prompt tied to an exact SHA.
+- [codex-to-cloud-return](skills/codex-to-cloud-return/SKILL.md): make Codex return a
+  verifiable result artifact/commit so ChatGPT can re-read and continue safely.
 
-Native repository discovery uses the `.agents/skills` symlinks. GitHub-only use can
-read the skills and their linked contracts at one pinned commit. See
+The three workflow skills deliberately build on `surface-handoff` instead of duplicating
+its protocol. GitHub is the canonical source for their definitions. OpenAI Skills are
+portable across supporting products, but installation/sync can differ by surface, so a
+repo-backed skill must still be re-read or installed where it will execute.
+
+Native repository discovery uses the `.agents/skills` links for skills that have been
+installed into that discovery path. GitHub-only use can always read the canonical
+`skills/*/SKILL.md` files and their linked contracts at one pinned commit. See
 [INSTALLATION](docs/INSTALLATION.md); simply cloning a repository does not prove
 that a particular host loaded or executed a skill.
 

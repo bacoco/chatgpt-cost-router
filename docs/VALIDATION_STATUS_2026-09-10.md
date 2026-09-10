@@ -24,6 +24,10 @@ T17 — Scheduled Task → Actions MCP detailed result          PENDING CAPTURE
 T18 — explicit Actions runner/quota gate                    NOT YET IMPLEMENTED
 T19 — per-repo scheduler workspace launcher                 DESIGNED / NOT YET FORMALLY TESTED
 T20 — ChatGPT Cloud → Codex → ChatGPT GitHub handoff        DESIGNED / NOT YET TESTED
+T21 — three workflow skill files/frontmatter                PASS — repository format checked
+T22 — project-workspace-bootstrap end-to-end target repo     NOT YET TESTED
+T23 — cloud-to-codex-handoff executed with real Codex        NOT YET TESTED
+T24 — codex-to-cloud-return verified back in ChatGPT         NOT YET TESTED
 Codex worker path                                            NOT YET TESTED / NOT YET NEEDED
 Gmail Developer MCP                                         NOT YET TESTED
 ```
@@ -123,4 +127,7 @@ The design rule is already clear: durable state belongs in GitHub/checkpoints, n
 4. Add an explicit Actions-runner/quota capability gate so the router never selects hosted CI when no runner can be allocated.
 5. T19 — validate one active project with a primary repo-specific scheduler/workspace launcher.
 6. T20 — once the Codex macOS lane is available, validate the GitHub handoff round trip: ChatGPT writes `TO_CODEX.md`, Codex completes only the remainder and writes `RETURN_FROM_CODEX.md`, then ChatGPT verifies the resulting SHA/diff/tests.
-7. Only after these cloud/handoff behaviors are characterized, compare the Codex desktop/CLI lane on macOS.
+7. T21 — skill file/frontmatter structure is already checked; keep runtime execution separate from format validation.
+8. T22 — run the one-prompt bootstrap against a safe real target repo and verify installed `.chatgpt/` plus `.agents/skills/` state.
+9. T23/T24 — execute the two directional handoff skills across a real Codex session and verify the return from GitHub.
+10. Only after these cloud/handoff behaviors are characterized, compare the Codex desktop/CLI lane on macOS.
