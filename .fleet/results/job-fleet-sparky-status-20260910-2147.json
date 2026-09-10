@@ -1,0 +1,25 @@
+{
+  "action": "status",
+  "finished_at_unix": 1789070871.8652549,
+  "host": "sparky",
+  "job_id": "job-fleet-sparky-status-20260910-2147",
+  "job_sha256": "9d88eb0df32c6b0c76a31c55e06a3e48901606c4d152ead083cdb4a7d66a985f",
+  "result": {
+    "argv": [
+      "uname",
+      "-a"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.387,
+    "exit_code": 0,
+    "host": "sparky",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "Linux Spark-lolo 6.17.0-1008-nvidia #8-Ubuntu SMP PREEMPT_DYNAMIC Wed Jan 21 17:56:56 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789070871.4355881,
+  "status": "PASS",
+  "version": 1
+}
