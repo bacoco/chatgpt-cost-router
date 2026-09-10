@@ -1,78 +1,75 @@
 # Validation status — 10 September 2026
 
-This file is the **authoritative current status snapshot** for the ChatGPT Cost Router experiments. Historical analysis/log files preserve earlier pending states and failures; when they conflict with this snapshot, use this file plus durable receipts and current GitHub state.
+This is the **authoritative current status snapshot**. Historical experiment logs intentionally preserve earlier pending/failure states; when they conflict, use this file plus durable receipts and current GitHub state.
 
 ## Status vocabulary
 
 - `PASS`: requested behavior actually executed and verified with observable evidence.
-- `PARTIAL`: meaningful bounded part verified, but the full measurement/test is incomplete.
-- `BLOCKED_MISSING_CONNECTOR`: required connector is unavailable in the tested context.
-- `DEFERRED_NOT_JUSTIFIED`: intentionally not built because current evidence does not justify it.
-- `NOT_YET_FORMALLY_TESTED`: distinct test remains unexecuted even if adjacent capabilities are proven.
+- `PARTIAL_STOPPED`: useful evidence preserved, but further measurement was intentionally stopped.
+- `BLOCKED_MISSING_CONNECTOR`: required connector unavailable in the tested context.
+- `DEFERRED_NOT_JUSTIFIED`: intentionally not built/tested because current evidence does not justify the cost.
+- `NOT_YET_FORMALLY_TESTED`: distinct test remains unexecuted.
 
 ## Current validated state
 
 ```text
-T01 — GitHub Developer MCP identity + repository read       PASS
-T02 — files / issues / PR / branches read                  PASS
-T03 — temporary issue create / read / close                PASS
-T04 — branch + bounded documentation write + commit + PR   PASS
-T05 — formal PR review workflow                            PASS
-T06 — autonomous defect discovery -> deduplicated issue    PASS
-T07 — Scheduled Task -> GitHub Developer MCP read-only     PASS
-T08 — Scheduled write + second-run idempotency             PASS
-T09 — direct ChatGPT bounded patch + Python/shell tests    PASS
-T10 — Codex CLI persistent local Mac worker                PASS — T10A/T10B/T10C1/T10C2
-T10-VM — distinct Ubuntu/cloud persistent-VM variant       NOT_YET_FORMALLY_TESTED — optional
-T11 — Codex Worker MCP                                      DEFERRED_NOT_JUSTIFIED
-T12 — Scheduler -> Codex Worker                             DEFERRED_NOT_JUSTIFIED
-T13 — cost/quota experiment                                 PARTIAL_STOPPED
-T14 — Gmail Developer MCP                                   BLOCKED_MISSING_CONNECTOR
-T14-alt — Codex Mac Chat + standard Gmail connector         PASS — read/search/Sent/draft/send; real self-send verified
-T15 — scheduler-chat manual continuation                    PASS
-T16 — literal fresh-chat recovery from GitHub checkpoint   PASS
-T16A — independent-context recovery from checkpoint         PASS
-T17 — Scheduled Task -> Actions MCP detailed read           PASS
-T18 — explicit Actions runner/capability gate               PASS
-T19 — per-repo scheduler workspace launcher                 PASS
-T20 — ChatGPT Cloud -> Codex -> ChatGPT full round trip     PASS
-T21 — workflow skill files/frontmatter                      PASS
-T22 — project-workspace-bootstrap end-to-end dogfood        PASS
-T23 — cloud-to-codex handoff executed with real Codex       PASS
-T24 — codex-to-cloud return verified back in ChatGPT        PASS
-T25 — Codex Mac Work capability characterization             PASS
-T26 — Codex Mac Work -> GitHub durable return                PASS — independently reverified
-T27 — callable Codex CLI worker primitive                    PASS — headless codex exec via ChatGPT login
-T28A — CODEX_HOME auth/state isolation                        PASS
-T28B — distinct second-account worker                         PASS — two isolated authorized accounts
-T29 — standalone parallel smoke                               DEFERRED_NOT_JUSTIFIED
-T30 — two-worker local broker                                 PARTIAL — code + local unit tests PASS; live broker smoke next
+T01-T09     ChatGPT/GitHub cloud capabilities                 PASS where applicable
+T10         Codex CLI persistent local Mac worker             PASS — A/B/C1/C2
+T10-VM      distinct Ubuntu/cloud persistent VM               NOT_YET_FORMALLY_TESTED — optional
+T11/T12     original persistent Worker MCP / scheduler lane   DEFERRED_NOT_JUSTIFIED
+T13         quota/cost experiment                              PARTIAL_STOPPED
+T14         Gmail Developer MCP in ChatGPT/Scheduled Tasks    BLOCKED_MISSING_CONNECTOR
+T14-alt     Codex Mac Chat + built-in Gmail                   PASS
+T15/T16/16A scheduler-chat continuation / repo recovery       PASS
+T17/T18/T19 Actions control gate / repo scheduler workspace   PASS
+T20/T23/T24 ChatGPT Cloud -> Codex -> ChatGPT round trip      PASS
+T21/T22     workflow skills / project bootstrap               PASS
+T25         Codex Mac Work capability characterization        PASS
+T26         Codex Mac Work -> pushed GitHub return            PASS — independently reverified
+T27         headless callable Codex CLI via codex exec        PASS
+T28A        CODEX_HOME auth/state isolation                   PASS
+T28B        two distinct authorized account workers           PASS
+T29         standalone parallel smoke                         DEFERRED_NOT_JUSTIFIED
+T30         two-worker local broker                           PASS — live alias dispatch verified
+T31A        quota/budget-aware selection logic                PASS — deterministic local tests
 
-GitHub Actions Developer MCP interactive/read control        PASS
-GitHub Actions hosted runner allocation                     BLOCKED_EXTERNAL_CAPACITY — free Actions allowance exhausted during observed test
-Repository creation through Developer MCP                   BLOCKED — create_repository returned 403
-Paid OpenAI API                                             NOT USED
+GitHub Actions control plane                                 PASS
+GitHub hosted runner allocation                              BLOCKED_EXTERNAL_CAPACITY during observed test
+Create repository via tested GitHub Developer MCP            BLOCKED — observed 403
+Paid OpenAI API                                               NOT USED
 ```
 
-## Recent worker evidence
+## Worker evidence
 
-T27 proved a normal controller shell can call ChatGPT-authenticated Codex non-interactively with `codex exec`, exit 0, read-only sandbox, no work files and per-call token reporting.
+T27 proved that a normal controller shell can invoke ChatGPT-authenticated Codex non-interactively with `codex exec`, read-only/ephemeral execution and per-call token telemetry.
 
-T28A proved a fresh alternate `CODEX_HOME` does not inherit the default Codex login.
+T28A proved a fresh alternate `CODEX_HOME` does not inherit the default Codex login. T28B then established two distinct authorized OpenAI/ChatGPT account identities in isolated worker homes; worker B executed successfully while worker A remained authenticated. GitHub retains only aliases and the fact of distinct identity — no email address, token, raw identifier or auth-derived fingerprint.
 
-T28B attempt 1 used the same ChatGPT account and was correctly marked inconclusive. Worker B was then logged out, a second device-auth flow was completed with a different authorized ChatGPT account, and worker B executed a bounded read-only `codex exec` successfully (`gpt-6-astra`, exit 0, 4,432 reported tokens, no work file created) while worker A remained logged in. A local comparison of non-secret identity claims proved different OpenAI user and account/workspace identities. No email address, token, raw identifier or auth-derived hash is retained in GitHub. Therefore T28B is PASS for two distinct addressable local Codex workers.
+## T30 — live broker PASS
 
-## T30 — two-worker broker
+A pinned checkout at `d4da83ada93df28bfdc80064c41f532827567880` ran **45/45 repository tests PASS**. Live broker `probe` saw both `openai-A` and `openai-B` ready. Zero-model `select` chose `openai-A`. An explicit broker dispatch to `openai-B` returned `BROKER_OK`, provider `openai`, model `gpt-6-astra`, `4,607` reported tokens, `5.527 s`, and exit code `0`. Paid-API environment variables were stripped, execution was `read-only` + `ephemeral`, and the workspace remained empty.
 
-The first broker implementation is now present: a non-secret worker registry, explicit/automatic selection, ChatGPT login probing under each worker's `CODEX_HOME`, forced `--ephemeral --sandbox read-only` Codex execution, removal of known paid-API-key environment variables, and per-call parsing of model/provider/tokens/duration/exit code. Five isolated unit tests using a fake Codex process passed locally, plus Python compilation checks. This does not yet count as a live broker PASS; one real broker dispatch remains required.
+Receipt: `.chatgpt/test-receipts/T30_TWO_WORKER_BROKER_LIVE_2026-09-10.md`.
+
+This proves a controller can address a specific isolated ChatGPT-authenticated Codex worker by alias without manual account swapping. It does not yet prove remote transport or useful concurrency.
+
+## T31A — budget-aware selection
+
+The broker now accepts a separate non-secret budget-state file. It supports per-worker `available/busy/quota_exhausted/unknown`, observed 5-hour remaining percentage, weekly remaining percentage, and local reported-token counters. Known busy/exhausted workers are excluded before a Codex probe. At equal cost class, known allowance headroom is preferred over unknown headroom and larger minimum 5-hour/weekly headroom wins before static priority. Explicit selection of a known exhausted worker fails before any model call.
+
+Ten isolated worker/budget tests pass locally; the modified broker compiles. These tests use fake Codex processes and consume no Codex allowance.
+
+Important boundary: automatic trustworthy ingestion of OpenAI's live 5-hour/weekly allowance is **not yet proven**. Local `tokens used` output is telemetry, not a direct provider-quota decrement measurement. Unknown values remain `UNKNOWN`; the broker never invents them.
+
+Specification: `docs/T31_QUOTA_AWARE_SELECTION.md`.
 
 ## Remaining gaps
 
-1. **T14 canonical:** connect/test a real Gmail Developer MCP in a compatible ChatGPT/Scheduled-Task context only if scheduler-native Gmail is still required.
-2. **T13:** quota/cost behavior remains `PARTIAL_STOPPED`; do not burn allowance merely to move a coarse percentage display.
-3. **T10-VM:** remote/always-on variant remains optional and untested.
-4. **T11/T12:** daemon/MCP worker remains deferred; add only if remote dispatch actually needs it.
-5. **Worker mesh:** T28A/T28B are PASS for two distinct isolated local OpenAI workers. T30 broker code and fake-process unit tests are complete; one live broker dispatch remains before calling the dispatcher lane PASS. Quota-aware routing, remote nodes, useful concurrency and cross-provider workers remain unvalidated.
-6. Repository creation from scratch through the tested GitHub Developer MCP remains blocked by the observed 403; existing-repository work is validated.
+1. Automatic/reliable live 5-hour and weekly allowance ingestion per account.
+2. Secure remote worker transport / always-on worker nodes.
+3. Useful broker-managed concurrency when an actual workload benefits from it.
+4. Claude/other-provider worker adapters plus provider-neutral handoff.
+5. Canonical Gmail Developer MCP in ChatGPT/Scheduled Tasks only if still operationally required.
+6. Repository creation through the tested GitHub Developer MCP remains blocked by the observed 403.
 
 No paid OpenAI API was used for these validations.
