@@ -31,10 +31,10 @@ This is the concise operational map for `bacoco/chatgpt-cost-router` as of 2026-
                                     ▼                                   ▼
                          ┌──────────────────────┐            ┌─────────────────────────────┐
                          │ Cloud → Codex → Cloud│            │ Worker mesh                 │
-                         │ T20/T23/T24 ✅       │            │ OpenAI account A/B/C        │
-                         │ exact-SHA handoff    │            │ remote Codex / Claude       │
-                         │ return reverified    │            │ quota-aware routing         │
-                         └──────────────────────┘            │ TO_WORKER / RETURN_WORKER   │
+                         │ T20/T23/T24 ✅       │            │ OpenAI account A/B ✅       │
+                         │ exact-SHA handoff    │            │ remote Codex device ✅      │
+                         │ return reverified    │            │ quota-aware logic ✅        │
+                         └──────────────────────┘            │ cross-provider routing ?    │
                                                              └─────────────────────────────┘
 
                          ┌──────────────────────────┐
@@ -63,6 +63,9 @@ This is the concise operational map for `bacoco/chatgpt-cost-router` as of 2026-
 | Gmail read/search/Sent | ⛔ canonical Developer-MCP path missing | ✅ PASS built-in Gmail | — | ✅ search PASS; full read not tested | — |
 | Gmail draft/send | ⛔ canonical Developer-MCP path missing | ✅ PASS; one real deduplicated self-send | — | ? NOT TESTED | — |
 | Cloud↔Codex handoff | ✅ produce + verify | receiver mode not separately classified | can consume repo state; provider-neutral test later | ✅ handoff read + pushed return PASS (T26) | ✅ exact-SHA transfer bus |
+| Multiple isolated OpenAI workers | broker/controller can address aliases | — | ✅ PASS — two distinct `CODEX_HOME` account workers | — | stores non-secret registry/evidence |
+| Remote worker dispatch | controller role possible | — | ✅ PASS — Tailscale Serve second-device dispatch to `openai-B` (T32) | — | durable receipts/state |
+| Quota-aware selection logic | — | — | ✅ PASS for supplied observations; live provider ingestion unknown | — | may store non-secret observations |
 | Create new GitHub repo | ⛔ Developer MCP returned 403 | ? | possible via `gh`, not part of validated T10/T27 | ? | existing repos validated |
 
 Legend: ✅ empirically verified; ⛔ blocked/unavailable in the tested context; ❌ explicitly unavailable action; ? not independently tested/classified.
@@ -96,7 +99,8 @@ ChatGPT.com first
   → Codex CLI when persistent local engineering state / shell loops are useful
   → `codex exec` when a controller needs a non-interactive callable Codex worker (T27)
   → Codex Work for verified connector/local-tool/handoff work (T25/T26)
-  → another OpenAI account or Claude only through an explicit GitHub handoff
+  → isolated OpenAI worker A/B through the validated broker; remote Tailscale node is PASS (T28/T30/T32)
+  → Claude/other providers only after their adapters/handoffs are independently validated
   → paid API only by explicit exception
 ```
 
@@ -104,8 +108,9 @@ ChatGPT.com first
 
 - Codex Mac Work persistence across separate Work sessions remains untested; core read/write handoff lane is PASS (T25/T26).
 - Canonical Gmail Developer MCP from ChatGPT/Scheduled Tasks, only if scheduler-native Gmail is still required.
-- Multi-account OpenAI worker identity/isolation and concurrency tests — T28 next.
-- Claude Code / terminal handoff and return verification.
-- Provider-neutral `TO_WORKER` / `RETURN_FROM_WORKER` layer and broker/registry.
-- Distinct Ubuntu/cloud always-on worker only if a real cross-machine requirement appears.
+- Automatic/reliable live 5-hour/weekly allowance ingestion remains unproven; T31A only routes on trusted supplied observations.
+- Remote node registration/discovery and always-on supervision remain to build; T32 proves the private transport primitive.
+- A separately shared external Tailscale user has not yet been live-tested; second-device remote dispatch is PASS.
+- Claude Code / other-provider adapter and provider-neutral handoff remain to validate.
+- Useful concurrency remains deferred until a real workload benefits from it.
 - New-repository creation through the tested GitHub Developer MCP remains blocked by the observed 403; existing-repository work is validated.
