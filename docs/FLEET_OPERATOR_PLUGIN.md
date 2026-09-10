@@ -1,6 +1,6 @@
 # Fleet Operator — private SSH app for ChatGPT
 
-Status: `CODE COMPLETE / LOCAL POLICY TESTS PASS — HOST INSTALL + TUNNEL + LIVE CHATGPT CALL PENDING`
+Status: `RELAY LIVE / MCP SERVER LIVE — SECURE MCP TUNNEL + DIRECT CHATGPT APP ATTACHMENT PENDING`
 
 ## Goal
 
@@ -60,7 +60,7 @@ The MCP ToolAnnotations describe the real behavior. Write tools are not mislabel
 
 ## macOS gateway packaging
 
-`requirements-fleet-operator.txt` pins the MCP SDK. The installer creates a private virtualenv and a per-user LaunchAgent. It never runs as root.
+`requirements-fleet-operator.txt` pins the MCP SDK. The current SDK requires Python 3.10+. The installer now discovers a compatible installed interpreter (including Homebrew Python) rather than assuming the system `python3`, creates a private versioned virtualenv and a per-user LaunchAgent, and never runs as root.
 
 ```bash
 python3 scripts/fleet_operator_macos.py bootstrap \
@@ -104,4 +104,4 @@ See `docs/FLEET_OPERATOR_RELAY.md` and `schemas/fleet-operator-job.schema.json`.
 
 ## Verification state
 
-Local verification currently covers policy/config/SSH construction, root-command blocking, destructive authorization, root confinement, output/timeout bounds, parallel ordering, local transport, LaunchAgent/tunnel config redaction, job schema/expiry, relay replay protection and one local fake-bus execution. No live SSH/MCP/Tunnel call is claimed by these tests.
+Local verification covers policy/config/SSH construction, root-command blocking, destructive authorization, root confinement, output/timeout bounds, parallel ordering, local transport, LaunchAgent/tunnel config redaction, job schema/expiry and relay replay protection. Live evidence now additionally proves autonomous GitHub-relay execution on the gateway MacBook and on a remote Mac Studio over SSH/Tailscale. The loopback MCP server is installed and running on port 8810 under Python 3.11. Secure MCP Tunnel and a direct ChatGPT MCP invocation remain untested.
