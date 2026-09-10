@@ -3,8 +3,10 @@ import plistlib
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
-from fleet_operator.macos import SERVER_LABEL, RELAY_LABEL, InstallError, init_fleet_config, install_relay, install_server, install_tunnel, launch_plist, tunnel_yaml
+from fleet_operator.macos import SERVER_LABEL, RELAY_LABEL, InstallError, compatible_python, init_fleet_config, install_relay, install_server, install_tunnel, launch_plist, tunnel_yaml
 
 
 class MacOSFleetOperatorTests(unittest.TestCase):
@@ -13,6 +15,15 @@ class MacOSFleetOperatorTests(unittest.TestCase):
         for rel in ("scripts/fleet_operator_server.py", "fleet_operator/core.py", "fleet_operator/mcp_server.py", "requirements-fleet-operator.txt"):
             p = repo / rel; p.parent.mkdir(parents=True, exist_ok=True); p.write_text("x")
         return repo
+
+    def test_compatible_python_skips_39_and_uses_311(self):
+        def fake_run(argv, **kwargs):
+            version = "3.9" if argv[0].endswith("python3.9") else "3.11"
+            return SimpleNamespace(returncode=0, stdout=version + "\n", stderr="")
+        with patch("fleet_operator.macos._candidate_pythons", return_value=["/x/python3.9", "/x/python3.11"]):
+            binary, version = compatible_python(run=fake_run)
+        self.assertEqual(binary, "/x/python3.11")
+        self.assertEqual(version, (3, 11))
 
     def test_plist_keepalive_and_loopback_env(self):
         p = launch_plist(SERVER_LABEL, ["/venv/python", "/repo/server.py"], Path("/logs"), {"FLEET_OPERATOR_HOST": "127.0.0.1"})

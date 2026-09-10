@@ -64,8 +64,49 @@ def _bootstrap(plist: Path, label: str, *, dry_run: bool = False, run=subprocess
     run(["launchctl", "kickstart", "-k", service], check=True)
 
 
-def _venv_python(home: Path) -> Path:
-    return home / ".local/share/chatgpt-cost-router/fleet-operator-venv/bin/python"
+MIN_MCP_PYTHON = (3, 10)
+
+
+def _candidate_pythons() -> list[str]:
+    """Return likely Python executables, preferring modern Homebrew versions."""
+    candidates: list[str] = []
+    for base in ("/opt/homebrew/bin", "/usr/local/bin"):
+        for name in ("python3.14", "python3.13", "python3.12", "python3.11", "python3.10", "python3"):
+            path = str(Path(base) / name)
+            if Path(path).is_file():
+                candidates.append(path)
+    for name in ("python3.14", "python3.13", "python3.12", "python3.11", "python3.10", "python3"):
+        value = shutil.which(name)
+        if value:
+            candidates.append(value)
+    candidates.append(sys.executable)
+    return list(dict.fromkeys(str(Path(x).resolve()) for x in candidates if x))
+
+
+def compatible_python(*, run=subprocess.run) -> tuple[str, tuple[int, int]]:
+    """Find Python >= 3.10, required by the current MCP Python SDK."""
+    for binary in _candidate_pythons():
+        proc = run(
+            [binary, "-c", "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"],
+            capture_output=True, text=True, check=False,
+        )
+        if proc.returncode != 0:
+            continue
+        try:
+            major, minor = (int(x) for x in proc.stdout.strip().split(".", 1))
+        except (TypeError, ValueError):
+            continue
+        if (major, minor) >= MIN_MCP_PYTHON:
+            return binary, (major, minor)
+    raise InstallError(
+        "Fleet Operator MCP server requires Python >= 3.10. "
+        "Install a modern Python (for example Homebrew python@3.11+) or run relay-only."
+    )
+
+
+def _venv_python(home: Path, version: tuple[int, int]) -> Path:
+    tag = f"py{version[0]}{version[1]}"
+    return home / f".local/share/chatgpt-cost-router/fleet-operator-venv-{tag}/bin/python"
 
 
 def install_server(*, repo: Path, home: Path, config: Path, port: int = 8810, install_dependencies: bool = True, dry_run: bool = False, run=subprocess.run) -> list[Path]:
@@ -77,11 +118,16 @@ def install_server(*, repo: Path, home: Path, config: Path, port: int = 8810, in
         raise InstallError("missing Fleet Operator files: " + ", ".join(missing))
     if not 1024 <= int(port) <= 65535:
         raise InstallError("Fleet Operator port must be between 1024 and 65535")
-    python = _venv_python(home)
+    if dry_run:
+        version = MIN_MCP_PYTHON
+        source_python = sys.executable
+    else:
+        source_python, version = compatible_python(run=run)
+    python = _venv_python(home, version)
     if not dry_run and install_dependencies:
         venv_dir = python.parents[1]
         if not python.exists():
-            run([sys.executable, "-m", "venv", str(venv_dir)], check=True)
+            run([source_python, "-m", "venv", str(venv_dir)], check=True)
         run([str(python), "-m", "pip", "install", "--disable-pip-version-check", "-r", str(repo / "requirements-fleet-operator.txt")], check=True)
     if not dry_run and not python.exists():
         raise InstallError(f"Fleet Operator venv Python not found: {python}")
