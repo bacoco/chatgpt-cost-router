@@ -1,0 +1,32 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789070259.579404,
+  "host": "macbook",
+  "job_id": "job-fleet-macbook-tests-20260910-2132",
+  "job_sha256": "d505f9f72e232c4bb744525b234ed74b4c1cf86da869b1eac69af85d7735fe57",
+  "result": {
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_fleet_operator*.py",
+      "-v"
+    ],
+    "cwd": "/Users/loic/codex-t30-broker-test",
+    "elapsed_seconds": 0.559,
+    "exit_code": 0,
+    "host": "macbook",
+    "stderr": "test_cwd_cannot_escape_allowed_root (test_fleet_operator.FleetOperatorTests) ... ok\ntest_destructive_requires_explicit_flag (test_fleet_operator.FleetOperatorTests) ... ok\ntest_inventory_hides_ssh_targets (test_fleet_operator.FleetOperatorTests) ... ok\ntest_local_transport_skips_ssh (test_fleet_operator.FleetOperatorTests) ... ok\ntest_output_is_capped (test_fleet_operator.FleetOperatorTests) ... ok\ntest_parallel_preserves_requested_host_order (test_fleet_operator.FleetOperatorTests) ... ok\ntest_read_command_enforces_allowlist (test_fleet_operator.FleetOperatorTests) ... ok\ntest_read_file_stays_under_root_and_uses_head (test_fleet_operator.FleetOperatorTests) ... ok\ntest_root_admin_command_is_hard_blocked (test_fleet_operator.FleetOperatorTests) ... ok\ntest_ssh_is_batch_strict_and_quotes_argv (test_fleet_operator.FleetOperatorTests) ... ok\ntest_timeout_becomes_structured_result (test_fleet_operator.FleetOperatorTests) ... ok\ntest_compatible_python_skips_39_and_uses_311 (test_fleet_operator_macos.MacOSFleetOperatorTests) ... ok\ntest_dry_relay_install_has_no_host_targets_in_plist (test_fleet_operator_macos.MacOSFleetOperatorTests) ... ok\ntest_dry_server_install_plist_has_config_path_not_config_contents (test_fleet_operator_macos.MacOSFleetOperatorTests) ... ok\ntest_dry_tunnel_install_plist_contains_no_api_key (test_fleet_operator_macos.MacOSFleetOperatorTests) ... ok\ntest_init_config_is_private_and_hides_nothing_in_repo (test_fleet_operator_macos.MacOSFleetOperatorTests) ... ok\ntest_plist_keepalive_and_loopback_env (test_fleet_operator_macos.MacOSFleetOperatorTests) ... ok\ntest_tunnel_id_validation (test_fleet_operator_macos.MacOSFleetOperatorTests) ... ok\ntest_tunnel_yaml_uses_file_secret_and_local_mcp (test_fleet_operator_macos.MacOSFleetOperatorTests) ... ok\ntest_bad_action_returns_error_result_not_execution (test_fleet_operator_relay.RelayTests) ... ok\ntest_exec_read_cannot_smuggle_destructive_flag (test_fleet_operator_relay.RelayTests) ... ok\ntest_job_filename_and_expiry_are_enforced (test_fleet_operator_relay.RelayTests) ... ok\ntest_run_once_executes_and_replay_is_skipped (test_fleet_operator_relay.RelayTests) ... ok\n\n----------------------------------------------------------------------\nRan 23 tests in 0.092s\n\nOK\n",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789070258.960191,
+  "status": "PASS",
+  "version": 1
+}
