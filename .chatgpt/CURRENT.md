@@ -1,11 +1,11 @@
 # Current project checkpoint
 
-Task: consolidate validated Cloud/Codex/GitHub and Codex-Mac Gmail capabilities
-Status: CORE_ROUND_TRIP_VALIDATED — scheduler/chat/GitHub workspace recovery plus a real bounded ChatGPT Cloud -> Codex -> ChatGPT GitHub handoff round trip are verified. Codex Mac Chat also has a separately verified standard-Gmail route for read/search/Sent/draft/send operations.
+Task: T13 cost / allowance measurement
+Status: CORE_ROUND_TRIP_VALIDATED — T13 measurement is now active. Scheduler/chat/GitHub workspace recovery, real Cloud -> Codex -> Cloud handoff, and Codex Mac Chat Gmail read/draft/send are verified.
 
 Repository: `bacoco/chatgpt-cost-router`
 Default branch: `main`
-Main SHA observed before this consolidation write: `b15b3a626eafce63ec82300d1237a9e57cf0836f`
+T13 protocol commit: `def4cb071f9b6de1c63429dc1c193ea0e90f05e5`
 Source-kit SHA used by the workspace bootstrap: `a1e172e20e0ba5f63d94abd1fb2e988a7ffb6736`
 
 ## Validated
@@ -26,8 +26,25 @@ Source-kit SHA used by the workspace bootstrap: `a1e172e20e0ba5f63d94abd1fb2e988
   - T24: PASS — ChatGPT verified exact pushed return, branch history, changed-file scope and absence of a PR.
 - T21 workflow skill/frontmatter structure: PASS.
 - T22 project-workspace self-bootstrap: PASS.
-- T14-alt Codex Mac Chat + built-in Gmail: PASS for authenticated search/read, Sent search, draft creation/read-back, and one real deduplicated self-send via `Gmail.send_email`; exact subject/Sent state were reverified and the user independently confirmed receipt. No dedicated safe draft-delete action was exposed for the earlier test draft.
-- T13 remains PARTIAL: representative zero-paid-API routes and one real Codex execution are recorded, but allowance/quota-pool interaction remains unmeasured.
+- T14-alt Codex Mac Chat + built-in Gmail: PASS for authenticated search/read, Sent search, draft creation/read-back, and one real deduplicated self-send via `Gmail.send_email`; exact subject/Sent state were reverified and the user independently confirmed receipt.
+- T13 route ledger: representative no-paid-API ChatGPT/Scheduler/GitHub/Codex/Gmail routes recorded. Empirical before/after allowance measurement remains pending.
+
+## T13 current measurement plan
+
+Canonical measurement document: `docs/COST_QUOTA_EXPERIMENT_2026-09-10.md`.
+
+T13-M1 uses one pinned read-only task on the same OpenAI account in:
+
+1. ChatGPT.com Chat;
+2. Codex Mac Chat.
+
+Pinned repository state: `0cb7ff63464258fd9484db2f1485df4dd6b2bd73`.
+
+Capture before/after Usage metrics where observable. Record unavailable metrics as `NOT_OBSERVABLE`; do not infer or fabricate token consumption.
+
+OpenAI documentation checked on 2026-09-10 says Codex, ChatGPT Work and other eligible agentic features share an agentic allowance/credit pool on supported plans. Ordinary ChatGPT.com Chat remains a separately tracked surface in this experiment unless direct account evidence proves otherwise.
+
+T13-M2 will compare Codex Mac Work / ChatGPT Work against the same pinned task if available. Multi-account/provider measurements are deferred to the surface-map campaign.
 
 ## Durable receipts on main
 
@@ -45,23 +62,23 @@ Source-kit SHA used by the workspace bootstrap: `a1e172e20e0ba5f63d94abd1fb2e988
 
 ## Remaining gaps
 
-- T10: `NOT_YET_FORMALLY_TESTED` — distinct persistent-VM Codex proof was not run; T23 proves the real GitHub handoff path, not that persistent-VM design.
+- T10: `NOT_YET_FORMALLY_TESTED` — distinct persistent-VM Codex proof was not run; it remains worth a bounded look after T13.
 - T11/T12: `DEFERRED_NOT_JUSTIFIED` — do not build a persistent Codex Worker merely to satisfy test numbers.
-- T13: `PARTIAL` — quota/allowance-pool interaction remains unmeasured.
-- T14 canonical: `BLOCKED_MISSING_CONNECTOR` — no Gmail Developer MCP is available in this developer-MCP-restricted ChatGPT conversation. Separately, Codex Mac Chat standard Gmail is empirically PASS for read/search/Sent/draft/send including one real deduplicated self-send; this does not prove scheduler/Developer-MCP Gmail.
+- T13: `PARTIAL — MEASUREMENT ACTIVE` — first matched before/after allowance sample is next.
+- T14 canonical: `BLOCKED_MISSING_CONNECTOR` — no Gmail Developer MCP is available in this developer-MCP-restricted ChatGPT conversation. Codex Mac Chat standard Gmail is separately PASS including real send.
 - Repository creation from scratch through the tested GitHub Developer MCP remains blocked by the observed `403 Resource not accessible by integration`.
 
 ## Next safe actions
 
-1. Manually delete the exact draft `[T14 TEST] Codex Mac Gmail capability validation` from Gmail Drafts if it is still present; no safe dedicated draft-delete action was exposed in the tested Codex Mac connector.
-2. If scheduler/ChatGPT-native Gmail is still required, connect an actual Gmail Developer MCP and test bounded allowlisted operations. Codex Mac Chat is already a validated alternative for read/search/Sent/draft/send.
-3. T13: run matched tasks if economic/quota measurement is still desired.
-4. T10: run persistent-VM Codex proof only if that architecture remains operationally relevant.
-5. Keep T11/T12 deferred unless measured limitations justify a persistent worker.
+1. T13-M1: capture account Usage baseline, run the pinned matched read task in ChatGPT.com Chat and Codex Mac Chat, then capture Usage again.
+2. T13-M2: repeat once in Codex Mac Work / ChatGPT Work if available.
+3. T10: run the separate persistent-VM/CLI Codex proof after T13 to characterize what it adds beyond the already-validated Mac/Cloud handoff.
+4. Keep T11/T12 deferred unless measured limitations justify a persistent worker.
+5. Canonical T14 Developer-MCP Gmail remains optional unless scheduler-native Gmail is operationally required.
 
 ## Deferred synthesis task
 
-Create the concise global surface/capability map described in `docs/SURFACE_CAPABILITY_MAP_TODO.md`. It must distinguish ChatGPT.com Chat, Codex Mac Chat, and Codex Mac Work; place the GitHub repository in the middle as durable state/transfer bus; show what is empirically verified vs unavailable/not tested on each surface; and show allowance/cost semantics separately (ChatGPT allowance, Codex allowance, GitHub Actions capacity, paid API). This is intentionally deferred until the current validation work is finished.
+Create the concise global surface/capability map described in `docs/SURFACE_CAPABILITY_MAP_TODO.md`. It must distinguish ChatGPT.com Chat, Codex Mac Chat, Codex Mac Work, and future multi-account/provider lanes; place GitHub in the middle as durable state/transfer bus; support multiple OpenAI accounts and provider-neutral handoffs to/from Claude Code or another verified worker; and show allowance/cost semantics separately by account/provider.
 
 Authoritative status: `docs/VALIDATION_STATUS_2026-09-10.md`.
 Beginner entry point: `docs/INSTALLATION_KIT_INDEX.md`.
