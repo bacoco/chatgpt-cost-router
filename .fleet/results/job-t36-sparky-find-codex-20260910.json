@@ -1,0 +1,28 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789071127.952773,
+  "host": "sparky",
+  "job_id": "job-t36-sparky-find-codex-20260910",
+  "job_sha256": "2046ef2364120bf0bf4e1dd51322f49b70cf2379d1242f1d62c21496df796b75",
+  "result": {
+    "argv": [
+      "find",
+      "/home/baconnier/.nvm",
+      "-path",
+      "*/@openai/codex/bin/codex.js",
+      "-print"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 1.215,
+    "exit_code": 0,
+    "host": "sparky",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "/home/baconnier/.nvm/versions/node/v20.20.0/lib/node_modules/@openai/codex/bin/codex.js\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071126.688401,
+  "status": "PASS",
+  "version": 1
+}
