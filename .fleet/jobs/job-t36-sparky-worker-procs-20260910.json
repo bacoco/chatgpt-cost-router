@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "job_id": "job-t36-sparky-worker-procs-20260910",
+  "host": "sparky",
+  "action": "exec_read",
+  "args": {
+    "argv": ["pgrep", "-af", "remote_worker_server.py|mesh_node_agent.py"],
+    "timeout_seconds": 20
+  },
+  "expires_at_unix": 1789085000
+}
