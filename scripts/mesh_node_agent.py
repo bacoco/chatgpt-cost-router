@@ -46,6 +46,7 @@ def main(argv=None):
     p.add_argument("--workers", default=os.environ.get("COST_ROUTER_REMOTE_WORKERS", "openai-B"))
     p.add_argument("--location", choices=["local", "remote", "cloud"], default="remote")
     p.add_argument("--interval", type=int, default=30)
+    p.add_argument("--codex-bin", default="codex")
     p.add_argument("--once", action="store_true")
     args = p.parse_args(argv)
 
@@ -68,6 +69,7 @@ def main(argv=None):
                 allowed_workers=workers,
                 budget_state_path=args.budget_state,
                 location=args.location,
+                codex_bin=args.codex_bin,
             )
             result = post_json(control + "/v1/mesh/register", payload)
             print(json.dumps(result, indent=2, ensure_ascii=False), flush=True)
