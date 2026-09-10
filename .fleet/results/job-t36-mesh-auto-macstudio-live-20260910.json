@@ -1,0 +1,32 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789072277.28686,
+  "host": "macstudio",
+  "job_id": "job-t36-mesh-auto-macstudio-live-20260910",
+  "job_sha256": "5b327764c1d327f2fe11fc52593bfbe0aace1bb43131673c2c01a87b8873ea03",
+  "result": {
+    "argv": [
+      "python3",
+      "scripts/mesh_client.py",
+      "--url",
+      "https://mac-studio.taildc96f0.ts.net:8444",
+      "run",
+      "--worker",
+      "auto",
+      "--prompt",
+      "Return exactly MULTINODE_OK"
+    ],
+    "cwd": "/Users/macstudio/remote-worker-test",
+    "elapsed_seconds": 15.415,
+    "exit_code": 0,
+    "host": "macstudio",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "{\n  \"mesh_worker\": \"macstudio-worker/openai-A\",\n  \"node_id\": \"macstudio-worker\",\n  \"node_location\": \"remote\",\n  \"result\": {\n    \"worker\": \"openai-A\",\n    \"provider\": \"openai\",\n    \"model\": \"gpt-6-astra\",\n    \"tokens_reported\": 4896,\n    \"elapsed_seconds\": 14.644,\n    \"exit_code\": 0,\n    \"output\": \"MULTINODE_OK\\n\",\n    \"sandbox\": \"read-only\",\n    \"ephemeral\": true,\n    \"paid_api_env_removed\": true,\n    \"selection_probes\": [\n      {\n        \"worker\": \"openai-A\",\n        \"ready\": true\n      }\n    ]\n  }\n}\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789072261.835191,
+  "status": "PASS",
+  "version": 1
+}
