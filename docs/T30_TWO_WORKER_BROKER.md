@@ -5,7 +5,7 @@ Status: `CODE_COMPLETE_LOCAL_TESTS_PASS — REAL TWO-WORKER SMOKE NEXT`
 The first useful broker layer is implemented as:
 
 - `cost_router/workers.py` — registry, safe environment isolation, readiness probe, worker selection, `codex exec` invocation and telemetry parsing;
-- `scripts/worker_broker.py` — human/controller CLI;
+- `scripts/worker_broker.py` — human/controller CLI with `list`, `probe`, zero-token `select`, and `run`;
 - `examples/workers.json` — non-secret example descriptors for `openai-A` and `openai-B`;
 - `tests/test_workers.py` — fake-process tests that consume no Codex allowance.
 
@@ -27,8 +27,10 @@ python3 -m unittest discover -s isolated-tests -v
 5 tests PASS
 python3 -m py_compile workers.py worker_broker.py test_workers.py
 PASS
+zero-token select with a fake ChatGPT-authenticated Codex binary
+PASS — selected openai-A
 ```
 
-These tests fake the Codex process and therefore prove broker logic, not a live broker-to-worker call. The next bounded step is one real call through the broker to `openai-B`, followed by one `auto` selection call if the explicit call succeeds. Do not add concurrency, a daemon, MCP server or remote listener before that path is verified.
+These tests fake the Codex process and therefore prove broker logic, not a live broker-to-worker call. The next bounded step is a live zero-token `select` against both configured homes followed by one real call through the broker to `openai-B`. The `select` command only runs `codex login status`; it does not invoke a model. Do not add concurrency, a daemon, MCP server or remote listener before that path is verified.
 
 T29 standalone parallel smoke remains `DEFERRED_NOT_JUSTIFIED`; useful concurrency will be exercised later through the broker.

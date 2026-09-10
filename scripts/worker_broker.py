@@ -19,6 +19,8 @@ def main(argv=None):
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("list")
     sub.add_parser("probe")
+    choose = sub.add_parser("select")
+    choose.add_argument("--worker", default="auto")
     dispatch = sub.add_parser("run")
     dispatch.add_argument("--worker", default="auto")
     dispatch.add_argument("--workspace", required=True)
@@ -45,6 +47,10 @@ def main(argv=None):
             payload = [probe(w, codex_bin=args.codex_bin) for w in workers]
             print(json.dumps(payload, indent=2))
             return 0 if any(item["ready"] for item in payload) else 3
+        if args.command == "select":
+            worker, probes = select_worker(workers, args.worker, codex_bin=args.codex_bin)
+            print(json.dumps({"selected_worker": worker.id, "probes": probes}, indent=2))
+            return 0
         worker, probes = select_worker(workers, args.worker, codex_bin=args.codex_bin)
         result = run_task(worker, args.prompt, args.workspace, codex_bin=args.codex_bin)
         result["selection_probes"] = probes
