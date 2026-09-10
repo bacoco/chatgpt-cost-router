@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789072131.6524422,
+  "host": "macstudio",
+  "job_id": "job-t36-macstudio-codex-auth2-20260910",
+  "job_sha256": "cfa78b5eeabea9db8cb7bb3beff5915901f99d27e53738e633eca4f4d57d772e",
+  "result": {
+    "argv": [
+      "bash",
+      "-lc",
+      "/Users/macstudio/.local/bin/codex --version && /Users/macstudio/.local/bin/codex login status"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 2.952,
+    "exit_code": 0,
+    "host": "macstudio",
+    "stderr": "Logged in using ChatGPT\n",
+    "stderr_truncated": false,
+    "stdout": "codex-cli 0.153.2\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789072128.658907,
+  "status": "PASS",
+  "version": 1
+}
