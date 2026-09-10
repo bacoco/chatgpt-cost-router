@@ -1,0 +1,26 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789069832.119686,
+  "host": "macbook",
+  "job_id": "job-fleet-macbook-python-20260910-2125",
+  "job_sha256": "402e2f3115b5f259747ae30a37dc71d3acb58ee213e0082dc35c148af3c29787",
+  "result": {
+    "argv": [
+      "python3",
+      "-c",
+      "import sys; print(sys.version); print(sys.executable)"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.17,
+    "exit_code": 0,
+    "host": "macbook",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "3.9.6 (default, May 22 2026, 11:13:45) \n[Clang 21.0.0 (clang-2100.1.1.101)]\n/Applications/Xcode.app/Contents/Developer/usr/bin/python3\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789069831.886374,
+  "status": "PASS",
+  "version": 1
+}
