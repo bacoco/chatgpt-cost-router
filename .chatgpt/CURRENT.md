@@ -1,7 +1,7 @@
 # Current project checkpoint
 
-Task: T31 quota/budget-aware routing after live T30 broker validation
-Status: `TWO_WORKER_BROKER_VALIDATED` — two distinct authorized ChatGPT accounts are isolated as local Codex workers; the broker can address either by alias. T31A budget-aware selection logic is implemented and locally tested. Automatic provider-quota ingestion remains unproven.
+Task: T32 secure remote worker transport after T30/T31A local broker validation
+Status: `REMOTE_WORKER_CODE_READY` — two distinct local Codex workers and the alias/budget-aware broker are validated. T32 adds a loopback-only HTTP facade intended exclusively behind Tailscale Serve, with Tailscale identity allowlisting and a remote-worker allowlist. Six isolated T32 tests pass; a live second-device/tailnet request is still required before remote transport is PASS.
 
 Repository: `bacoco/chatgpt-cost-router`
 Default branch: `main`
@@ -22,6 +22,7 @@ Default branch: `main`
 - T29: `DEFERRED_NOT_JUSTIFIED` as a standalone parallel quota-burn test.
 - T30: PASS. Live broker `probe` saw both workers ready; zero-model `select` chose A; explicit broker dispatch to B returned `BROKER_OK`, model `gpt-6-astra`, 4,607 reported tokens, 5.527 s, exit 0, paid-API environment stripped, read-only/ephemeral sandbox, empty workspace afterwards.
 - T31A: PASS for deterministic quota/budget-aware selection logic. Ten isolated worker/budget tests pass without a model call.
+- T32A: CODE COMPLETE / LOCAL TESTS PASS. A loopback-only remote facade requires Tailscale identity, exposes only allowed worker aliases, rejects client workspace paths, creates/deletes private temporary task directories, and returns redacted telemetry. Six isolated tests pass without a model call.
 
 ## Cost / quota boundary
 
@@ -30,7 +31,8 @@ T13 remains `PARTIAL_STOPPED`. Per-call Codex token counts are useful local tele
 ## Remaining gaps
 
 - Automatic/reliable ingestion of live per-account 5-hour and weekly allowance.
-- Remote worker transport / always-on nodes.
+- Live T32 remote request from a second Tailscale-authenticated device/user; T32 code itself is complete and locally tested.
+- Always-on/service supervision for remote nodes after the transport smoke passes.
 - Useful concurrency through the broker when operationally needed.
 - Claude/other-provider workers and provider-neutral handoff.
 - T14 canonical Gmail Developer MCP in ChatGPT/Scheduled Tasks only if still required.
@@ -38,10 +40,11 @@ T13 remains `PARTIAL_STOPPED`. Per-call Codex token counts are useful local tele
 
 ## Next useful direction
 
-Local callability, account isolation, alias dispatch and budget-aware selection logic are now proven. The next high-value architectural step is a secure **remote worker node**: expose only the broker/worker interface over an authenticated private transport, not raw Codex or shell access. A remote user/controller should submit bounded work to a named worker; the worker executes locally under its own `CODEX_HOME` and returns telemetry/result. GitHub remains durable project state where appropriate.
+T32 code is now implemented. The next proof is operational rather than architectural: run `scripts/remote_worker_server.py` on the worker Mac bound to localhost, put Tailscale Serve in front, and issue one request from a second authorized Tailscale device/user. Do not expose the backend directly to LAN/Internet and do not use Funnel. A PASS requires the remote caller's Tailscale identity to be accepted, the chosen worker to execute, and redacted result/telemetry to return.
 
 T30 receipt: `.chatgpt/test-receipts/T30_TWO_WORKER_BROKER_LIVE_2026-09-10.md`.
 T31 specification: `docs/T31_QUOTA_AWARE_SELECTION.md`.
+T32 specification: `docs/T32_REMOTE_WORKER.md`.
 Authoritative status: `docs/VALIDATION_STATUS_2026-09-10.md`.
 
 Paid OpenAI API used for recorded validations: no.
