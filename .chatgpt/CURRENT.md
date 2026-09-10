@@ -5,7 +5,7 @@ Status: CLOUD_LANE_VALIDATED — all currently autonomous Developer-MCP/cloud ch
 
 Repository: `bacoco/chatgpt-cost-router`
 Default branch: `main`
-Main SHA observed immediately before this checkpoint write: `2284fe1733bf0ed180c7d3e5ca61a4f9ce17eda8`
+Main SHA observed immediately before this checkpoint write: `487ba989f406ef637bcd39e896dfb0fdcafceb5a`
 Source-kit SHA used by the workspace bootstrap: `a1e172e20e0ba5f63d94abd1fb2e988a7ffb6736`
 
 ## Validated
@@ -22,6 +22,7 @@ Source-kit SHA used by the workspace bootstrap: `a1e172e20e0ba5f63d94abd1fb2e988
   - handoff: `.chatgpt/handoffs/T20/TO_CODEX.md`
   - exact handoff commit: `be8b29f191b877072e1def641aa3aeec51ec2ab8`
 - T13 representative no-paid-API route ledger: recorded in `docs/COST_QUOTA_EXPERIMENT_2026-09-10.md`; quota interaction remains partial.
+- `README.md`, `docs/INSTALLATION_KIT_INDEX.md`, and `docs/VALIDATION_STATUS_2026-09-10.md` have been reconciled to the current experiment state.
 
 ## Durable receipts on main
 
