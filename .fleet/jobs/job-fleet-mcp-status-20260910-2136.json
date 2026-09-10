@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "job_id": "job-fleet-mcp-status-20260910-2136",
+  "host": "macbook",
+  "action": "exec_read",
+  "args": {
+    "argv": ["python3", "scripts/fleet_operator_macos.py", "status"],
+    "cwd": "/Users/loic/codex-t30-broker-test",
+    "timeout_seconds": 60
+  },
+  "expires_at_unix": 1789100000
+}
