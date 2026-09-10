@@ -1,0 +1,28 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789071241.4896781,
+  "host": "macstudio",
+  "job_id": "job-t36-macstudio-codex-bins-20260910",
+  "job_sha256": "bb4d6e8528b52fce05f25af94bc41c554dd62c4be697d47439441ec67d531f6e",
+  "result": {
+    "argv": [
+      "ls",
+      "-l",
+      "/opt/homebrew/bin/codex",
+      "/usr/local/bin/codex",
+      "/Users/macstudio/.local/bin/codex"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.214,
+    "exit_code": 1,
+    "host": "macstudio",
+    "stderr": "ls: /opt/homebrew/bin/codex: No such file or directory\nls: /usr/local/bin/codex: No such file or directory\n",
+    "stderr_truncated": false,
+    "stdout": "lrwx------  1 macstudio  staff  58 Aug  3 17:47 /Users/macstudio/.local/bin/codex -> /usr/local/lib/nodejs/node-v22.14.0-darwin-arm64/bin/codex\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071241.229146,
+  "status": "FAILED",
+  "version": 1
+}
