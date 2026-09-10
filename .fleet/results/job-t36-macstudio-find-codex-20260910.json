@@ -1,0 +1,28 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789071114.3611698,
+  "host": "macstudio",
+  "job_id": "job-t36-macstudio-find-codex-20260910",
+  "job_sha256": "866fff93898a52e0b3d926a73edf6c07b59061794b724b68133ac4b25794e61d",
+  "result": {
+    "argv": [
+      "find",
+      "/Users/macstudio/.nvm",
+      "-path",
+      "*/@openai/codex/bin/codex.js",
+      "-print"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.314,
+    "exit_code": 1,
+    "host": "macstudio",
+    "stderr": "find: /Users/macstudio/.nvm: No such file or directory\n",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071114.002423,
+  "status": "FAILED",
+  "version": 1
+}
