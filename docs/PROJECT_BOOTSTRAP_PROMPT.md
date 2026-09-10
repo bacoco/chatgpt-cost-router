@@ -14,8 +14,11 @@ Resolve and pin the source repo SHA first. Read and apply
 
 In TARGET_REPO, inspect existing instructions/state before writing. Install or
 reconcile the canonical `.chatgpt/` workspace without deleting or blindly
-overwriting project-specific information. Use a bootstrap branch/PR for an existing
-repo unless direct initialization is clearly safer and authorized.
+overwriting project-specific information. Also copy the exact pinned
+`cloud-to-codex-handoff` and `codex-to-cloud-return` skills into
+`.agents/skills/` in TARGET_REPO, preserving unrelated existing skills. Use a
+bootstrap branch/PR for an existing repo unless direct initialization is clearly
+safer and authorized.
 
 Create or reuse one primary repo-specific ChatGPT Scheduled Task/workspace launcher
 when useful. Its prompt must re-read the target repo and `.chatgpt/` checkpoint

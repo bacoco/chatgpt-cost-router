@@ -48,6 +48,12 @@ Install or reconcile:
   HANDOFF_POLICY.md
   handoffs/
     README.md
+
+.agents/skills/
+  cloud-to-codex-handoff/
+    SKILL.md
+  codex-to-cloud-return/
+    SKILL.md
 ```
 
 `PROJECT.md` contains stable project purpose, key paths, constraints, source-of-truth rules, source-kit SHA, and relevant Developer MCPs.
@@ -57,6 +63,8 @@ Install or reconcile:
 `SCHEDULER.md` contains the canonical repo-specific scheduler prompt, its cadence or one-shot behavior, idempotency rules, and allowed mutations.
 
 `HANDOFF_POLICY.md` points to the cloud-to-Codex and Codex-to-cloud conventions and forbids scope expansion.
+
+Copy the two handoff skills from the exact pinned source-kit SHA into `.agents/skills/` so a Codex checkout of the target repo has the workflow locally. Record the source-kit SHA in `PROJECT.md`; refresh these copies only through a later controlled bootstrap/update, never from memory.
 
 ## Safe installation
 

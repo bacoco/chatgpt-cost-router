@@ -27,12 +27,13 @@ Do not use a remembered copy.
 1. Verify target GitHub identity/access and exact default-branch SHA.
 2. Inspect target repo instructions, open work, and existing `.chatgpt/` structure.
 3. Install/reconcile `.chatgpt/PROJECT.md`, `CURRENT.md`, `SCHEDULER.md`, `HANDOFF_POLICY.md`, and `handoffs/README.md`.
-4. Persist the source-kit SHA inside `PROJECT.md` so future refreshes are reproducible.
-5. Create/reuse a project Scheduled Task only if useful. Its prompt must read target repo state and `.chatgpt/` files freshly on every invocation.
-6. If the user supplied concrete work, begin with ChatGPT + Developer MCPs and persist checkpoints after meaningful progress.
-7. When a real capability boundary is reached, use `cloud-to-codex-handoff`; do not paste the whole conversation into Codex.
-8. On return from Codex, use `codex-to-cloud-return` evidence and verify actual GitHub state before continuing.
-9. Never silently use paid API capacity. GitHub Actions runner capacity is a separate cost/capability gate.
+4. Copy the exact pinned source versions of `skills/cloud-to-codex-handoff/SKILL.md` and `skills/codex-to-cloud-return/SKILL.md` into the target repository under `.agents/skills/<skill-name>/SKILL.md`. Preserve any unrelated existing target skills.
+5. Persist the source-kit SHA inside `PROJECT.md` so future refreshes are reproducible and the copied skills can be traced back to their source.
+6. Create/reuse a project Scheduled Task only if useful. Its prompt must read target repo state and `.chatgpt/` files freshly on every invocation.
+7. If the user supplied concrete work, begin with ChatGPT + Developer MCPs and persist checkpoints after meaningful progress.
+8. When a real capability boundary is reached, use `cloud-to-codex-handoff`; do not paste the whole conversation into Codex.
+9. On return from Codex, use `codex-to-cloud-return` evidence and verify actual GitHub state before continuing.
+10. Never silently use paid API capacity. GitHub Actions runner capacity is a separate cost/capability gate.
 
 ## Installation safety
 
