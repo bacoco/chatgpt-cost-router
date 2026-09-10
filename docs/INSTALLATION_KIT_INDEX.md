@@ -53,7 +53,7 @@ Read:
 
 `VALIDATION_STATUS_2026-09-10.md`
 
-**This is the authoritative current PASS / FAIL / NOT-TESTED snapshot for the 10 September experiment.**
+**This is the authoritative current PASS / PARTIAL / BLOCKED / DEFERRED snapshot for the 10 September experiment.**
 
 ### 5. Read failures before troubleshooting
 
