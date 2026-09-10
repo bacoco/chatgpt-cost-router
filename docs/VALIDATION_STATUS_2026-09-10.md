@@ -30,8 +30,8 @@ T12 — Scheduler -> Codex Worker                             DEFERRED_NOT_JUSTI
 T13 — cost/quota experiment                                 PARTIAL — zero-paid-API cloud routes recorded; Codex quota interaction cannot be measured while Codex is unavailable
 T14 — Gmail Developer MCP                                   BLOCKED_MISSING_CONNECTOR — no Gmail Developer MCP is available in this developer-MCP-restricted conversation; standard Gmail was not used as a substitute
 
-T15 — scheduler-chat manual continuation clean-profile      BLOCKED_USER_INTERACTION — scheduler side ran; PASS still requires a manual reply in that Scheduled Task's associated chat
-T16 — fresh-chat recovery from GitHub checkpoint            NOT YET FORMALLY TESTED — current chat is not a clean fresh-chat test
+T15 — scheduler-chat manual continuation clean-profile      PASS — user continued in the Scheduled Task's associated chat and that same chat successfully read current main through GitHub — bacoco TEST
+T16 — fresh-chat recovery from GitHub checkpoint            PASS — genuinely fresh Chat reconstructed project state from repository + .chatgpt/CURRENT.md only
 T16A — independent-context recovery from checkpoint         PASS — durable receipt on main
 T17 — Scheduled Task -> Actions MCP detailed read           PASS — durable receipt on main
 T18 — explicit Actions runner/capability gate               PASS — PR #10 merged; router rejects unavailable hosted route and selects verified local fallback
@@ -50,7 +50,36 @@ Repository creation through Developer MCP                   BLOCKED — real cre
 Paid OpenAI API                                             NOT USED
 ```
 
-## Exact current evidence added after the earlier snapshot
+## Exact current evidence
+
+### T15 — scheduler-chat continuation
+
+The Scheduled Task side had already run. The user then opened the Scheduled Task's associated chat, continued the conversation there, and that same chat successfully invoked `GitHub — bacoco TEST` to read current `main` SHA `33ca2c8f6934f8217d028900721ad0f9648dd982` without modifying GitHub.
+
+Receipt:
+
+```text
+.chatgpt/test-receipts/T15_SCHEDULER_CHAT_CONTINUATION_PENDING_2026-09-10.md
+```
+
+The legacy filename is retained to avoid duplicate receipt paths; its content now records `result=PASS`.
+
+### T16 — literal fresh-chat recovery
+
+A genuinely fresh Chat was given only:
+
+```text
+repository: bacoco/chatgpt-cost-router
+checkpoint: .chatgpt/CURRENT.md
+```
+
+Using only `GitHub — bacoco TEST`, it freshly resolved `main` at `33ca2c8f6934f8217d028900721ad0f9648dd982`, recovered the source-kit SHA, reconstructed PASS/PARTIAL/BLOCKED/DEFERRED status, and verified the T20 handoff branch/path/exact commit. No prior-chat project context was supplied.
+
+Receipt:
+
+```text
+.chatgpt/test-receipts/T16_FRESH_CHAT_RECOVERY_2026-09-10.md
+```
 
 ### T16A — independent-context recovery
 
@@ -90,7 +119,7 @@ Observed result: `PASS`. The Scheduled Task freshly resolved `main`, read `.chat
 
 ### T20 — Cloud handoff boundary
 
-The cloud half is now actually executed, not merely designed.
+The cloud half is actually executed, not merely designed.
 
 ```text
 branch: test/t20-cloud-to-codex-handoff-20260910
@@ -106,7 +135,7 @@ The handoff preserves exact repository/branch/SHA, completed work, remaining wor
 
 PR #9 (`test: dogfood project workspace bootstrap`) is merged and changed exactly seven bounded workspace/skill files. Merge commit: `5a6652630629abe644afd19de44399bc36b4e567`.
 
-Current `main` was re-read and contains:
+Current `main` contains:
 
 ```text
 .chatgpt/PROJECT.md
@@ -141,6 +170,12 @@ Scheduled Task
   -> controlled write
   -> idempotent duplicate prevention
   -> repo-backed .chatgpt workspace recovery
+  -> associated chat manual continuation
+
+Fresh Chat
+  -> repository + .chatgpt/CURRENT.md only
+  -> GitHub Developer MCP
+  -> full project-state recovery
 
 ChatGPT Cloud
   -> exact GitHub checkpoint
@@ -152,11 +187,9 @@ The key architectural rule remains: GitHub is durable state; chat and scheduler-
 
 ## Remaining blockers / next evidence
 
-1. **T15:** user must open the T15 Scheduled Task's associated chat and perform the requested manual continuation there. Scheduler execution alone is insufficient evidence.
-2. **T16:** requires a genuinely fresh Chat test; T16A already proves the stronger scheduler/independent-context checkpoint recovery path but is kept distinct for test fidelity.
-3. **T23/T24 and full T20:** wait for real Codex capacity, then use the already-persisted T20 handoff. Do not rebuild or broaden it unless GitHub state invalidates it.
-4. **T10/T13 Codex quota aspects:** wait for Codex capacity; do not infer quota-pool behavior.
-5. **T14:** requires an actual Gmail Developer MCP connection in a developer-MCP-compatible context. A blocked standard Gmail connector is not equivalent evidence.
-6. **T11/T12:** remain intentionally deferred unless evidence demonstrates that a persistent Codex Worker is worth building.
+1. **T23/T24 and full T20:** wait for real Codex capacity, then use the already-persisted T20 handoff. Do not rebuild or broaden it unless GitHub state invalidates it.
+2. **T10/T13 Codex quota aspects:** wait for Codex capacity; do not infer quota-pool behavior.
+3. **T14:** requires an actual Gmail Developer MCP connection in a developer-MCP-compatible context. A blocked standard Gmail connector is not equivalent evidence.
+4. **T11/T12:** remain intentionally deferred unless evidence demonstrates that a persistent Codex Worker is worth building.
 
 No paid OpenAI API was used to obtain the validations recorded here.
