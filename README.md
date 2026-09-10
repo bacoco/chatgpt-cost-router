@@ -44,7 +44,7 @@ The broker deliberately strips known paid-API-key environment variables from chi
 
 ### Private remote worker over Tailscale
 
-T32 adds a loopback-only HTTP facade intended to sit behind **Tailscale Serve**. It authorizes the Tailscale identity, exposes only explicitly allowed worker aliases, never accepts a client-supplied local workspace path, runs the existing read-only/ephemeral broker, and returns redacted telemetry. The backend refuses non-loopback binding; do not use Funnel or expose it directly to the LAN/Internet. Six isolated transport-boundary tests pass; one live second-device Tailscale smoke remains before calling the remote lane fully validated. See [T32_REMOTE_WORKER](docs/T32_REMOTE_WORKER.md).
+T32 adds a loopback-only HTTP facade intended to sit behind **Tailscale Serve**. It authorizes the Tailscale identity, exposes only explicitly allowed worker aliases, never accepts a client-supplied local workspace path, runs the existing read-only/ephemeral broker, and returns redacted telemetry. The backend refuses non-loopback binding; do not use Funnel or expose it directly to the LAN/Internet. Six isolated transport-boundary tests pass, and a live second-device Tailscale Serve dispatch to `openai-B` is validated with redacted telemetry and no paid API path. A separately shared external-user identity remains an optional later smoke. See [T32_REMOTE_WORKER](docs/T32_REMOTE_WORKER.md).
 
 ## Try the executable example
 
