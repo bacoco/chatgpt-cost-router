@@ -152,4 +152,4 @@ All three live under `skills/` and use the existing `surface-handoff` contract f
 
 ## Current phase boundary
 
-The ChatGPT cloud lane is implemented as documentation and repository-backed workflow skills, but it is not yet fully validated end to end. The scheduler-chat clean-profile continuation, fresh-chat recovery, one-prompt target-repo bootstrap, and full Cloud → Codex → Cloud round trip remain explicit tests before calling the installation kit final.
+The ChatGPT cloud lane is now validated through authenticated GitHub read/write, scheduled read/write and idempotency, independent-context checkpoint recovery, repo-specific scheduler/workspace consumption, the hosted-runner capability gate, and the one-prompt workspace dogfood bootstrap. The Cloud → Codex side is also validated through a persisted exact-SHA `TO_CODEX.md` handoff. The remaining end-to-end gaps are deliberately narrow: scheduler-chat clean-profile manual continuation, a literal fresh-chat recovery test, and the real Codex execution/return portion while Codex capacity is unavailable. Do not treat those external/manual blockers as failure of the already-proven cloud path.
