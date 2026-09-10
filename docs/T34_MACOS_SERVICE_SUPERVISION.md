@@ -67,7 +67,7 @@ python3 scripts/macos_mesh_service.py uninstall worker-node
 
 ## Local verification
 
-Six isolated tests cover private config permissions, LaunchAgent keepalive/run-at-load structure, no personal allowlist data in plists, control dry-install, worker-node two-agent dry-install, bad control URL rejection and versioned runner config. Python compilation and plist generation pass without model calls.
+Eight isolated tests cover private config permissions, LaunchAgent keepalive/run-at-load structure, no personal allowlist data in plists, control dry-install, worker-node two-agent dry-install, bad control URL rejection, versioned runner config, and absolute registry/binary-path behavior under launchd. Python compilation and plist generation pass without model calls.
 
 ## Live proof required
 

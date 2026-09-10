@@ -1,3 +1,4 @@
+import json
 import importlib.util
 import os
 import plistlib
@@ -13,6 +14,13 @@ from cost_router.macos_launchd import (
 
 
 class LaunchdTests(unittest.TestCase):
+    def load_runner(self):
+        path = Path(__file__).resolve().parents[1] / "scripts/mesh_service_runner.py"
+        spec = importlib.util.spec_from_file_location("mesh_service_runner", path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+
     def fake_repo(self, root: Path) -> Path:
         repo = root / "repo"
         for rel in (
@@ -85,15 +93,46 @@ class LaunchdTests(unittest.TestCase):
                     control_url="https://example.com", allowed_users="x", workers="B", dry_run=True)
 
     def test_runner_requires_versioned_config(self):
-        path = Path(__file__).resolve().parents[1] / "scripts/mesh_service_runner.py"
-        spec = importlib.util.spec_from_file_location("mesh_service_runner", path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
+        module = self.load_runner()
         with tempfile.TemporaryDirectory() as td:
             p = Path(td) / "bad.json"
             p.write_text('{"version":2}')
             with self.assertRaises(ValueError):
                 module.load_config(str(p))
+
+    def test_runner_remote_worker_uses_absolute_registry_and_binary_paths(self):
+        module = self.load_runner()
+        with tempfile.TemporaryDirectory() as td:
+            cfg = Path(td) / "cfg.json"
+            cfg.write_text(json.dumps({
+                "version": 1, "repo": "/repo", "allowed_users": "u",
+                "workers": "openai-B", "tailscale_bin": "/opt/tailscale/bin/tailscale",
+                "codex_bin": "/opt/codex/bin/codex", "https_port": 8443, "backend_port": 8787
+            }))
+            with patch.object(module, "wait_tailscale"), patch.object(module, "serve"), \
+                 patch.object(module, "exec_python") as exec_python:
+                self.assertEqual(module.main(["remote-worker", "--config", str(cfg)]), 0)
+            args = exec_python.call_args.args
+            self.assertIn("--registry", args[2])
+            self.assertIn("/repo/examples/workers.json", args[2])
+            self.assertIn("/opt/tailscale/bin", args[3]["PATH"])
+            self.assertIn("/opt/codex/bin", args[3]["PATH"])
+
+    def test_runner_mesh_node_uses_absolute_registry(self):
+        module = self.load_runner()
+        with tempfile.TemporaryDirectory() as td:
+            cfg = Path(td) / "cfg.json"
+            cfg.write_text(json.dumps({
+                "version": 1, "repo": "/repo", "control_url": "https://c.example.ts.net:8444",
+                "workers": "openai-B", "tailscale_bin": "/opt/tailscale/bin/tailscale",
+                "codex_bin": "/opt/codex/bin/codex", "worker_port": 8443, "heartbeat_seconds": 30
+            }))
+            with patch.object(module, "wait_tailscale"), patch.object(module, "wait_port"), \
+                 patch.object(module, "exec_python") as exec_python:
+                self.assertEqual(module.main(["mesh-node", "--config", str(cfg)]), 0)
+            args = exec_python.call_args.args
+            self.assertIn("--registry", args[2])
+            self.assertIn("/repo/examples/workers.json", args[2])
 
 
 if __name__ == "__main__":

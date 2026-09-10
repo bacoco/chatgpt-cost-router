@@ -14,6 +14,7 @@ Default branch: `main`
 - T31A: PASS for deterministic quota/budget-aware selection logic; provider quota ingestion itself remains unproven.
 - T32: PASS for private remote dispatch from a second Tailscale device to `openai-B` on another Mac: `REMOTE_OK`, `gpt-6-astra`, 4,610 reported tokens, 6.753 s, exit 0, read-only/ephemeral, paid-API environment removed.
 - T33: PASS. The MacBook heartbeat-registered as a live remote node; the Mac Studio control plane discovered namespaced `macbook-pro-de-loic/openai-B`; `--worker auto` dispatched through the dynamically resolved node and returned `MESH_OK`, `gpt-6-astra`, 4,612 reported tokens, 5.888 s, exit 0, read-only/ephemeral, paid-API environment removed.
+- T34A: CODE COMPLETE / LOCAL TESTS PASS. Per-user LaunchAgents supervise mesh-control, remote-worker and mesh-node roles with RunAtLoad/restart-on-failure. Runtime config stays under `~/.config/chatgpt-cost-router/` mode 0600; plists contain no allowlist/worker identity material. Eight isolated tests pass without model calls.
 
 ## Cost / quota boundary
 
@@ -23,18 +24,19 @@ T13 remains `PARTIAL_STOPPED`. Per-call Codex token counts are telemetry, not pr
 
 - Automatic/reliable ingestion of live per-account 5-hour and weekly allowance.
 - Separately shared external-user Tailscale identity/ACL smoke when such a user is available.
-- Always-on service supervision/launch-at-boot for control plane and worker nodes.
+- Live T34 LaunchAgent install/restart/recovery smoke on the current control and worker hosts.
 - Useful concurrency when a real workload benefits from it.
 - Claude/other-provider adapters and provider-neutral handoff.
 - Canonical Gmail Developer MCP only if still required.
 
 ## Next useful action
 
-Make the validated mesh operational rather than experimental: add supervised launch-at-login/boot packaging, restart/health behavior, and a second live worker-bearing node when available. Keep external-person Tailscale sharing as a separate identity/ACL smoke because the current remote and mesh proofs used the owner's Tailscale identity.
+Run the T34 live install/restart smoke on the current Mac Studio control plane and MacBook worker node. Confirm all three LaunchAgents load, kill one supervised process, verify launchd restarts it, and confirm the node reappears without a manual restart. No model call is required.
 
 T32 receipt: `.chatgpt/test-receipts/T32_REMOTE_WORKER_LIVE_2026-09-10.md`.
 T33 specification: `docs/T33_MESH_NODE_REGISTRATION.md`.
 T33 receipt: `.chatgpt/test-receipts/T33_MESH_LIVE_2026-09-10.md`.
+T34 specification: `docs/T34_MACOS_SERVICE_SUPERVISION.md`.
 Authoritative status: `docs/VALIDATION_STATUS_2026-09-10.md`.
 
 Paid OpenAI API used for recorded validations: no.

@@ -67,6 +67,12 @@ def main(argv=None):
     tailscale = cfg["tailscale_bin"]
     wait_tailscale(tailscale)
     env = os.environ.copy()
+    path_parts = [str(Path(tailscale).parent)]
+    if cfg.get("codex_bin"):
+        path_parts.append(str(Path(cfg["codex_bin"]).parent))
+    if env.get("PATH"):
+        path_parts.append(env["PATH"])
+    env["PATH"] = ":".join(dict.fromkeys(path_parts))
 
     if args.role == "control":
         env["COST_ROUTER_MESH_ALLOWED_USERS"] = cfg["allowed_users"]
@@ -80,6 +86,7 @@ def main(argv=None):
         serve(tailscale, int(cfg["https_port"]), int(cfg["backend_port"]))
         exec_python(repo, "remote_worker_server.py",
                     ["--host", "127.0.0.1", "--port", str(cfg["backend_port"]),
+                     "--registry", str(repo / "examples/workers.json"),
                      "--codex-bin", cfg["codex_bin"]], env)
     else:
         wait_port("127.0.0.1", 8787)
@@ -88,6 +95,7 @@ def main(argv=None):
                     ["--control-url", cfg["control_url"],
                      "--workers", cfg["workers"],
                      "--worker-port", str(cfg["worker_port"]),
+                     "--registry", str(repo / "examples/workers.json"),
                      "--interval", str(cfg["heartbeat_seconds"]),
                      "--codex-bin", cfg["codex_bin"]], env)
     return 0
