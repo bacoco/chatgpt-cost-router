@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789071422.7116292,
+  "host": "sparky",
+  "job_id": "job-t36-sparky-start-worker-node-20260910",
+  "job_sha256": "8cb4320f3aa031dd93f0b0168f52320e26cc2f2ca4cb6fd7b8bb14057dfb2c3a",
+  "result": {
+    "argv": [
+      "bash",
+      "-lc",
+      "set -euo pipefail; cd /home/baconnier; if [ -d chatgpt-cost-router/.git ]; then cd chatgpt-cost-router && git pull --ff-only; else git clone https://github.com/bacoco/chatgpt-cost-router.git && cd chatgpt-cost-router; fi; export PATH=/home/baconnier/.nvm/versions/node/v20.20.0/bin:$PATH; export COST_ROUTER_ALLOWED_TAILSCALE_USERS=\"$(tailscale status --json | python3 -c 'import json,sys; d=json.load(sys.stdin); uid=str(d[\"Self\"][\"UserID\"]); print(d[\"User\"][uid][\"LoginName\"])')\"; export COST_ROUTER_REMOTE_WORKERS=openai-A; bash scripts/start_remote_worker.sh; export COST_ROUTER_MESH_CONTROL_URL=https://mac-studio.taildc96f0.ts.net:8444; bash scripts/start_mesh_node.sh"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 3.272,
+    "exit_code": 0,
+    "host": "sparky",
+    "stderr": "Cloning into 'chatgpt-cost-router'...\n",
+    "stderr_truncated": false,
+    "stdout": "remote worker backend started: pid 3913173\nAvailable within your tailnet:\n\nhttps://spark-lolo.taildc96f0.ts.net:8443/\n|-- proxy http://127.0.0.1:8787\n\nServe started and running in the background.\nTo disable the proxy, run: tailscale serve --https=8443 off\n--- Tailscale Serve status ---\n|-- tcp://spark-lolo.taildc96f0.ts.net:1235 (tailnet only)\n|-- tcp://100.98.112.93:1235\n|-- tcp://[fd7a:115c:a1e0::bc01:70a0]:1235\n|--> tcp://127.0.0.1:1235\n|-- tcp://spark-lolo.taildc96f0.ts.net:8188 (tailnet only)\n|-- tcp://100.98.112.93:8188\n|-- tcp://[fd7a:115c:a1e0::bc01:70a0]:8188\n|--> tcp://127.0.0.1:8188\n\nhttps://spark-lolo.taildc96f0.ts.net (tailnet only)\n|-- / proxy http://127.0.0.1:8188\n\nhttps://spark-lolo.taildc96f0.ts.net:8443 (tailnet only)\n|-- / proxy http://127.0.0.1:8787\n\n--- Local state ---\nbackend=http://127.0.0.1:8787\ntailscale_https_port=8443\nallowed_workers=openai-A\nlog=/home/baconnier/.local/state/chatgpt-cost-router/remote-worker/server.log\nDo not use Tailscale Funnel for this service.\nmesh node agent started: pid 3913205\ncontrol=https://mac-studio.taildc96f0.ts.net:8444\nworkers=openai-A\nlog=/home/baconnier/.local/state/chatgpt-cost-router/mesh-node/agent.log\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071419.373069,
+  "status": "PASS",
+  "version": 1
+}
