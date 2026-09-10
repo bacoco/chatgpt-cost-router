@@ -1,0 +1,1 @@
+Tu es libre de choisir le chemin, mais explique brièvement en quoi il te rapproche de l’objectif et vérifie qu’il produit le progrès attendu. Si les faits montrent que tu t’es trompé, reconnais-le et change de chemin. Le but n’est pas de défendre ton premier choix : c’est d’atteindre l’objectif.

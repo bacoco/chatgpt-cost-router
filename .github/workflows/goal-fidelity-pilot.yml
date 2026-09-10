@@ -1,0 +1,44 @@
+name: Goal fidelity isolated pilot
+on:
+  push:
+    branches: [experiment/goal-fidelity-ab-20260910]
+    paths: [RUN]
+permissions:
+  contents: write
+concurrency:
+  group: goal-fidelity-ab-20260910
+  cancel-in-progress: false
+jobs:
+  pilot:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned inference library
+        env:
+          CMAKE_ARGS: -DGGML_NATIVE=ON -DGGML_OPENMP=ON
+          CMAKE_BUILD_PARALLEL_LEVEL: '4'
+        run: python -m pip install 'llama-cpp-python==0.3.16' --prefer-binary --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+      - name: Validate fixed graders and run bounded experiment
+        run: |
+          python benchmark/grader.py
+          timeout 800s python -u benchmark/runner.py
+      - name: Persist observations on this experimental branch only
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ ! -d benchmark/results ]; then exit 0; fi
+          python -m pip freeze > benchmark/results/dependencies.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add benchmark/results
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'test: preserve goal-fidelity pilot observations [skip ci]'
+          AUTH=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c http.extraheader="AUTHORIZATION: basic $AUTH" push origin "HEAD:$GITHUB_REF_NAME"
