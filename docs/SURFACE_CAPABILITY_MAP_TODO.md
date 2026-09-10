@@ -112,6 +112,36 @@ GitHub remains the neutral durable coordination bus for project state, claims, b
 
 Future questions to test: worker registration/discovery, heartbeat/lease expiry, quota exhaustion failover, account switching, cross-provider handoff, conflict arbitration, local-vs-remote data constraints, and whether Scheduled Tasks can act as lightweight dispatchers without creating uncontrolled recursive schedulers.
 
+### Multi-account worker pool and allowance scheduler
+
+Prefer persistent worker identities over manual account swapping. A separately authorized account may expose one or more workers, for example:
+
+```text
+openai-A/mac-work
+openai-A/mac-chat
+openai-A/mac-cli
+openai-B/remote-cli
+openai-C/cloud-worker
+anthropic-A/claude-code
+```
+
+The caller should address a worker through the control plane rather than logging the human in and out of accounts. Account identity, GitHub identity, machine identity and worker identity remain separate dimensions. A worker may be local, remote or cloud-hosted, but must expose the same provider-neutral handoff contract.
+
+Routing should account for both capability and allowance economics. For every worker/account, track independently when observable:
+
+- short-window allowance (for example a 5-hour pool);
+- weekly allowance;
+- purchased/flexible credits;
+- current task/session consumption if the product exposes it;
+- reset timestamps;
+- expected tokens/work units for the candidate task;
+- marginal monetary cost;
+- queue/busy state and expected latency.
+
+The broker objective is not simply `use the strongest model`. It should minimize expected total cost and scarce allowance while satisfying capability, quality, deadline and verification requirements. A candidate scoring function may therefore penalize consumption from a nearly exhausted 5-hour or weekly pool and prefer an already-paid worker with more available capacity when both can safely perform the task.
+
+Multi-account routing must be limited to independently authorized accounts/subscriptions and provider-permitted use. Do not use account rotation to evade a provider hard limit, suspension, safety control or terms-of-service restriction. The optimization target is legitimate workload placement across available resources, not quota circumvention.
+
 ## For each surface show
 
 - GitHub read/write/branch/PR capability;
