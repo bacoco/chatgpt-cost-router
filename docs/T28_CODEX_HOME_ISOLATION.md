@@ -1,6 +1,6 @@
 # T28 — isolated Codex worker identity with CODEX_HOME
 
-Status: `READY`
+Status: `T28A PASS — T28B OPTIONAL/NEXT`
 
 ## Goal
 
@@ -17,6 +17,10 @@ From a normal macOS shell:
 5. Do not copy `auth.json`, cookies, config, tokens, or any credential from the default home.
 
 This proves state/auth isolation, not a second account.
+
+### T28A empirical result — 2026-09-10
+
+PASS. The default Codex home reported `Logged in using ChatGPT` before and after the test. A fresh `~/codex-worker-homes/openai-B` reported `Not logged in` with exit code `1`; it did not inherit the default login. No credentials were copied. The alternate home contained only a `tmp` entry after the status check. Durable receipt: `.chatgpt/test-receipts/T28A_CODEX_HOME_ISOLATION_2026-09-10.md`.
 
 ## T28B — optional second authorized account
 
