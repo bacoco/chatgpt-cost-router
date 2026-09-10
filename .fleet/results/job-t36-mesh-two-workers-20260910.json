@@ -1,0 +1,28 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789071473.995351,
+  "host": "macstudio",
+  "job_id": "job-t36-mesh-two-workers-20260910",
+  "job_sha256": "37ef4240a6747825693a1ad68e55592b345bebc1d6277207bbf7af82088126ac",
+  "result": {
+    "argv": [
+      "python3",
+      "scripts/mesh_client.py",
+      "--url",
+      "https://mac-studio.taildc96f0.ts.net:8444",
+      "workers"
+    ],
+    "cwd": "/Users/macstudio/remote-worker-test",
+    "elapsed_seconds": 0.395,
+    "exit_code": 0,
+    "host": "macstudio",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "{\n  \"workers\": [\n    {\n      \"mesh_worker\": \"macbook-pro-de-loic/openai-B\",\n      \"node_id\": \"macbook-pro-de-loic\",\n      \"auth\": \"chatgpt\",\n      \"budget\": {\n        \"five_hour_remaining_pct\": null,\n        \"status\": \"unknown\",\n        \"weekly_remaining_pct\": null\n      },\n      \"cost_class\": \"included\",\n      \"priority\": 20,\n      \"provider\": \"openai\",\n      \"ready\": true,\n      \"worker\": \"openai-B\"\n    },\n    {\n      \"mesh_worker\": \"spark-lolo/openai-A\",\n      \"node_id\": \"spark-lolo\",\n      \"auth\": \"chatgpt\",\n      \"budget\": {\n        \"five_hour_remaining_pct\": null,\n        \"status\": \"unknown\",\n        \"weekly_remaining_pct\": null\n      },\n      \"cost_class\": \"included\",\n      \"priority\": 10,\n      \"provider\": \"openai\",\n      \"ready\": true,\n      \"worker\": \"openai-A\"\n    }\n  ]\n}\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071473.533269,
+  "status": "PASS",
+  "version": 1
+}
