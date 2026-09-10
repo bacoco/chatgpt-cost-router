@@ -10,11 +10,10 @@ This is the concise operational map for `bacoco/chatgpt-cost-router` as of 2026-
 │ repo read/write  ✅      │        │ read/search      ✅      │        │ persistent FS     ✅      │
 │ branch/PR        ✅      │        │ draft/send       ✅      │        │ git/gh/python/node✅      │
 │ Scheduler        ✅      │        │ Gmail dedup      ✅      │        │ persistent repo   ✅      │
-│ local verify     ✅      │        │ draft delete     ❌      │        │ tests/reconcile   ✅      │
-│ Gmail Dev MCP    ⛔      │        │ repo lane        ?       │        │ remote write      not needed
-│ paid API         NO      │        │ paid API         NO      │        │ paid API          NO      │
+│ local verify     ✅      │        │ draft delete     ❌      │        │ codex exec worker ✅      │
+│ Gmail Dev MCP    ⛔      │        │ repo lane        ?       │        │ paid API          NO      │
 └────────────┬─────────────┘        └────────────┬─────────────┘        └────────────┬─────────────┘
-             │ validated                         │ validated Gmail                     │ validated local worker
+             │ validated                         │ validated Gmail                     │ validated local/headless worker
              │                                   │                                      │
              └──────────────────────┬────────────┴──────────────────────┬───────────────┘
                                     │                                   │
@@ -25,18 +24,17 @@ This is the concise operational map for `bacoco/chatgpt-cost-router` as of 2026-
                          │ main + branches + commits + PRs                       │
                          │ .chatgpt/PROJECT.md + CURRENT.md + SCHEDULER.md        │
                          │ receipts / evidence                                   │
-                         │ TO_CODEX.md  → specialist handoff                     │
-                         │ RETURN_FROM_CODEX.md → verified return                │
+                         │ exact-SHA handoffs + verified returns                 │
                          └──────────┬───────────────────────────────────┬──────────┘
                                     │                                   │
                          validated  │                                   │ future / dashed
                                     ▼                                   ▼
                          ┌──────────────────────┐            ┌─────────────────────────────┐
-                         │ Cloud → Codex → Cloud│            │ Multi-account / providers   │
-                         │ T20/T23/T24 ✅       │            │ OpenAI account B/C          │
-                         │ exact-SHA handoff    │            │ Claude Code / terminal      │
-                         │ return reverified    │            │ TO_WORKER / RETURN_WORKER   │
-                         └──────────────────────┘            │ parallel branches/worktrees │
+                         │ Cloud → Codex → Cloud│            │ Worker mesh                 │
+                         │ T20/T23/T24 ✅       │            │ OpenAI account A/B/C        │
+                         │ exact-SHA handoff    │            │ remote Codex / Claude       │
+                         │ return reverified    │            │ quota-aware routing         │
+                         └──────────────────────┘            │ TO_WORKER / RETURN_WORKER   │
                                                              └─────────────────────────────┘
 
                          ┌──────────────────────────┐
@@ -55,16 +53,17 @@ This is the concise operational map for `bacoco/chatgpt-cost-router` as of 2026-
 |---|---|---|---|---|---|
 | Normal reasoning/chat | ✅ PASS | ✅ PASS | ✅ PASS | ✅ PASS | — |
 | GitHub read | ✅ PASS via Developer MCP | ? not separately classified | ✅ PASS via git | ✅ PASS direct connector | ✅ durable |
-| GitHub write / branch / PR | ✅ PASS | ? not separately classified | possible toolchain present; remote write not required by T10 | ✅ write/commit to dedicated branch PASS; PR not tested | ✅ durable |
+| GitHub write / branch / PR | ✅ PASS | ? not separately classified | toolchain available; remote write not required by T10/T27 | ✅ write/commit to dedicated branch PASS; PR not tested | ✅ durable |
 | Scheduled Task | ✅ PASS | — | — | ? NOT TESTED | stores checkpoints/receipts |
 | Same-chat continuation after scheduler | ✅ PASS | — | — | ? NOT TESTED | durable checkpoint supports recovery |
 | Fresh-chat recovery from repo | ✅ PASS | ? | ✅ repo rediscovery/reconcile PASS | ? | ✅ source of truth |
 | Local shell / Python tests | ✅ PASS for bounded verification | ? mode-specific | ✅ PASS, 40/40 | ✅ shell/Python commands PASS; full tests not part of T25 | stores code/evidence |
 | Persistent local workspace | no guarantee / treat ephemeral | ? NOT TESTED | ✅ PASS across independent sessions | ? NOT TESTED | ✅ remote durable state |
+| Headless/callable worker | scheduler can dispatch external tools | ? NOT TESTED | ✅ PASS via `codex exec` from normal shell; 10,215 tokens reported in T27 | Work is callable interactively; headless Work not tested | coordination bus |
 | Gmail read/search/Sent | ⛔ canonical Developer-MCP path missing | ✅ PASS built-in Gmail | — | ✅ search PASS; full read not tested | — |
 | Gmail draft/send | ⛔ canonical Developer-MCP path missing | ✅ PASS; one real deduplicated self-send | — | ? NOT TESTED | — |
 | Cloud↔Codex handoff | ✅ produce + verify | receiver mode not separately classified | can consume repo state; provider-neutral test later | ✅ handoff read + pushed return PASS (T26) | ✅ exact-SHA transfer bus |
-| Create new GitHub repo | ⛔ Developer MCP returned 403 | ? | possible via `gh`, not part of validated T10 | ? | existing repos validated |
+| Create new GitHub repo | ⛔ Developer MCP returned 403 | ? | possible via `gh`, not part of validated T10/T27 | ? | existing repos validated |
 
 Legend: ✅ empirically verified; ⛔ blocked/unavailable in the tested context; ❌ explicitly unavailable action; ? not independently tested/classified.
 
@@ -77,9 +76,9 @@ Do not collapse these into one “token” number.
 | ChatGPT normal-chat allowance | Track separately. S0→S1 showed no observable change in the displayed agentic counters after a ChatGPT.com + GitHub-MCP read task; UI granularity was too coarse for a useful burn test. |
 | OpenAI agentic / Codex allowance | Applies to Codex/eligible agentic surfaces according to current product documentation; exact per-mode accounting is not fully empirically mapped here. |
 | Codex Mac Chat | Capability validated for Gmail; allowance consumption was not measured to useful precision. |
-| Codex CLI | Real ChatGPT-account-authenticated Codex CLI validated; treat as consuming the applicable Codex/agentic allowance, not paid API, unless account evidence says otherwise. |
+| Codex CLI | Real ChatGPT-account-authenticated Codex CLI validated. T27 headless `codex exec` reported `10,215` tokens for one bounded call; this is useful per-invocation telemetry but is not itself a direct quota-decrement measurement. Treat it as consuming the applicable Codex/agentic allowance, not paid API, unless account evidence says otherwise. |
 | Codex Mac Work | T25/T26 empirically validate GitHub read, a pushed one-file GitHub return, Gmail search, local filesystem, shell and Python. Workspace persistence remains untested. Treat usage as part of the applicable Work/Codex agentic pool, not paid API, when signed in through ChatGPT. |
-| Additional OpenAI accounts A/B/C | Separate account pools. Never assume quota sharing across accounts. |
+| Additional OpenAI accounts A/B/C | Keep each account as a distinct worker budget/identity. Do not assume quota sharing across accounts. |
 | Claude / Anthropic | Separate provider/account allowance or billing. Measure independently. |
 | GitHub Actions | Independent GitHub runner capacity/cost. Control-plane MCP works; hosted runner allowance was exhausted during the observed test. |
 | Paid OpenAI API | Explicit separate billing path. **Not used** in the validated campaign. |
@@ -95,6 +94,7 @@ ChatGPT.com first
   → local ChatGPT verification when sufficient
   → Codex Mac Chat for capabilities proven there (for example Gmail)
   → Codex CLI when persistent local engineering state / shell loops are useful
+  → `codex exec` when a controller needs a non-interactive callable Codex worker (T27)
   → Codex Work for verified connector/local-tool/handoff work (T25/T26)
   → another OpenAI account or Claude only through an explicit GitHub handoff
   → paid API only by explicit exception
@@ -104,8 +104,8 @@ ChatGPT.com first
 
 - Codex Mac Work persistence across separate Work sessions remains untested; core read/write handoff lane is PASS (T25/T26).
 - Canonical Gmail Developer MCP from ChatGPT/Scheduled Tasks, only if scheduler-native Gmail is still required.
-- Multi-account OpenAI handoff and concurrency tests.
+- Multi-account OpenAI worker identity/isolation and concurrency tests — T28 next.
 - Claude Code / terminal handoff and return verification.
-- Callable-worker primitive (`codex exec`) and then provider-neutral `TO_WORKER` / `RETURN_FROM_WORKER` layer.
+- Provider-neutral `TO_WORKER` / `RETURN_FROM_WORKER` layer and broker/registry.
 - Distinct Ubuntu/cloud always-on worker only if a real cross-machine requirement appears.
 - New-repository creation through the tested GitHub Developer MCP remains blocked by the observed 403; existing-repository work is validated.
