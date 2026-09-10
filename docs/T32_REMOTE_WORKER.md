@@ -29,7 +29,7 @@ GitHub remains the durable project-state/handoff bus when a task needs repositor
 - remote clients cannot supply a filesystem workspace path;
 - each call gets a temporary private task directory that is deleted after completion;
 - request JSON accepts only `worker` and `prompt` and is size-limited;
-- Codex remains `--ephemeral --sandbox read-only`;
+- Codex remains `--ephemeral --sandbox read-only` and remote calls add `--ignore-user-config` so the host user's Codex config/MCP/plugin configuration is not loaded;
 - paid API-key environment variables are stripped by the broker;
 - responses omit `CODEX_HOME`, local task paths and Codex stderr/session ids;
 - no credentials, user emails or allowlists are committed to GitHub.
@@ -45,10 +45,18 @@ export COST_ROUTER_REMOTE_WORKSPACE_ROOT="$HOME/codex-remote-worker-tasks"
 python3 scripts/remote_worker_server.py --port 8787
 ```
 
-Then, in a separate terminal, expose that localhost port only through Tailscale Serve:
+The repository also contains a launcher that starts the localhost backend and configures a dedicated Tailscale Serve HTTPS port `8443` in the background:
 
 ```bash
-tailscale serve 8787
+export COST_ROUTER_ALLOWED_TAILSCALE_USERS='remote-user-tailnet-login'
+export COST_ROUTER_REMOTE_WORKERS='openai-B'
+bash scripts/start_remote_worker.sh
+```
+
+Equivalent manual Serve configuration:
+
+```bash
+tailscale serve --bg --https=8443 8787
 ```
 
 Tailscale Serve should report a private `https://<device>.<tailnet>.ts.net` URL. Do **not** use Tailscale Funnel for this worker.
@@ -60,6 +68,16 @@ Authenticated through Tailscale Serve identity headers:
 - `GET /v1/health`
 - `GET /v1/workers`
 - `POST /v1/run` with `{"worker":"openai-B","prompt":"..."}`
+
+A tiny client is included for the remote Mac/PC:
+
+```bash
+python3 scripts/remote_worker_client.py --url https://<device>.<tailnet>.ts.net:8443 health
+python3 scripts/remote_worker_client.py --url https://<device>.<tailnet>.ts.net:8443 workers
+python3 scripts/remote_worker_client.py --url https://<device>.<tailnet>.ts.net:8443 run --worker openai-B --prompt 'Return exactly REMOTE_OK'
+```
+
+Stop the dedicated listener with `bash scripts/stop_remote_worker.sh`.
 
 ## Verification
 
