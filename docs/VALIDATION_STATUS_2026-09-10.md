@@ -22,10 +22,11 @@ T06 — autonomous defect discovery -> deduplicated issue    PASS
 T07 — Scheduled Task -> GitHub Developer MCP read-only     PASS
 T08 — Scheduled write + second-run idempotency             PASS
 T09 — direct ChatGPT bounded patch + Python/shell tests    PASS
-T10 — Codex CLI persistent-VM proof of concept              NOT_YET_FORMALLY_TESTED
+T10 — Codex CLI persistent local Mac worker                PASS — T10A/T10B/T10C1/T10C2
+T10-VM — distinct Ubuntu/cloud persistent-VM variant       NOT_YET_FORMALLY_TESTED — optional
 T11 — Codex Worker MCP                                      DEFERRED_NOT_JUSTIFIED
 T12 — Scheduler -> Codex Worker                             DEFERRED_NOT_JUSTIFIED
-T13 — cost/quota experiment                                 PARTIAL
+T13 — cost/quota experiment                                 PARTIAL_STOPPED
 T14 — Gmail Developer MCP                                   BLOCKED_MISSING_CONNECTOR
 T14-alt — Codex Mac Chat + standard Gmail connector         PASS — read/search/Sent/draft/send; real self-send verified
 T15 — scheduler-chat manual continuation                    PASS
@@ -108,6 +109,43 @@ Durable receipt:
 
 This establishes a useful alternative route for Gmail work from Codex Mac Chat. It does not close canonical T14, whose definition remains a Gmail Developer MCP usable in a developer-MCP/scheduler-compatible ChatGPT context.
 
+## T10 — Codex CLI local persistent worker
+
+The local macOS Codex CLI lane is now empirically validated as a persistent engineering workspace across independent sessions.
+
+Evidence sequence:
+
+```text
+T10A  PASS — Codex CLI 0.153.4; macOS arm64; ChatGPT-account login reported;
+             git/gh/Python/Node available; controlled marker created.
+
+T10B  PASS — new independent Codex CLI session rediscovered exactly one marker
+             under HOME and verified exact 100-byte content and SHA-256.
+
+T10C1 PASS — persistent checkout created at
+             /Users/loic/codex-t10-persistence-test/chatgpt-cost-router
+             main/origin-main = 230e247cdd838f64a51b745df36fad6a8e73ec71,
+             40/40 tests PASS, schema generation PASS, clean tree.
+
+T10C2 PASS — third independent Codex CLI session rediscovered the persisted
+             checkout/state without prior chat history, re-ran 40/40 tests and
+             schema generation successfully, then fetched exactly once:
+             local HEAD stayed 230e247cdd838f64a51b745df36fad6a8e73ec71
+             origin/main advanced to 48c42bdd71ddb00e95104fc695447585b81567dd
+             working tree remained clean and unchanged.
+```
+
+This proves same-Mac filesystem/workspace persistence, local Git state recovery, repeatable local verification, and safe comparison with newer remote state without overwriting the local checkout. It does **not** prove conversational memory, cross-account persistence, cross-machine persistence, or an always-on Ubuntu/cloud VM.
+
+Durable receipts:
+
+```text
+.chatgpt/test-receipts/T10A_CODEX_CLI_ENVIRONMENT_2026-09-10.md
+.chatgpt/test-receipts/T10B_CODEX_CLI_PERSISTENCE_2026-09-10.md
+.chatgpt/test-receipts/T10C1_CODEX_CLI_REPO_STATE_2026-09-10.md
+.chatgpt/test-receipts/T10C2_CODEX_CLI_REPO_RECOVERY_2026-09-10.md
+```
+
 ## Proven execution path
 
 ```text
@@ -129,13 +167,20 @@ Codex Mac Chat
   -> draft create/read-back
   -> deduplicated self-send
   -> Sent verification + user receipt confirmation
+
+Codex CLI on Mac
+  -> ChatGPT-account authenticated CLI
+  -> persistent local filesystem/workspace across sessions
+  -> git/gh/Python/Node toolchain
+  -> repeatable local tests
+  -> fetch/reconcile remote metadata without overwriting local state
 ```
 
 ## Remaining gaps
 
 1. **T14 canonical:** connect/test a real Gmail Developer MCP in a compatible ChatGPT/Scheduled-Task context. Codex Mac standard Gmail is separately PASS for read/search/Sent/draft/send, including a real deduplicated self-send and independent user receipt confirmation.
-2. **T13:** quota/cost behavior remains PARTIAL until matched tasks measure allowance-pool behavior over time.
-3. **T10:** distinct persistent-VM Codex proof remains not formally tested; T23 proves the handoff path, not that architecture.
+2. **T13:** quota/cost behavior remains `PARTIAL_STOPPED`; preserve S0/S1 and do not deliberately burn quota merely to move a coarse percentage display.
+3. **T10 local Mac CLI:** PASS. A distinct Ubuntu/cloud persistent-VM variant remains not formally tested and is optional; run it only if cross-machine or always-on remote persistence becomes operationally useful.
 4. **T11/T12:** intentionally deferred until evidence justifies a persistent Codex Worker.
 5. Repository creation from scratch through the tested GitHub Developer MCP remains blocked by the observed 403; work on an existing repo is independently validated.
 
