@@ -1,0 +1,26 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789070379.963022,
+  "host": "macbook",
+  "job_id": "job-fleet-mcp-status-20260910-2136",
+  "job_sha256": "60fc4889399f57bc91ee13f63643fc7c670acd1484240bce0288f52516521241",
+  "result": {
+    "argv": [
+      "python3",
+      "scripts/fleet_operator_macos.py",
+      "status"
+    ],
+    "cwd": "/Users/loic/codex-t30-broker-test",
+    "elapsed_seconds": 0.334,
+    "exit_code": 0,
+    "host": "macbook",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "{\n  \"server\": {\n    \"installed\": true,\n    \"loaded\": true\n  },\n  \"tunnel\": {\n    \"installed\": false,\n    \"loaded\": false\n  },\n  \"relay\": {\n    \"installed\": true,\n    \"loaded\": true\n  },\n  \"mcp_port_8810_open\": true,\n  \"tunnel_health_port_8811_open\": false\n}\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789070379.581593,
+  "status": "PASS",
+  "version": 1
+}
