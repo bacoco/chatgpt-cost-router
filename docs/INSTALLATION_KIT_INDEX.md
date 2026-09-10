@@ -107,6 +107,32 @@ A ChatGPT Developer MCP can control GitHub Actions, but it does not provide free
 
 If the GitHub Actions allowance/budget is exhausted, prefer the ChatGPT + GitHub MCP + local verification route and do not repeatedly trigger doomed workflows.
 
+## Project workspace and Codex handoff
+
+For an active repository, read:
+
+`REPO_SCHEDULER_WORKSPACE.md`
+
+This describes the optional **one active repo → one primary scheduler/workspace entry point** pattern. The scheduler is a launcher and automatic refresher; GitHub remains durable state. Do not create an idle scheduler for every repository.
+
+When ChatGPT reaches a real capability boundary, read:
+
+`CHATGPT_TO_CODEX_HANDOFF.md`
+
+This makes GitHub the transfer bus from ChatGPT Cloud to Codex. ChatGPT commits a compact handoff containing the exact branch/SHA, completed work, remaining work, tests and constraints; Codex receives a short takeover prompt, verifies GitHub state, completes only the remainder and writes a durable return artifact.
+
+The intended project flow is:
+
+```text
+project scheduler / Chat
+-> GitHub checkpoint
+-> ChatGPT work
+-> GitHub handoff when necessary
+-> Codex specialist work
+-> GitHub return
+-> ChatGPT review/continuation
+```
+
 ## Current phase boundary
 
 This kit currently documents the **ChatGPT cloud lane**.
