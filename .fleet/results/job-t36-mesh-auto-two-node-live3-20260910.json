@@ -1,0 +1,32 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789071971.7103848,
+  "host": "macstudio",
+  "job_id": "job-t36-mesh-auto-two-node-live3-20260910",
+  "job_sha256": "856e6e75f7f74aa1c33eaf9330015d78d4429e3ba1aa5893236dfbf167f539e3",
+  "result": {
+    "argv": [
+      "python3",
+      "scripts/mesh_client.py",
+      "--url",
+      "https://mac-studio.taildc96f0.ts.net:8444",
+      "run",
+      "--worker",
+      "auto",
+      "--prompt",
+      "Return exactly MULTINODE_OK"
+    ],
+    "cwd": "/Users/macstudio/remote-worker-test",
+    "elapsed_seconds": 3.886,
+    "exit_code": 2,
+    "host": "macstudio",
+    "stderr": "{\"error\": \"HTTP Error 400: Bad Request\"}\n",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789071967.765516,
+  "status": "FAILED",
+  "version": 1
+}
