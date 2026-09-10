@@ -21,6 +21,9 @@ GitHub Actions hosted runner allocation                     BLOCKED — account 
 T15 — scheduler-chat manual continuation clean-profile      NOT YET FORMALLY TESTED
 T16 — fresh-chat recovery from GitHub checkpoint            NOT YET TESTED
 T17 — Scheduled Task → Actions MCP detailed result          PENDING CAPTURE
+T18 — explicit Actions runner/quota gate                    NOT YET IMPLEMENTED
+T19 — per-repo scheduler workspace launcher                 DESIGNED / NOT YET FORMALLY TESTED
+T20 — ChatGPT Cloud → Codex → ChatGPT GitHub handoff        DESIGNED / NOT YET TESTED
 Codex worker path                                            NOT YET TESTED / NOT YET NEEDED
 Gmail Developer MCP                                         NOT YET TESTED
 ```
@@ -118,4 +121,6 @@ The design rule is already clear: durable state belongs in GitHub/checkpoints, n
 2. T16 — prove a fresh Chat can recover solely from a compact GitHub checkpoint.
 3. Capture the Scheduled Task → GitHub Actions MCP result before marking T17 PASS.
 4. Add an explicit Actions-runner/quota capability gate so the router never selects hosted CI when no runner can be allocated.
-5. Only after the cloud lane is characterized, build and compare the Codex desktop/CLI lane on macOS.
+5. T19 — validate one active project with a primary repo-specific scheduler/workspace launcher.
+6. T20 — once the Codex macOS lane is available, validate the GitHub handoff round trip: ChatGPT writes `TO_CODEX.md`, Codex completes only the remainder and writes `RETURN_FROM_CODEX.md`, then ChatGPT verifies the resulting SHA/diff/tests.
+7. Only after these cloud/handoff behaviors are characterized, compare the Codex desktop/CLI lane on macOS.
