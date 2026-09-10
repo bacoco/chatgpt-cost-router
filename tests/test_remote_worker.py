@@ -99,6 +99,7 @@ class RemoteWorkerTests(unittest.TestCase):
             self.assertEqual(list(Path(root).glob("task-*")), [])
             exec_command = fake.calls[-1][0]
             self.assertIn("--ephemeral", exec_command)
+            self.assertIn("--ignore-user-config", exec_command)
             self.assertEqual(exec_command[exec_command.index("--sandbox") + 1], "read-only")
 
     def test_policy_unknown_worker_fails_closed(self):
