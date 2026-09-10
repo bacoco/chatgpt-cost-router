@@ -35,6 +35,7 @@ T31A        quota/budget-aware selection logic                PASS — determini
 T32         private remote worker over Tailscale Serve        PASS — live second-device dispatch
 T33         automatic node registry / cross-node mesh routing PASS — live two-machine auto dispatch
 T34         macOS LaunchAgent supervision/recovery            PASS — live forced-crash recovery
+T35A        Fleet Operator SSH/MCP + GitHub relay code         PASS — 22 isolated tests; live gateway pending
 
 GitHub Actions control plane                                  PASS
 GitHub hosted runner allocation                               BLOCKED_EXTERNAL_CAPACITY during observed test
@@ -78,15 +79,31 @@ Therefore T34 is PASS for per-user launchd supervision and recovery from unexpec
 Specification: `docs/T34_MACOS_SERVICE_SUPERVISION.md`.
 Receipt: `.chatgpt/test-receipts/T34_LAUNCHD_RECOVERY_LIVE_2026-09-10.md`.
 
+## T35A — Fleet Operator code / self-service control path
+
+The project now contains a private Fleet Operator layer intended to eliminate routine user terminal copy/paste. The gateway maps caller-visible aliases to local-only host configuration; SSH targets and credentials are not returned to clients. It supports local and SSH transports, per-host root/command allowlists, strict host-key checking, batch SSH, bounded time/output/fan-out, hard-blocked root/admin commands, and a separate explicit gate for destructive commands.
+
+A loopback-only MCP 2.x Streamable HTTP server exposes truthful read-only and write-capable tools and is packaged for OpenAI Secure MCP Tunnel. Runtime API key material is referenced from a local mode-0600 file rather than embedded in the LaunchAgent or repository.
+
+Because the current ChatGPT Pro product boundary does not provide full custom-MCP write actions, T35A also implements a GitHub command-relay compatibility lane. A supervised gateway can poll versioned jobs only from `fleet/commands`, validate action/expiry/filename, reject replay with a local ledger, execute through the same FleetRunner policy, persist a local result first, and push a sanitized deterministic result branch `fleet/results/<job_id>`. This does not execute PR/issue text or arbitrary branches and does not invoke a model/API.
+
+Twenty-two isolated Fleet Operator tests pass and all new Python files compile. These tests do **not** prove a real SSH connection, Secure MCP Tunnel connection, GitHub result push, or ChatGPT invocation. Live gateway bootstrap plus one ChatGPT-created/ChatGPT-read relay job is still required before the no-copy/paste lane is PASS.
+
+Specification: `docs/FLEET_OPERATOR_PLUGIN.md`.
+Relay: `docs/FLEET_OPERATOR_RELAY.md`.
+Receipt: `.chatgpt/test-receipts/T35A_FLEET_OPERATOR_CODE_2026-09-10.md`.
+
 ## Remaining gaps
 
-1. Automatic/reliable live 5-hour and weekly allowance ingestion per account.
-2. Separately shared external-user Tailscale identity/ACL smoke when available.
-3. A second simultaneously live worker-bearing node to validate real multi-node selection/load distribution.
-4. Full logout/login or machine reboot lifecycle recovery for the LaunchAgents, if operationally worth testing.
-5. Useful broker-managed concurrency when an actual workload benefits from it.
-6. Claude/other-provider worker adapters plus provider-neutral handoff.
-7. Canonical Gmail Developer MCP only if operationally required.
-8. Repository creation through the tested GitHub Developer MCP remains blocked by the observed 403.
+1. Live Fleet Operator gateway bootstrap plus one autonomous GitHub-relay job/result round trip.
+2. Direct ChatGPT MCP write actions remain product-plan/workspace limited; current Pro custom MCP is read/fetch only.
+3. Automatic/reliable live 5-hour and weekly allowance ingestion per account.
+4. Separately shared external-user Tailscale identity/ACL smoke when available.
+5. A second simultaneously live worker-bearing node for real multi-node selection/load distribution.
+6. Full logout/login or machine reboot lifecycle recovery for LaunchAgents, if operationally worth testing.
+7. Useful broker-managed concurrency when a real workload benefits from it.
+8. Claude/other-provider worker adapters plus provider-neutral handoff.
+9. Canonical Gmail Developer MCP only if operationally required.
+10. Repository creation through the tested GitHub Developer MCP remains blocked by the observed 403.
 
-No paid OpenAI API was used for these validations.
+No paid OpenAI API/model call was used for T35A local validation.
