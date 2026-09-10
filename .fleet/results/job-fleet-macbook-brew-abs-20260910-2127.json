@@ -1,0 +1,31 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789069935.2473652,
+  "host": "macbook",
+  "job_id": "job-fleet-macbook-brew-abs-20260910-2127",
+  "job_sha256": "9789672b250ce838ed6050ca299462349e5b819f619355bf32f2f1db62cb531e",
+  "result": {
+    "argv": [
+      "/opt/homebrew/bin/brew",
+      "list",
+      "--versions",
+      "python@3.10",
+      "python@3.11",
+      "python@3.12",
+      "python@3.13",
+      "python@3.14"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 1.342,
+    "exit_code": 1,
+    "host": "macbook",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "python@3.11 3.11.14_1\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789069933.8678532,
+  "status": "FAILED",
+  "version": 1
+}
