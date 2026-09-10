@@ -1,0 +1,9 @@
+{
+  "error": "argv elements must not contain NUL/newlines",
+  "finished_at_unix": 1789071540.595119,
+  "job_id": "job-t36-mesh-auto-two-node-live-20260910",
+  "job_sha256": "2ccb323bb967fdf82cf48b0aca688ccbd7a2e946183b4ba7efa9ccc0391e7a0f",
+  "started_at_unix": 1789071540.538831,
+  "status": "ERROR",
+  "version": 1
+}
