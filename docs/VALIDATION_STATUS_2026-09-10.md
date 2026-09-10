@@ -34,7 +34,7 @@ T30         two-worker local broker                           PASS — live alia
 T31A        quota/budget-aware selection logic                PASS — deterministic local tests
 T32         private remote worker over Tailscale Serve        PASS — live second-device dispatch
 T33         automatic node registry / cross-node mesh routing PASS — live two-machine auto dispatch
-T34A        macOS LaunchAgent supervision code                PASS — 8 isolated tests; live restart smoke pending
+T34         macOS LaunchAgent supervision/recovery            PASS — live forced-crash recovery
 
 GitHub Actions control plane                                  PASS
 GitHub hosted runner allocation                               BLOCKED_EXTERNAL_CAPACITY during observed test
@@ -61,24 +61,29 @@ Therefore T33 is PASS for automatic node registration/discovery and cross-machin
 Specification: `docs/T33_MESH_NODE_REGISTRATION.md`.
 Receipt: `.chatgpt/test-receipts/T33_MESH_LIVE_2026-09-10.md`.
 
-## T34A — macOS service supervision
+## T34 — macOS service supervision / live recovery
 
-T34A adds per-user macOS LaunchAgents for three roles: mesh control plane, T32 remote-worker facade, and T33 mesh-node heartbeat agent. Runtime values such as Tailscale allowlists, control-plane URL and worker aliases are written only to local `~/.config/chatgpt-cost-router/*.json` files with mode `0600`; they are not committed and are not embedded in the plist. The plists contain only the absolute Python runner path, local config-file path, RunAtLoad/KeepAlive policy and log paths.
+T34 adds per-user macOS LaunchAgents for three roles: mesh control plane, T32 remote-worker facade, and T33 mesh-node heartbeat agent. Runtime values such as Tailscale allowlists, control-plane URL and worker aliases are written only to local `~/.config/chatgpt-cost-router/*.json` files with mode `0600`; they are not committed and are not embedded in the plist. The plists contain only the absolute Python runner path, local config-file path, RunAtLoad/KeepAlive policy and log paths.
 
 The service runner resolves/records absolute Python, Tailscale and Codex binaries at install time, uses absolute `examples/workers.json` paths so launchd working-directory differences cannot break discovery, waits for Tailscale before starting, and waits for the local T32 port before starting mesh-node registration.
 
 Eight isolated tests pass without a model call, including private config permissions, plist structure/redaction, dry installs for control and worker-node roles, invalid control URL rejection, versioned config validation, and absolute registry/binary-path behavior under launchd.
 
-This is not yet a live T34 PASS. The current Mac Studio and MacBook must install the agents, show them loaded, survive a killed process through launchd restart, and recover mesh node discovery without manual restart.
+The live installation/recovery proof then succeeded. The Mac Studio `mesh-control` LaunchAgent reported installed/loaded. The MacBook `remote-worker` and `mesh-node` LaunchAgents also reported installed/loaded, with the T32 endpoint remaining tailnet-only. An initial integration smoke exposed a real `--codex-bin` CLI mismatch that caused the node agent to crash-loop; commits `9c4ac6f686513d45af82abd4387f1e23e7ba6cfb` and `13af9c0e158b5899c16a232439f97e3ecf2a80b6` corrected and regression-tested it.
+
+After the fix, both MacBook services were deliberately killed with `SIGKILL`. `remote-worker` restarted from PID `38936` to `39984`; `mesh-node` restarted from `39681` to `39985`. `launchctl` reported both `state = running`, the management CLI reported both `loaded=true`, and the Mac Studio subsequently rediscovered `macbook-pro-de-loic/openai-B` as `ready=true` with a fresh heartbeat (`age_seconds=15.979`). No manual service restart or model call was used for this recovery proof.
+
+Therefore T34 is PASS for per-user launchd supervision and recovery from unexpected process exit, including automatic re-registration into the mesh. A full logout/login or machine reboot lifecycle remains a distinct untested check.
 
 Specification: `docs/T34_MACOS_SERVICE_SUPERVISION.md`.
+Receipt: `.chatgpt/test-receipts/T34_LAUNCHD_RECOVERY_LIVE_2026-09-10.md`.
 
 ## Remaining gaps
 
 1. Automatic/reliable live 5-hour and weekly allowance ingestion per account.
 2. Separately shared external-user Tailscale identity/ACL smoke when available.
-3. Live T34 LaunchAgent install/restart/recovery smoke on the current control and worker hosts.
-4. A second simultaneously live worker-bearing node to validate real multi-node selection/load distribution.
+3. A second simultaneously live worker-bearing node to validate real multi-node selection/load distribution.
+4. Full logout/login or machine reboot lifecycle recovery for the LaunchAgents, if operationally worth testing.
 5. Useful broker-managed concurrency when an actual workload benefits from it.
 6. Claude/other-provider worker adapters plus provider-neutral handoff.
 7. Canonical Gmail Developer MCP only if operationally required.

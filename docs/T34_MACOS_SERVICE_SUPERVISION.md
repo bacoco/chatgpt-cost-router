@@ -1,6 +1,6 @@
 # T34 — macOS LaunchAgent supervision for the private worker mesh
 
-Status: `CODE COMPLETE — LOCAL TESTS PASS; LIVE INSTALL/RESTART SMOKE NEXT`
+Status: `PASS — LIVE INSTALL + FORCED-CRASH RECOVERY VERIFIED`
 
 ## Goal
 
@@ -69,6 +69,16 @@ python3 scripts/macos_mesh_service.py uninstall worker-node
 
 Eight isolated tests cover private config permissions, LaunchAgent keepalive/run-at-load structure, no personal allowlist data in plists, control dry-install, worker-node two-agent dry-install, bad control URL rejection, versioned runner config, and absolute registry/binary-path behavior under launchd. Python compilation and plist generation pass without model calls.
 
-## Live proof required
+## Live proof
 
-Install on the current Mac Studio control plane and MacBook worker node, confirm all three LaunchAgents are loaded, kill one supervised process, verify launchd restarts it, then confirm `nodes`/`workers` recover without manual server restart. A model call is unnecessary for T34 unless a final end-to-end dispatch is desired after restart.
+T34 was verified on the live two-Mac mesh without a model call.
+
+- Mac Studio: `mesh-control` was installed as a per-user LaunchAgent and reported `installed=true`, `loaded=true`; Tailscale Serve remained private on port `8444`.
+- MacBook: `remote-worker` and `mesh-node` were installed as per-user LaunchAgents and both reported `installed=true`, `loaded=true`; the T32 endpoint remained tailnet-only on port `8443`.
+- A launchd integration bug was exposed during the first smoke: the runner passed `--codex-bin` to `mesh_node_agent.py` before that CLI accepted the option. The agent crash-looped and expired from the mesh by TTL. Commit `9c4ac6f686513d45af82abd4387f1e23e7ba6cfb` added the argument and commit `13af9c0e158b5899c16a232439f97e3ecf2a80b6` added the regression test.
+- After the fix, both supervised MacBook processes were deliberately killed with `SIGKILL`. `remote-worker` changed PID `38936 -> 39984`; `mesh-node` changed PID `39681 -> 39985`. `launchctl` then reported both services `state = running`, and the management CLI still reported both `loaded=true`.
+- Without a manual service restart, the Mac Studio subsequently rediscovered `macbook-pro-de-loic/openai-B` with `ready=true` and a fresh heartbeat (`age_seconds=15.979` in the observed check).
+
+This proves unexpected-process recovery through per-user `launchd`, followed by automatic heartbeat recovery into the T33 mesh. It does **not** yet prove a full logout/login or machine reboot cycle; `RunAtLoad` is configured, but that distinct lifecycle test has not been executed.
+
+Receipt: `.chatgpt/test-receipts/T34_LAUNCHD_RECOVERY_LIVE_2026-09-10.md`.
