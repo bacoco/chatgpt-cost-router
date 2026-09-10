@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "job_id": "job-t36-sparky-checkout-20260910",
+  "host": "sparky",
+  "action": "exec_read",
+  "args": {
+    "argv": ["ls", "-ld", "/home/baconnier/chatgpt-cost-router"],
+    "timeout_seconds": 20
+  },
+  "expires_at_unix": 1789085000
+}
