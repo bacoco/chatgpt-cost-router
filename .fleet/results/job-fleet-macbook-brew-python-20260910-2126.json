@@ -1,0 +1,9 @@
+{
+  "error": "[Errno 2] No such file or directory: 'brew'",
+  "finished_at_unix": 1789069866.9055638,
+  "job_id": "job-fleet-macbook-brew-python-20260910-2126",
+  "job_sha256": "3f99a7aa67a34eafc80e8964323072ef74bcd65bb7c7b8261a2719cba8d4d06a",
+  "started_at_unix": 1789069866.837663,
+  "status": "ERROR",
+  "version": 1
+}
