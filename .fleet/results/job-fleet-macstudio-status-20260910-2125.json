@@ -1,0 +1,25 @@
+{
+  "action": "status",
+  "finished_at_unix": 1789069812.6285172,
+  "host": "macstudio",
+  "job_id": "job-fleet-macstudio-status-20260910-2125",
+  "job_sha256": "9ebc4fbba2d1948af25c33d1b1eac692afc878a79bb5518ad756ae540090cd0a",
+  "result": {
+    "argv": [
+      "uname",
+      "-a"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.361,
+    "exit_code": 0,
+    "host": "macstudio",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "Darwin mac-studio-2.home 25.5.0 Darwin Kernel Version 25.5.0: Mon Apr 27 20:38:56 PDT 2026; root:xnu-12377.121.6~2/RELEASE_ARM64_T6000 arm64\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789069812.231452,
+  "status": "PASS",
+  "version": 1
+}
