@@ -135,7 +135,7 @@ project scheduler / Chat
 
 ## Canonical workflow skills
 
-The repeatable workflow is now encoded as repository-backed skills, not only prose prompts:
+The repeatable workflow is encoded as repository-backed skills, not only prose prompts:
 
 ```text
 project-workspace-bootstrap
@@ -152,4 +152,12 @@ All three live under `skills/` and use the existing `surface-handoff` contract f
 
 ## Current phase boundary
 
-The ChatGPT cloud lane is now validated through authenticated GitHub read/write, scheduled read/write and idempotency, independent-context checkpoint recovery, repo-specific scheduler/workspace consumption, the hosted-runner capability gate, and the one-prompt workspace dogfood bootstrap. The Cloud → Codex side is also validated through a persisted exact-SHA `TO_CODEX.md` handoff. The remaining end-to-end gaps are deliberately narrow: scheduler-chat clean-profile manual continuation, a literal fresh-chat recovery test, and the real Codex execution/return portion while Codex capacity is unavailable. Do not treat those external/manual blockers as failure of the already-proven cloud path.
+The ChatGPT cloud lane is now empirically validated for authenticated GitHub MCP read/write, Scheduled Task GitHub access, scheduled idempotency, repo-backed workspace consumption, scheduler-associated-chat continuation, literal fresh-chat recovery from GitHub checkpoint state, and one-prompt project self-bootstrap. The Cloud -> Codex handoff half is also validated through exact-SHA persistence and read-back.
+
+The remaining end-to-end gaps are deliberately narrow:
+
+- real Codex execution and return verification for T23/T24/full T20 while Codex capacity is exhausted;
+- Gmail Developer MCP testing for T14 because that connector is not present in this developer-MCP-restricted context;
+- T11/T12 remain intentionally deferred until a persistent Codex Worker is justified by measured need.
+
+Do not regenerate the existing T20 handoff while `test/t20-cloud-to-codex-handoff-20260910` remains valid at `be8b29f191b877072e1def641aa3aeec51ec2ab8`. Use `VALIDATION_STATUS_2026-09-10.md` and `.chatgpt/CURRENT.md` for the current state rather than historical pending lines in older experiment documents.
