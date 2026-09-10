@@ -134,7 +134,7 @@ def dispatch_remote(payload: Mapping[str, str], *, policy: RemotePolicy, registr
             task_kwargs["run"] = run
         if clock is not None:
             task_kwargs["clock"] = clock
-        result = run_task(worker, payload["prompt"], folder, **task_kwargs)
+        result = run_task(worker, payload["prompt"], folder, ignore_user_config=True, **task_kwargs)
 
     return {
         "worker": result["worker"],
