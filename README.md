@@ -7,8 +7,9 @@ and costs fit the task.
 
 The repository now contains a deterministic recommendation engine, versioned JSON
 contracts, five repository-backed skills, a durable local operation ledger and tests.
-It evaluates caller-supplied plans. It does not discover host tools, launch another
-ChatGPT surface, operate hardware, send messages or implement remote MCP gateways.
+It evaluates caller-supplied plans. Remote execution is isolated in explicit adapters; the
+new Fleet Operator component provides a private, allowlisted SSH/MCP gateway rather than
+letting routing code silently operate hardware.
 
 
 ## Cloud-first project bootstrap
@@ -45,6 +46,20 @@ The broker deliberately strips known paid-API-key environment variables from chi
 ### Private remote worker over Tailscale
 
 T32 adds a loopback-only HTTP facade intended to sit behind **Tailscale Serve**. It authorizes the Tailscale identity, exposes only explicitly allowed worker aliases, never accepts a client-supplied local workspace path, runs the existing read-only/ephemeral broker, and returns redacted telemetry. The backend refuses non-loopback binding; do not use Funnel or expose it directly to the LAN/Internet. Six isolated transport-boundary tests pass, and a live second-device Tailscale Serve dispatch to `openai-B` is validated with redacted telemetry and no paid API path. A separately shared external-user identity remains an optional later smoke. See [T32_REMOTE_WORKER](docs/T32_REMOTE_WORKER.md).
+
+### Fleet Operator — ChatGPT to SSH fleet gateway
+
+Fleet Operator is the operational escape hatch from manual terminal copy/paste. A loopback-only
+MCP server maps stable host aliases to local/SSH transports, enforces per-host command and path
+allowlists, blocks root/admin commands, requires an explicit destructive flag for dangerous
+operations, and returns bounded telemetry without revealing SSH targets or credentials. The intended
+ingress is OpenAI Secure MCP Tunnel. See [FLEET_OPERATOR_PLUGIN](docs/FLEET_OPERATOR_PLUGIN.md).
+
+Because full custom-MCP write actions are not currently available on ChatGPT Pro, the same code also
+contains a supervised GitHub command relay. ChatGPT can enqueue a versioned bounded job on the
+`fleet/commands` branch using its already-validated GitHub connector; the gateway executes it through
+the same policy and pushes the result to `fleet/results/<job_id>`. See
+[FLEET_OPERATOR_RELAY](docs/FLEET_OPERATOR_RELAY.md).
 
 ## Try the executable example
 
