@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789097210.324904,
+  "host": "macbook",
+  "job_id": "job-t37-reload-services-20260911",
+  "job_sha256": "39be0ca1918969abe336b44a462c635b20168bcf5e19c8f57f3c2c9719c10165",
+  "result": {
+    "argv": [
+      "bash",
+      "-lc",
+      "(sleep 15; launchctl kickstart -k gui/$(id -u)/pro.chatgpt-cost-router.fleet-relay; launchctl kickstart -k gui/$(id -u)/pro.chatgpt-cost-router.fleet-operator) >/tmp/t37-fleet-reload.log 2>&1 & echo reload_scheduled"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.576,
+    "exit_code": 0,
+    "host": "macbook",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "reload_scheduled\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789097209.70679,
+  "status": "PASS",
+  "version": 1
+}
