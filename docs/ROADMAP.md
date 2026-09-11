@@ -1,38 +1,24 @@
-# Roadmap: implementation versus acceptance
+# Roadmap and remaining acceptance gates
 
-## Implemented in this A/B delivery
+Read [deployment status](DEPLOYMENT_STATUS.md) for the current evidence and exact runtime revision. The A/B deployment is authorized; the earlier blanket deployment pause is obsolete. **T38 and quota-burning experiments remain paused.**
 
-| Area | Code acceptance delivered |
+## Implemented and under live acceptance
+
+A has durable native/direct connector workflows, project/account/session scopes, exact approvals, verification, cancellation and non-replaying recovery. B has independent jobs, supervised processes, logs/progress, receipts/artifacts, typed gateway routing and durable relay publication. Optional worker/mesh code is separated with compatible imports. Owner installers create separate revision-pinned user services.
+
+Two acceptance classes must remain separate: a passing source test suite and a live service completing the owner's actual operation. Never infer either from a successful Git push or queue submission.
+
+## Next operational gates
+
+| Gate | Required evidence |
 | --- | --- |
-| A workflows | Multi-connector action catalog; native tool loop; optional bound HTTP adapter; references, approvals, read-back, cancellation and read-only recovery. |
-| Shared contracts | Versioned requests, operator project/resource/account grants, scoped capabilities, private journal, atomic claims and receipts. |
-| B lifecycle | Independent CLI/MCP, immutable source, owned supervisor, queue/concurrency, logs/progress, cancellation/deadlines, stale recovery, results and artifact retrieval. |
-| Gateway/relay | Typed project/node calls, bounded public commands, enrolled identity pins, non-replaying durable outbox and legacy entrypoint compatibility. |
-| Structure | Physical worker/mesh migration with exact old import aliases; A and ordinary B have no implicit model runtime. |
-| Operations | Local release staging/integrity, idle activation/rollback, explicit enrollment plans, user-service rendering and installable core wheel. |
-| Delivery | Regression/failure-injection tests, local demonstration, schemas/examples, usage, feature-branch commits and machine-readable validation. |
+| Complete fleet coverage | Resolve the `macstudio` permission failure without replaying its uncertain job; restore authorized SSH availability on Sparky and Omen, then perform completion/cancellation/artifact checks. |
+| A attached to a real Chat account | Authenticated app/transport attachment, fresh capability discovery and a real approved connector workflow, with native read-back. Local MCP discovery is not that attachment. |
+| Application-specific use | Enroll the required projects, accounts and named script/build/service profiles. Current owner defaults are smoke and release validation. |
+| Untrusted workloads | Exercise the real container engine, filesystem/network/resource restrictions and cleanup under failures. |
+| Operational durability | Reboot/login persistence, backup/restore, staged upgrade and rollback with real service reload and uncertain-job handling. |
+| Retire older paths | Check other projects' dependencies before disabling legacy relay/mesh/worker services; do not silently break them. |
 
-## Gates before production integration or deployment
+## Optional, not prerequisites
 
-1. Review the committed feature branch and run validation in the target environment.
-   Code publication is complete; main merge and deployment remain separate authorized
-   actions. Read `../audits/ab-implementation-20260911/` for delivery evidence.
-2. Run the optional official MCP SDK test with its pinned dependencies, then verify
-   authenticated attachment from each actual Chat surface/account. Local HTTP tests
-   and a tool-registration recorder are not that live acceptance test.
-3. Validate one explicitly authorized harmless job on each actual target OS/SSH
-   transport. Test service install/reload/reboot, measured metrics and version rollback.
-4. Validate the pinned container image/engine and its filesystem/resource/network
-   behavior on the real target before accepting untrusted workloads.
-5. Exercise real connector workflows with an explicitly authorized test destination,
-   actual per-action capability evidence and read-back. Do not send or publish merely
-   to make a code test pass.
-
-**T38 and deployment remain paused.** None of these gates authorizes itself.
-
-## Deliberately optional extensions
-
-Legacy worker/prompt mesh, placement optimization, provider-account telemetry,
-local inference, Serena and PAIR are not prerequisites for A/B ordinary operations.
-Public multi-tenant OAuth, automatic OS provisioning and a new project-aware mesh
-would be separately scoped products, not claims made by this release.
+Load distribution, local inference, extra provider workers, Serena and PAIR can be evaluated separately. They must not delay ordinary connector work or become implicit paid-model calls. Repository restructuring/branding beyond the implemented package boundaries is not needed to operate the current A/B path.

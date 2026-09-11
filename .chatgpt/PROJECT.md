@@ -1,60 +1,21 @@
-# ChatGPT project workspace
+# Project: Chat-first Operations & Fleet Operator
 
-Project: `bacoco/chatgpt-cost-router`
+## Purpose
 
-Purpose: develop two independent products in the existing repository:
-- **A — Chat-first Operations:** complete authorized work from normal Chat through
-  Gmail, GitHub, WordPress/Cowboy and all other available plugins/connectors;
-  read, reason, edit, send, publish, coordinate and verify, not only create issues.
-- **B — Fleet Operator:** machine access, process execution/management, supervision,
-  monitoring and results, usable without Chat; distribution and model workers optional.
+A completes authorized work from native Chat using Gmail, GitHub, Cowboy and other available connectors, not only issue creation. B independently operates ordinary processes on enrolled machines, not only Codex. Deterministic cost/capability routing supports those products; optional inference, mesh, Serena and PAIR are not prerequisites.
 
-The historical cost/capability router remains a decision-support component, not the
-entire product definition. A does not require B for connector-only work.
-A can invoke B as a tool without requiring another LLM.
+## Resume order
 
-Canonical source kit: this repository itself.
-Source-kit revision used for this bootstrap: `a1e172e20e0ba5f63d94abd1fb2e988a7ffb6736`.
-That SHA is historical bootstrap provenance, not the current `main` revision.
+Read README.md, docs/DEPLOYMENT_STATUS.md, .chatgpt/CURRENT.md, docs/ARCHITECTURE.md and docs/ROADMAP.md from the current branch before acting. The owner requested completed implementation, deployment and documentation that a new repository visitor can use. Main is the intended published authority; inspect actual refs before claiming a merge.
 
-Durable-state rule: GitHub is the source of truth for project instructions, code,
-checkpoints and delivery evidence. Chat/scheduler-local files are workspaces only.
-B also has machine-local runtime state; GitHub receipts are not live fleet telemetry.
-Credentials and private runtime configuration must not be committed.
+Prefer actual available native connectors and ordinary local execution. No automatic Work/Codex/Claude/API transfer. Confirm project/account/resource grants, exact intended effects and the definition of completion. Never mistake a plan, file push, queue submission, old receipt or simulated connector for a verified live result.
 
-## Current entry points and authority
+## Operating constraints
 
-Read `README.md`, `.chatgpt/CURRENT.md`, `docs/ARCHITECTURE.md` and
-`docs/ROADMAP.md`. The product boundary is recorded in
-`docs/TWO_PROJECTS_AND_PAIR_2026-09-11.md`; historical verification is recorded in
-`docs/VALIDATION_STATUS_2026-09-11.md` and the exact test receipts.
+The owner's A/B deployment is authorized. T38, quota burning and unrelated experiments remain paused. Use exact runtime revisions, private configuration and separately owned services. Preserve unrelated working copies, projects and legacy services. A new Chat session must observe its own real capabilities.
 
-The A/B code split and core runtimes are committed on `feat/ab-products-20260911`.
-Read docs/AB_USAGE.md and docs/AB_VALIDATION.md for actual entry points and evidence.
-No main merge or deployment was performed. T38, installations and new fleet jobs
-remain paused unless the owner explicitly resumes them. Code validation and a
-feature-branch commit are not deployment instructions.
+Lost external results and uncertain machine jobs require reconciliation, not blind repetition. Keep credentials, private journals and raw destinations out of repository evidence. Public artifact bytes must not be used to bypass private result retrieval.
 
-## Preferred execution, subject to the current task and pause
+## Provenance
 
-1. Stay in normal Chat and use the authorized tools that can complete the request.
-2. Act directly through Gmail, GitHub, Cowboy or other available connectors and
-   verify the result; an issue/handoff is not the default substitute for completion.
-3. Use a Scheduled Task only when available and needed for launching/repetition;
-   it is not required for ordinary connector work.
-4. Use local deterministic tools or B for machine work when necessary and authorized.
-5. Invoke Codex/Claude/Work only for an explicit, useful capability boundary.
-6. Use a paid model API only by explicit exception. CI/compute costs also have gates.
-
-Never silently switch surface or hide another model call behind an app.
-Preserve the user's stopped quota experiment. Check capabilities by exact action,
-resource/account, surface and session; yesterday's proof is not a universal entitlement.
-
-The historical GitHub-project reference profile uses `GitHub — bacoco TEST`;
-`GitHub Actions — bacoco TEST` is optional with a separate runner-capacity gate.
-Other apps are selected for the actual task; this list does not restrict A to GitHub.
-For WordPress use Cowboy, not WPVibe.
-
-Bind every operation to its project or authorized task context. Keep GitHub identity,
-OS identity and provider account separate. Do not broaden repository, merge,
-release, mail, publication, deployment, secret or paid-API permissions.
+The repository evolved from a Chat/repository handoff and cost-routing kit. Historical bootstrap instructions, dated experiments and earlier worker demonstrations are retained as provenance; they no longer define the complete A/B scope or its current deployment status. See docs/README.md for the historical/current distinction.

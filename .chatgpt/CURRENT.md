@@ -1,26 +1,9 @@
-# Current A/B implementation state — September 11, 2026
+# Current A/B work
 
-Repository: `bacoco/chatgpt-cost-router`.
-Verified source branch: `feat/ab-products-20260911`.
-Verified pre-delivery head: `cd897ddf3856ffdabef68ba1a71b43dd99efad46`.
+Date: 2026-09-11. The owner explicitly authorized A/B deployment and a clear, current repository entrypoint. The earlier blanket deployment pause no longer applies; **T38/quota-burning experiments remain paused**.
 
-Core A/B implementation, examples and regression tests have been committed on the
-feature branch using the actual GitHub write connector. The earlier ZIP-only delivery
-and assertion that writes were unavailable were incorrect. No PR, main merge or
-deployment was performed. Fresh local revalidation: 201 tests, 200 passed, no failures
-or errors, one optional official MCP SDK test skipped. Evidence is recorded under
-`audits/ab-implementation-20260911/`; live acceptance is separate from code delivery.
+Read ../README.md and ../docs/DEPLOYMENT_STATUS.md first. Final deployment evidence and remaining gates belong there, not in an old experiment count or ZIP. Source is on feat/ab-products-20260911 pending the requested main merge; after merge use main.
 
-Implemented: physical worker/mesh separation with compatibility aliases; A workflow
-execution/verification/cancellation/recovery; B ordinary job lifecycle, immutable
-workspaces, monitoring/results/artifacts; secure typed gateway; durable non-replaying
-relay; local enrollment, staged releases, activation/rollback and service rendering;
-packaging, examples, schema and regression/failure-injection coverage.
+Runtime currently being accepted is 10b3ee3e438d57b210b1155e2dbaf19aac9b00db. MacBook and macstudioprod have completed real process/artifact/cancellation checks. Other hosts must retain their specific blockers. Keep existing legacy services/checkouts intact and use the separate A/B queue only once its result evidence is confirmed.
 
-Read `../docs/AB_USAGE.md`, `../docs/AB_VALIDATION.md` and `../docs/ROADMAP.md`. Live native Chat
-attachment, actual connector workflows, target SSH/macOS/container behavior and
-service installation remain explicit acceptance gates, not inferred PASS results.
-
-**T38 and all existing deployments/services/schedulers remain paused and unchanged.**
-No paid API, Codex smoke, real email/publication or job on the owner's machines was
-performed to validate this code. Local temporary test processes are not fleet jobs.
+Never claim Chat attachment from local MCP initialization, success from a queued job, CI pass from a local suite, or complete fleet deployment from two verified nodes. Do not replay the macstudio uncertain smoke.
