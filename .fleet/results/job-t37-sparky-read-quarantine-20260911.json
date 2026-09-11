@@ -1,0 +1,29 @@
+{
+  "action": "read_file",
+  "finished_at_unix": 1789097441.680494,
+  "host": "sparky",
+  "job_id": "job-t37-sparky-read-quarantine-20260911",
+  "job_sha256": "8c695e969536b20658b3a3125023981b2106c352f79db21d611c8da4240da7fc",
+  "result": {
+    "argv": [
+      "head",
+      "-c",
+      "8192",
+      "--",
+      "/home/baconnier/.local/state/chatgpt-cost-router/worker-health.json"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.356,
+    "exit_code": 0,
+    "host": "sparky",
+    "path": "/home/baconnier/.local/state/chatgpt-cost-router/worker-health.json",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "{\n  \"version\": 1,\n  \"workers\": {\n    \"openai-A\": {\n      \"reason\": \"auth_failure\",\n      \"since_unix\": 1789097405.9945796,\n      \"status\": \"quarantined\"\n    }\n  }\n}\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789097441.2807932,
+  "status": "PASS",
+  "version": 1
+}
