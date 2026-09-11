@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789143114.772609,
+  "host": "macbook",
+  "job_id": "job-ab-complete-assets-20260911-1610",
+  "job_sha256": "8a686aada4ea7fb38605dc40d143d92b2e4dd99073588de9cd3e9d4b65e7d994",
+  "result": {
+    "argv": [
+      "python3",
+      "-c",
+      "import pathlib,subprocess; h=pathlib.Path.home(); r=h/'codex-t30-broker-test'; helper='3aa64555e32bdf3a37ca19222e33815c06ff22f6'; revision='10b3ee3e438d57b210b1155e2dbaf19aac9b00db'; subprocess.run(['git','-C',str(r),'fetch','origin','feat/ab-products-20260911'],check=True,capture_output=True,timeout=60); code=subprocess.check_output(['git','-C',str(r),'show',helper+':scripts/ab_complete_assets.py'],timeout=20); compile(code,'ab_complete_assets.py','exec'); root=h/'.local/share/chatgpt-cost-router/ab'; script=root/'bootstrap'/(helper+'-assets.py'); script.write_bytes(code); script.chmod(384); subprocess.run(['python3',str(script),'--repo',str(r),'--root',str(root),'--revision',revision,'--alias','macbook','--finish'],check=True,timeout=600)"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 49.627,
+    "exit_code": 0,
+    "host": "macbook",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "{\"version\": 1, \"alias\": \"macbook\", \"revision\": \"10b3ee3e438d57b210b1155e2dbaf19aac9b00db\", \"source\": \"/Users/loic/.local/share/chatgpt-cost-router/ab/source/10b3ee3e438d57b210b1155e2dbaf19aac9b00db\", \"python\": \"/Users/loic/.local/share/chatgpt-cost-router/ab/venvs/10b3ee3e438d57b210b1155e2dbaf19aac9b00db/bin/python\", \"node_config\": \"/Users/loic/.local/share/chatgpt-cost-router/ab/config/node.json\", \"checks\": {\"job\": \"a200ae3b75804400a94d50d8ed7db913\", \"state\": \"SUCCEEDED\", \"artifact_verified\": true, \"artifact_sha256\": \"5adaef52750e8b683c5d729a19a5d755f03b375da680124bd8be089c088d2d49\", \"cancel_job\": \"40bd0f951b6843e38e57dc0e72e4a94d\", \"cancel_state\": \"CANCELLED\", \"health\": {\"ok\": true, \"node_id\": \"macbook\", \"observed_at\": 1789143074.87533, \"runtime_revision\": \"10b3ee3e438d57b210b1155e2dbaf19aac9b00db\", \"policy_revision\": \"bb19aa845899914084698db00917c7d9798bfa1332bad1f1df3315c91a560dcc\", \"model_runtime_required\": false, \"cpu_count\": 10, \"load_average\": [3.1103515625, 2.8701171875, 2.86669921875], \"disk_free_bytes\": 25720643584, \"max_concurrency\": 2, \"jobs_by_state\": {\"CANCELLED\": 2, \"SUCCEEDED\": 2}}, \"tests\": {\"tests_run\": 209, \"passed\": 209, \"failures\": 0, \"errors\": 0, \"skipped\": 0, \"successful\": true}}, \"services\": [{\"label\": \"pro.chatgpt-cost-router.ab-node\", \"definition\": \"/Users/loic/Library/LaunchAgents/pro.chatgpt-cost-router.ab-node.plist\", \"running\": true}, {\"label\": \"pro.chatgpt-cost-router.ab-chat\", \"definition\": \"/Users/loic/Library/LaunchAgents/pro.chatgpt-cost-router.ab-chat.plist\", \"running\": true}], \"legacy_services_changed\": false}\n{\"revision\": \"10b3ee3e438d57b210b1155e2dbaf19aac9b00db\", \"supplemental_files_sha256\": {\"skills/capability-router/SKILL.md\": \"ad94830f674fd9a03aaeb86d59f592c949a112db641439b293e3159ab86d4627\", \"skills/surface-handoff/SKILL.md\": \"2cd95a9e4a7d1ac9b72ea0eeb19faec30783d2416148bf852c48a3cb593f44f6\"}, \"runtime_code_changed\": false, \"original_archive_digest\": \"b97ec4eefbca28638b59b4a143acc4802f3cc30c79a6d67282d0f829bd481b99\"}\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789143065.091485,
+  "status": "PASS",
+  "version": 1
+}
