@@ -1,0 +1,25 @@
+{
+  "action": "status",
+  "finished_at_unix": 1789140634.0266109,
+  "host": "macbook",
+  "job_id": "job-ab-deploy-probe-macbook-20260911-1530",
+  "job_sha256": "3b70ca219c33306b564058430792e8e9716cdeadd38018c25cf8aeab6bd96f62",
+  "result": {
+    "argv": [
+      "uname",
+      "-a"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.007,
+    "exit_code": 0,
+    "host": "macbook",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "Darwin macbook-pro-de-loic.home 25.3.0 Darwin Kernel Version 25.3.0: Wed Jan 28 20:54:55 PST 2026; root:xnu-12377.91.3~2/RELEASE_ARM64_T8132 arm64\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789140633.9795048,
+  "status": "PASS",
+  "version": 1
+}
