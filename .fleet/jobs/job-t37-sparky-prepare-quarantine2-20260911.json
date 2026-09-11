@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "job_id": "job-t37-sparky-prepare-quarantine2-20260911",
+  "host": "sparky",
+  "action": "exec_write",
+  "args": {
+    "argv": ["bash", "-lc", "set -euo pipefail; cd /home/baconnier/chatgpt-cost-router; python3 -c \"from cost_router.worker_health import clear; clear('openai-A')\"; export PATH=/home/baconnier/.nvm/versions/node/v20.20.0/bin:$PATH; U=$(tailscale status --json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(iter(d[\"User\"].values()))[\"LoginName\"])'); export COST_ROUTER_ALLOWED_TAILSCALE_USERS=\"$U\"; export COST_ROUTER_REMOTE_WORKERS=openai-A; bash scripts/start_remote_worker.sh"],
+    "timeout_seconds": 120
+  },
+  "expires_at_unix": 1789120000
+}
