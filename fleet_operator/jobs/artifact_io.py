@@ -1,44 +1,96 @@
-"""Read only receipt-listed artifacts, with confined paths and per-chunk integrity."""
+"""Bounded artifact delivery, tied to a durable receipt rather than arbitrary paths."""
 import base64
 import hashlib
 import os
 import stat
-from operation_contracts.common import ContractError, integer
-from .workspace import root_for
+from pathlib import Path, PurePosixPath
+from operation_contracts.common import ContractError, digest, integer
+from operation_contracts.files import private_json
+
+MAX_ARTIFACT = 16 * 1024 * 1024
 
 
-def read_artifact(service, project, id_, name, offset=0, limit=65536):
-    result = service.result(project, id_)
-    item = next((v for v in result["artifacts"] if v["name"] == name), None)
-    if item is None:
-        raise ContractError("artifact is not in the verified result manifest")
-    integer(offset, 0, item["size"], "artifact offset")
-    integer(limit, 1, 131072, "artifact limit")
-    base = root_for(service.config, id_) / "workspace"
-    fd = os.open(base, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+def read_verified_file(work, name, offset=0, limit=65536):
+    """Read through no-follow descriptors; hash the whole bounded regular file."""
+    if (not isinstance(name, str) or not name or PurePosixPath(name).is_absolute()
+            or any(part in {'', '.', '..'} for part in name.split('/'))):
+        raise ContractError('invalid artifact name')
+    integer(offset, 0, MAX_ARTIFACT, 'offset')
+    integer(limit, 1, 65536, 'limit')
+    directory = os.open(work, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     try:
-        parts = name.split("/")
+        parts = name.split('/')
         for part in parts[:-1]:
-            child = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=fd)
-            os.close(fd)
-            fd = child
-        file = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=fd)
-        try:
-            if not stat.S_ISREG(os.fstat(file).st_mode):
-                raise ContractError("artifact is no longer a regular file")
-            raw = bytearray()
-            while len(raw) <= 16*1024*1024:
-                chunk = os.read(file, 65536)
-                if not chunk:
-                    break
-                raw.extend(chunk)
-            if len(raw) != item["size"] or hashlib.sha256(raw).hexdigest() != item["sha256"]:
-                raise ContractError("artifact changed since its receipt")
-            chunk = bytes(raw[offset:offset+limit])
-        finally:
-            os.close(file)
+            child = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=directory)
+            os.close(directory)
+            directory = child
+        fd = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory)
+    finally:
+        os.close(directory)
+    try:
+        before = os.fstat(fd)
+        if not stat.S_ISREG(before.st_mode) or before.st_nlink != 1:
+            raise ContractError('artifact must be a regular file with no hard links')
+        if before.st_size > MAX_ARTIFACT or offset > before.st_size:
+            raise ContractError('artifact size or offset exceeds limit')
+        sha, total, selected = hashlib.sha256(), 0, bytearray()
+        while True:
+            raw = os.read(fd, 65536)
+            if not raw:
+                break
+            if total + len(raw) > MAX_ARTIFACT:
+                raise ContractError('artifact exceeds limit while reading')
+            sha.update(raw)
+            left, right = max(offset, total), min(offset + limit, total + len(raw))
+            if left < right:
+                selected.extend(raw[left-total:right-total])
+            total += len(raw)
+        after = os.fstat(fd)
+        identity = lambda s: (s.st_dev, s.st_ino, s.st_size, s.st_mtime_ns, s.st_ctime_ns)
+        if identity(before) != identity(after) or total != before.st_size:
+            raise ContractError('artifact changed while reading')
+        return {'name': name, 'size': total, 'sha256': sha.hexdigest()}, bytes(selected)
     finally:
         os.close(fd)
-    return {"run_id":id_, **item, "offset":offset,"next_offset":offset+len(chunk),
-            "eof":offset+len(chunk) == item["size"], "encoding":"base64",
-            "data":base64.b64encode(chunk).decode(), "chunk_sha256":hashlib.sha256(chunk).hexdigest()}
+
+
+def manifest(profile, work):
+    found = []
+    for name in profile.get('artifacts', []):
+        try:
+            item, _ = read_verified_file(work, name)
+        except FileNotFoundError:
+            continue
+        except OSError as exc:
+            raise ContractError('artifact path is unavailable or contains a link') from exc
+        found.append(item)
+    return found
+
+
+def artifact(service, project, run_id, name, offset=0, limit=65536):
+    from .workspace import root_for
+    row = service.row(project, run_id)
+    result = service.result(project, run_id)
+    if not result['receipt_digest']:
+        raise ContractError('no verified completion receipt for this artifact')
+    root = root_for(service.config, run_id)
+    try:
+        receipt = private_json(root / 'result.json')
+        if (digest(receipt) != result['receipt_digest']
+                or receipt.get('run_id') != run_id or receipt.get('request_digest') != row['digest']
+                or receipt.get('policy') != row['policy'] or receipt.get('token') != row['data'].get('token')
+                or receipt.get('state') != row['state']):
+            raise ContractError('completion receipt does not match this execution')
+        if receipt.get('artifacts') != result['artifacts']:
+            raise ContractError('artifact manifest differs from completion receipt')
+        expected = next((item for item in receipt['artifacts'] if item['name'] == name), None)
+        if expected is None:
+            raise ContractError('artifact is not in the completion manifest')
+        observed, raw = read_verified_file(root / 'workspace', name, offset, limit)
+        if observed != expected:
+            raise ContractError('artifact differs from recorded size or hash')
+    except OSError as exc:
+        raise ContractError('recorded artifact or receipt is unavailable') from exc
+    return {'run_id': run_id, **observed, 'offset': offset, 'next_offset': offset + len(raw),
+            'eof': offset + len(raw) == observed['size'], 'encoding': 'base64',
+            'data_base64': base64.b64encode(raw).decode('ascii'), 'verified': True}

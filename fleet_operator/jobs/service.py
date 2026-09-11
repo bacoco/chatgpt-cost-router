@@ -39,7 +39,7 @@ class Jobs:
         return {"run_id":id_, "project_id":project, "node_id":self.config.node_id, "state":row["state"],
                 "profile":row["request"]["profile"], "isolation":data.get("isolation",profile.get("isolation","unknown")),
                 "source":row["request"].get("source"), "created":row["created"], "updated":row["updated"],
-                "metrics":data.get("metrics"), "heartbeat":data.get("heartbeat"), "progress":data.get("progress"),
+                "heartbeat":data.get("heartbeat"), "progress":data.get("progress"),
                 "last_output_at":data.get("last_output_at"), "exit_code":data.get("exit_code"),
                 "reason":data.get("reason"), "runtime_revision":data.get("runtime_revision"),
                 "extra_model_calls":0}
@@ -116,6 +116,10 @@ class Jobs:
                 "output_truncated":row["data"].get("output_truncated",False),
                 "request_digest":row["digest"],"receipt_digest":row["data"].get("receipt_digest")}
 
+    def artifact(self, project, id_, name, offset=0, limit=65536):
+        from .artifact_io import artifact
+        return artifact(self, project, id_, name, offset, limit)
+
     def reconcile(self, project, id_):
         from operation_contracts.common import digest
         row = self.row(project,id_)
@@ -132,26 +136,14 @@ class Jobs:
         self.journal.transition(id_,{"UNCERTAIN"},receipt["state"],{**receipt,"receipt_digest":digest(receipt)},token=expected[2])
         return self.result(project,id_)
 
-    def artifact(self, project, id_, name, offset=0, limit=65536):
-        from .artifact_io import read_artifact
-        return read_artifact(self, project, id_, name, offset, limit)
-
-    def health(self):
-        from .metrics import node_health
-        return node_health(self)
-
     def recover_stale(self, age=120):
         integer(age,5,86400,"stale age")
         recovered = []
-        with self.journal.transaction() as db:
-            rows = db.execute("SELECT * FROM operations WHERE principal=? AND kind='process' AND state IN ('RUNNING','CANCELLING')",
-                              (self.config.principal,)).fetchall()
-        for record in rows:
-            row = self.journal.decode(record)
-            if time.time()-row["data"].get("heartbeat", row["updated"]) > age:
-                if self.journal.transition(row["id"], {row["state"]}, "UNCERTAIN",
-                                           {"reason":"supervisor heartbeat lost"}, token=row["data"].get("token")):
-                    recovered.append(row["id"])
+        for project in self.config.projects.list(self.config.principal):
+            for row in self.journal.list(self.config.principal,project["project_id"],"process"):
+                if row["state"] in {"RUNNING","CANCELLING"} and time.time()-row["data"].get("heartbeat",row["updated"]) > age:
+                    if self.journal.transition(row["id"],{row["state"]},"UNCERTAIN",{"reason":"supervisor heartbeat lost"},token=row["data"].get("token")):
+                        recovered.append(row["id"])
         return recovered
 
     def profiles(self, project):

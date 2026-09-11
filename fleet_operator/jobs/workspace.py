@@ -97,15 +97,5 @@ def prepare(config, row):
 
 
 def artifacts(profile, work):
-    found, root = [], work.resolve()
-    for name in profile.get("artifacts", []):
-        path = work / name
-        if not path.exists():
-            continue
-        if path.is_symlink() or root not in path.resolve().parents or not path.is_file():
-            raise ContractError("artifact escapes workspace or is not regular")
-        size = path.stat().st_size
-        if size > 16*1024*1024:
-            raise ContractError("artifact exceeds 16 MiB")
-        found.append({"name":name, "size":size, "sha256":hashlib.sha256(path.read_bytes()).hexdigest()})
-    return found
+    from .artifact_io import manifest
+    return manifest(profile, work)
