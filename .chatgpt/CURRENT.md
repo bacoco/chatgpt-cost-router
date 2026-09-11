@@ -1,7 +1,7 @@
 # Current project checkpoint
 
-Task: strategic pause — separate Chat orchestration and Fleet Operator
-Status: `STRATEGIC_REVIEW_TWO_PROJECTS` — the owner clarified two independent needs: maximize work orchestrated from Chat, and operate/monitor processes across machines, with placement optional. NVIDIA PAIR is the Personal AI Router, not PER/PIR. The proposed split and researched PAIR scope are recorded in `docs/TWO_PROJECTS_AND_PAIR_2026-09-11.md`. No implementation, deployment, or live test is authorized by this documentation-only review.
+Task: strategic pause — complete Chat-first operations and independent Fleet Operator
+Status: `STRATEGIC_REVIEW_TWO_PROJECTS` — owner correction: A means completing authorized operations entirely through normal Chat and all its plugins/connectors (Gmail, GitHub, WordPress/Cowboy and others), without default Work/Codex/model-API delegation. It is not limited to issues, specifications or code analysis. B independently provides machine access, process execution/management and monitoring; placement is optional. NVIDIA PAIR is the Personal AI Router, not PER/PIR. The proposed split and researched PAIR scope are recorded in `docs/TWO_PROJECTS_AND_PAIR_2026-09-11.md`. No implementation, deployment, or live test is authorized by this documentation-only review.
 
 Repository: `bacoco/chatgpt-cost-router`
 Default branch: `main`
@@ -30,13 +30,13 @@ The GitHub relay remains the immediately usable execution path from this ChatGPT
 
 Review and approve the two-project boundary before resuming implementation:
 
-1. Chat Orchestration: evidence gathering, reasoning, plans, issues/PRs and other authorized connector actions across projects. Serena is optional code-context tooling; a fleet job is not mandatory.
+1. Chat-first Operations: use normal Chat and the full verified plugin/connector toolbox to read, reason, write, edit, send, publish, coordinate workflows and verify outcomes across Gmail, GitHub, Cowboy and other systems. An issue is one action among many. Prefer capability already included in Chat; no Work switch, extra coding-agent inference or paid model API by default. Serena is optional, not the product foundation. A can directly invoke B as a tool when machine work is needed, without making a second LLM mandatory.
 2. Fleet Operator: node enrollment/access, bounded process execution, supervision, monitoring and results; optional placement across machines and optional Codex/Claude/local-inference adapters. It must also be usable without Chat.
-3. Shared contract: project/repository/SHA, authorized operation, run identity, permitted resources/account reference, budget, status and evidence. No credentials in requests or GitHub receipts.
+3. Shared contract: explicit project/task context, repository/SHA when applicable, authorized operation, run identity, permitted resources/account reference, budget, status and evidence. No credentials in requests or GitHub receipts. Separate user identity, GitHub identity, model account and machine.
 
 Keep T38 and further installations paused. Do not install PAIR or Serena, move code, split repositories, change services, or submit fleet jobs as part of this review. The broad write-lane risk remains an open issue; this pause does not certify it safe. PAIR is a candidate for local inference only, not a general process manager or subscription-account router. Keep existing test receipts and the authoritative validation snapshot unchanged.
 
-The design stays in the existing repository for review. Separate repositories are a later packaging decision, not a prerequisite for independent responsibilities. Next acceptance scenarios should separately prove (A) a real Chat-to-GitHub project deliverable without an extra model call and (B) an enrolled node running and monitoring a bounded non-LLM task. These are plans, not executed tests.
+The design stays in the existing repository for review. Separate repositories are a later packaging decision, not a prerequisite for independent responsibilities. A's acceptance categories cover completed mail, repository, publication/other-app and cross-app workflows, not merely one issue or PR. B's category covers a node running and monitoring a bounded non-LLM task. Reuse the existing plugin test receipts; maintain an action-level matrix distinguishing ChatGPT.com Chat, Codex Mac Chat, Work, CLI and Scheduled Tasks. Visibility is not execution, and proof on one surface does not validate every other surface. Do not restart the stopped quota-burn experiment. These are plans, not executed tests.
 
 Fleet Operator spec: `docs/FLEET_OPERATOR_PLUGIN.md`.
 Relay spec: `docs/FLEET_OPERATOR_RELAY.md`.

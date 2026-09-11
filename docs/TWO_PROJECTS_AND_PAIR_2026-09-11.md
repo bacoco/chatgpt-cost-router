@@ -1,28 +1,49 @@
 # Strategic split: Chat orchestration and Fleet Operator
 
 Date: 2026-09-11.
-Status: design proposal following the owner's correction; no deployment or new test.
+Status: documentation-only strategic pause. Owner scope correction: A covers complete operations through Chat and all authorized apps/connectors, not only issues or coding deliverables.
 Repository reviewed: `bacoco/chatgpt-cost-router`, `main` at `4772e01b2bf13ccf4e07af4f6a232b0e8223070d`.
 
 ## Decision and scope
 
 There are two independent needs, not one mandatory Chat-to-Codex cluster pipeline.
 
-**A — Chat Orchestration:** maximize useful reasoning, research and authorized actions from the Chat surface already included in the user's plan. Code analysis, issues and PRs are important examples, not the whole product. Avoid an additional Codex/Claude/API invocation when Chat plus tools can accomplish the objective.
+**A — Chat-first Operations:** accomplish as much real work as possible entirely from the normal Chat surface and its authorized plugins/connectors, using the capability already included in the user's subscription. Chat reasons, reads, writes, sends, publishes, coordinates workflows and verifies outcomes. Gmail, GitHub, WordPress/Cowboy and the other existing or future authorized apps are first-class capabilities. An issue is one possible action, not A's product definition or sole acceptance criterion. Avoid switching to Work or invoking Codex/Claude/model APIs when Chat plus tools can complete the request.
 
 **B — Fleet Operator:** access machines, submit bounded processes, manage their lifecycle, monitor progress and resources, and retrieve results. Placement across machines is optional; reliable access and process supervision come first. Models, GPUs and subscription workers are optional execution capabilities.
 
 A must work without B for connector-only work. B must work without Chat through a CLI, API or other authorized client. Separate logical products now; separate repositories only after their contracts and packaging are agreed. Keep the current repository and historical receipts intact during this design phase.
 
-## A: scope, tools and acceptance
+## A: full Chat-only operations, tools and acceptance
 
-A owns project selection, evidence collection, reasoning, task/specification drafting, review, authorized GitHub or other connector actions, and the decision to request execution.
+The fundamental requirement is operational, not merely informational: the user stays in Chat to complete authorized work through available tools. Do not reduce A to researching code, creating an issue, preparing a handoff, or asking another agent to do the actual work. Direct connector actions are the primary execution lane; B is optional when a machine/process capability is needed.
 
-Use existing GitHub MCP actions for repository/issue/PR operations. Serena is an optional MCP code-understanding tool: symbol lookup, references and targeted retrieval can provide better evidence before Chat writes an issue or proposes a change. Serena is not required for every repository and is not the GitHub publishing authority. Initially prefer a read-oriented Serena configuration with a verified checkout/SHA; disable overlapping execution tools if B owns that responsibility.
+Illustrative scope (not a claim that every action is already verified on every surface):
 
-The proposed acceptance case is a useful project deliverable: inspect a real problem, identify code locations and supporting sources, publish an issue or prepare a reviewed change, then read it back. Do not require an extra model, a GPU, or a fleet deployment merely to create this deliverable. Do not create an empty PR as a substitute for a specification.
+| Connected resource | Intended work from Chat |
+| --- | --- |
+| Gmail | Search and read messages, prepare/read drafts, send authorized messages, and manage mail using actions actually exposed. |
+| GitHub | Read/analyze repositories, create or modify files, commit changes, manage branches/issues/PRs and authorized merges, and verify exact results. |
+| WordPress via Cowboy | Read content, prepare or update pages/articles, publish when authorized, and verify the resulting site. Do not substitute WPVibe. |
+| Other authorized plugins/connectors | Use their verified document, calendar, contact, publishing or other capabilities without making a second agent mandatory. |
+| Several connected systems | Complete a user-authorized workflow across apps, carrying the correct project/context and verifying each external effect. |
 
-Chat web, desktop Chat, desktop Work and CLI remain distinct capability/usage contexts. Preserve observed evidence per surface; do not infer universal availability or billing from an app name. This split does not restart the stopped quota-burn experiment. "Chat first" is an economic preference, not a claim of unlimited zero-cost automated model access.
+Chat owns intent interpretation, context gathering, planning, tool selection, authorized invocation, result verification, failure reporting and project/account separation. Publication, sending, editing and other state changes are part of A, subject to the user's scope and required confirmations; A is not read-only by definition.
+
+Serena is an optional MCP tool for targeted code context and, if appropriately configured, editing. It is neither A's central component nor a prerequisite for using Gmail, GitHub or other apps. Avoid redundant tools and select the cheapest verified path that achieves the actual requested outcome.
+
+The economic requirement is **Chat-only first**: no paid model API, extra Codex/Claude inference, or switch to Work by default. A connector call or an ordinary remote process must not silently hide another model call. This is the owner's routing objective, not a claim that all providers, transports, compute or Chat usage are unlimited or unmetered. Do not restart the deliberately stopped quota-burn experiment.
+
+Maintain an action-level capability inventory for each distinct surface: ChatGPT.com Chat, Codex Mac Chat, Work, CLI and Scheduled Tasks are not interchangeable. Record app name, authenticated scope/project, action, visible/invocable/executed/effect-verified state, evidence/date and known or unknown usage class. Reuse existing receipts rather than erasing yesterday's plugin tests or unnecessarily repeating them. For example, historical Gmail search/read/draft/send evidence belongs to Codex Mac Chat with built-in Gmail; it does not automatically validate Gmail Developer MCP in web Chat or Scheduled Tasks. A prior blocked context is not a universal current product ban either.
+
+Acceptance must cover representative completed outcomes, not one GitHub issue:
+
+- Mail: search/read the permitted messages and produce the requested verified draft or authorized send, with deduplication and no unnecessary model delegation.
+- GitHub: perform a requested repository operation and read back the exact file/commit/PR state; an issue is only one variant.
+- Publication/other apps: perform the requested authorized change through the appropriate connector and verify the external result.
+- Multi-app/multiproject: complete a scoped workflow without mixing recipients, accounts, projects or permissions and without automatically invoking a coding worker.
+
+These are acceptance categories for the design, not new executions. During the pause, do not send mail, publish pages, create test issues or dispatch machine jobs just to demonstrate the scope. Already verified actions keep their scoped evidence. Unavailable operations are reported explicitly, with an alternative or a proposed delegation rather than silently switching modes.
 
 ## B: scope, execution and monitoring
 
@@ -57,7 +78,7 @@ The known-issues page also distinguishes restart-on-exit from detection of an un
 ## Relationship and shared contract
 
 ```text
-Chat + authorized apps [A] -----> GitHub / other systems
+Chat + all authorized apps [A] -> Gmail / GitHub / Cowboy / other systems
           |
           | optional project-scoped execution request
           v
@@ -68,9 +89,9 @@ Fleet service [B] <-------------- CLI / API / other clients
           +-- optional PAIR -> local inference engines
 ```
 
-Do not use a shared mutable "active project" for concurrent chats. Each request binds an explicit project and run context. Proposed minimum contract:
+Do not use a shared mutable "active project" for concurrent chats. Each request binds an explicit project or user-authorized task context; repository identity and SHA apply when the operation concerns code, not to every email or document. Proposed minimum contract:
 
-- Request: requester identity, project ID, repository owner/name and immutable base SHA, operation/profile, inputs, allowed hosts/resources, deadline and idempotency key.
+- Request: requester identity, project/task context, operation/profile, inputs, allowed hosts/resources, deadline and idempotency key; repository owner/name and immutable base SHA where applicable.
 - Optional model use: provider/account reference, allowed usage class and budget; no token, password or private key in the request.
 - Return: run ID, lifecycle state, resolved node/workspace and software version, exit status, bounded diagnostics, artifact references and verification evidence.
 
@@ -80,7 +101,7 @@ Project rules may restrict execution but cannot grant permissions that the servi
 
 | Existing capability | Owner after logical split |
 | --- | --- |
-| Cloud-first workflow, GitHub context, specifications, issues/PRs | A |
+| Complete Chat-first operations through Gmail, GitHub, Cowboy and other authorized apps; single-app and cross-app workflows | A |
 | Optional Serena code retrieval | A, hosted on a verified checkout |
 | Host access and bounded execution via Fleet Operator | B |
 | Node registration, heartbeat, supervision and process monitoring | B |
@@ -91,7 +112,7 @@ Project rules may restrict execution but cannot grant permissions that the servi
 
 ## Next decisions, not an execution order
 
-Approve the A/B boundary, choose one independent acceptance case for each, and compare the missing B functions with existing process-management tools before extending the custom runtime. Evaluate Serena for a real information-to-issue task; evaluate PAIR separately only for a genuine local-inference need. Neither requires restarting every historical smoke test.
+Preserve the owner's broad A scope and the independent B scope. Consolidate existing per-surface plugin/action evidence and map the remaining gaps; do not replace A's scope with a single issue-producing test. Plan representative mail, repository, publication and cross-app outcomes for A, and a bounded process-lifecycle outcome for B. Evaluate Serena only where code context/editing adds value; evaluate PAIR separately for local inference. Reuse historical evidence and compare existing tools before extending the custom runtime. No new execution is ordered by this review.
 
 T01-T37 remain historical proofs with their recorded limitations. T38/write-lane hardening remains unfinished and paused; the broad write-lane risk is not resolved by this design document. Do not install packages, change services, invoke paid APIs, submit fleet jobs or physically split repositories during the pause.
 
