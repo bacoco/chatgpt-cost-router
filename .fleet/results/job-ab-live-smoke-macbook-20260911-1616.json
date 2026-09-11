@@ -1,0 +1,34 @@
+{
+  "action": "process_submit",
+  "finished_at_unix": 1789143367.883615,
+  "host": "macbook",
+  "job_id": "job-ab-live-smoke-macbook-20260911-1616",
+  "job_sha256": "ee9b82ae7964579f4a642f7bfe2ce8a2f4d08779f8aa524dbc00ecc01d01b16c",
+  "result": {
+    "_node": {
+      "node_id": "macbook",
+      "policy_revision": "bb19aa845899914084698db00917c7d9798bfa1332bad1f1df3315c91a560dcc",
+      "runtime_revision": "10b3ee3e438d57b210b1155e2dbaf19aac9b00db"
+    },
+    "created": 1789143367.846009,
+    "exit_code": null,
+    "extra_model_calls": 0,
+    "heartbeat": 1789143367.85127,
+    "isolation": "trusted-local",
+    "last_output_at": null,
+    "metrics": null,
+    "node_id": "macbook",
+    "profile": "smoke",
+    "progress": null,
+    "project_id": "chatgpt-cost-router",
+    "reason": null,
+    "run_id": "12f31abbc2bd4c5bb8df14d74cef69d8",
+    "runtime_revision": "10b3ee3e438d57b210b1155e2dbaf19aac9b00db",
+    "source": null,
+    "state": "RUNNING",
+    "updated": 1789143367.8513
+  },
+  "started_at_unix": 1789143367.666145,
+  "status": "ACCEPTED",
+  "version": 1
+}
