@@ -12,6 +12,7 @@ from cost_router.remote_worker import (
     parse_request_body,
     tailscale_identity,
 )
+from cost_router.worker_health import status as worker_health_status
 
 
 class FakeRun:
@@ -101,6 +102,39 @@ class RemoteWorkerTests(unittest.TestCase):
             self.assertIn("--ephemeral", exec_command)
             self.assertIn("--ignore-user-config", exec_command)
             self.assertEqual(exec_command[exec_command.index("--sandbox") + 1], "read-only")
+
+
+    def test_actual_auth_failure_quarantines_worker_and_hides_ready_state(self):
+        with tempfile.TemporaryDirectory() as root:
+            reg = Path(root) / "workers.json"
+            registry(reg)
+            health = Path(root) / "health.json"
+
+            class AuthFailRun(FakeRun):
+                def __call__(self, command, **kwargs):
+                    self.calls.append((command, kwargs))
+                    if command[1:3] == ["login", "status"]:
+                        return subprocess.CompletedProcess(command, 0, "Logged in using ChatGPT\n", "")
+                    return subprocess.CompletedProcess(
+                        command, 1, "",
+                        "401 Unauthorized: refresh_token_reused; Please log out and sign in again.\n",
+                    )
+
+            fake = AuthFailRun({"/B"})
+            result = dispatch_remote(
+                {"worker": "B", "prompt": "hi"},
+                policy=self.policy(root), registry_path=str(reg), run=fake,
+                health_state_path=health,
+            )
+            self.assertEqual(result["exit_code"], 1)
+            self.assertEqual(worker_health_status("B", path=health)["status"], "quarantined")
+            calls_before = len(fake.calls)
+            listing = list_remote_workers(
+                policy=self.policy(root), registry_path=str(reg), run=fake,
+                health_state_path=health,
+            )
+            self.assertEqual(listing, [{"worker": "B", "ready": False, "auth": "unavailable"}])
+            self.assertEqual(len(fake.calls), calls_before)
 
     def test_policy_unknown_worker_fails_closed(self):
         with tempfile.TemporaryDirectory() as root:

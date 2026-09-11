@@ -35,6 +35,57 @@ DESTRUCTIVE_COMMANDS = frozenset({"rm", "kill", "pkill"})
 DESTRUCTIVE_GIT_SUBCOMMANDS = frozenset({"clean", "reset"})
 DESTRUCTIVE_LAUNCHCTL_SUBCOMMANDS = frozenset({"bootout", "remove"})
 
+# Read mode is semantic, not merely an executable allow-list. Some otherwise
+# useful binaries can mutate state depending on subcommands or embedded code.
+# Keep interpreters/build tools out of read mode and constrain multi-purpose
+# CLIs to explicitly read-only subcommands.
+READ_MODE_INTERPRETERS = frozenset({
+    "python", "python3", "node", "npm", "npx", "make",
+    "bash", "zsh", "sh", "perl", "ruby",
+})
+SAFE_GIT_READ_SUBCOMMANDS = frozenset({
+    "status", "diff", "log", "show", "rev-parse", "rev-list", "ls-files",
+    "ls-tree", "branch", "tag", "remote", "describe", "show-ref",
+    "merge-base", "name-rev", "cat-file", "for-each-ref",
+})
+SAFE_TAILSCALE_READ_SUBCOMMANDS = frozenset({"status", "ping", "whois", "version"})
+SAFE_LAUNCHCTL_READ_SUBCOMMANDS = frozenset({"print", "print-disabled", "list"})
+SAFE_BREW_READ_SUBCOMMANDS = frozenset({"list", "info", "config", "doctor", "--prefix", "--version"})
+FORBIDDEN_FIND_ACTIONS = frozenset({
+    "-delete", "-exec", "-execdir", "-ok", "-okdir",
+    "-fprint", "-fprint0", "-fprintf", "-fls",
+})
+
+
+def validate_read_only_argv(argv: Sequence[str]) -> tuple[str, ...]:
+    """Reject argv forms that can mutate state while claiming read mode."""
+    args = validate_argv(argv)
+    program = _basename(args[0])
+    if program in READ_MODE_INTERPRETERS:
+        raise FleetError(f"read execution forbids interpreter/build tool: {program}")
+    if program == "git":
+        if len(args) < 2 or args[1] not in SAFE_GIT_READ_SUBCOMMANDS:
+            raise FleetError("git subcommand is not allowed in read mode")
+        # `git branch` and `git tag` mutate when passed operands. Permit only
+        # clearly informational flag-only forms.
+        if args[1] in {"branch", "tag"} and any(not x.startswith("-") for x in args[2:]):
+            raise FleetError(f"git {args[1]} with operands is not read-only")
+        if args[1] == "remote" and len(args) > 2 and args[2] not in {"-v", "--verbose", "show", "get-url"}:
+            raise FleetError("git remote mutation is not allowed in read mode")
+    elif program == "tailscale":
+        if len(args) < 2 or args[1] not in SAFE_TAILSCALE_READ_SUBCOMMANDS:
+            raise FleetError("tailscale subcommand is not allowed in read mode")
+    elif program == "launchctl":
+        if len(args) < 2 or args[1] not in SAFE_LAUNCHCTL_READ_SUBCOMMANDS:
+            raise FleetError("launchctl subcommand is not allowed in read mode")
+    elif program == "brew":
+        if len(args) < 2 or args[1] not in SAFE_BREW_READ_SUBCOMMANDS:
+            raise FleetError("brew subcommand is not allowed in read mode")
+    elif program == "find":
+        if any(x in FORBIDDEN_FIND_ACTIONS for x in args[1:]):
+            raise FleetError("find mutation/execution actions are not allowed in read mode")
+    return args
+
 
 @dataclass(frozen=True)
 class HostSpec:
@@ -231,6 +282,7 @@ class FleetRunner:
         if mode == "read":
             if program not in host.read_commands:
                 raise FleetError(f"command is not allowlisted for read execution on {host.alias}: {program}")
+            args = validate_read_only_argv(args)
         elif mode == "write":
             if program not in (host.read_commands | host.write_commands):
                 raise FleetError(f"command is not allowlisted for execution on {host.alias}: {program}")

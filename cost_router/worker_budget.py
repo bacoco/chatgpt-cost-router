@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Mapping, Union
@@ -97,6 +98,7 @@ def select_economic_worker(
     *,
     run=None,
     codex_bin: str = "codex",
+    health_state_path: str | os.PathLike[str] | None = None,
 ):
     all_workers = list(workers)
     if requested != "auto":
@@ -114,7 +116,7 @@ def select_economic_worker(
         raise WorkerError("no worker eligible by budget state")
     probes = []
     for worker in ordered:
-        kwargs = {"codex_bin": codex_bin}
+        kwargs = {"codex_bin": codex_bin, "health_state_path": health_state_path}
         if run is not None:
             kwargs["run"] = run
         status = probe(worker, **kwargs)

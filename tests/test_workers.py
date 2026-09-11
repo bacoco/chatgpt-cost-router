@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch
 
 from cost_router.workers import Worker, WorkerError, load_registry, probe, run_task, select_worker
+from cost_router.worker_health import quarantine
 
 
 class FakeRun:
@@ -45,6 +46,18 @@ class WorkerTests(unittest.TestCase):
         self.assertTrue(result["ready"])
         self.assertEqual(fake.calls[0][1]["env"]["CODEX_HOME"], expected)
         self.assertNotIn("OPENAI_API_KEY", fake.calls[0][1]["env"])
+
+
+    def test_quarantined_worker_is_not_ready_even_if_login_status_would_pass(self):
+        worker = Worker("B", "openai", "codex-exec", "/B")
+        fake = FakeRun({"/B": True})
+        with tempfile.TemporaryDirectory() as folder:
+            health = Path(folder) / "health.json"
+            quarantine("B", path=health)
+            result = probe(worker, run=fake, health_state_path=health)
+            self.assertFalse(result["ready"])
+            self.assertEqual(result["reason"], "auth_failure")
+            self.assertEqual(fake.calls, [])
 
     def test_auto_selection_falls_back_to_ready_worker(self):
         a = Worker("A", "openai", "codex-exec", "/A", priority=10)

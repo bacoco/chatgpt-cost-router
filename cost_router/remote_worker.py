@@ -14,6 +14,7 @@ from typing import Iterable, Mapping
 
 from .worker_budget import WorkerBudget, load_budget_state, select_economic_worker
 from .workers import Worker, WorkerError, load_registry, probe, run_task, select_worker
+from .worker_health import auth_failure_reason, clear as clear_worker_health, quarantine as quarantine_worker
 
 
 class RemoteWorkerError(ValueError):
@@ -97,11 +98,12 @@ def parse_request_body(raw: bytes, policy: RemotePolicy) -> dict:
     return {"worker": worker, "prompt": prompt}
 
 
-def list_remote_workers(*, policy: RemotePolicy, registry_path: str, codex_bin: str = "codex", run=None) -> list[dict]:
+def list_remote_workers(*, policy: RemotePolicy, registry_path: str, codex_bin: str = "codex", run=None,
+                        health_state_path: str | os.PathLike[str] | None = None) -> list[dict]:
     workers = _allowed_workers(load_registry(registry_path), policy)
     result = []
     for worker in workers:
-        kwargs = {"codex_bin": codex_bin}
+        kwargs = {"codex_bin": codex_bin, "health_state_path": health_state_path}
         if run is not None:
             kwargs["run"] = run
         state = probe(worker, **kwargs)
@@ -110,14 +112,15 @@ def list_remote_workers(*, policy: RemotePolicy, registry_path: str, codex_bin: 
 
 
 def dispatch_remote(payload: Mapping[str, str], *, policy: RemotePolicy, registry_path: str,
-                    budget_state_path: str | None = None, codex_bin: str = "codex", run=None, clock=None) -> dict:
+                    budget_state_path: str | None = None, codex_bin: str = "codex", run=None, clock=None,
+                    health_state_path: str | os.PathLike[str] | None = None) -> dict:
     """Dispatch one bounded remote prompt to one locally isolated worker."""
     workers = _allowed_workers(load_registry(registry_path), policy)
     requested = payload["worker"]
     if requested != "auto" and requested not in policy.allowed_workers:
         raise RemoteWorkerError("requested worker is not authorized for remote use")
 
-    select_kwargs = {"codex_bin": codex_bin}
+    select_kwargs = {"codex_bin": codex_bin, "health_state_path": health_state_path}
     if run is not None:
         select_kwargs["run"] = run
     if budget_state_path:
@@ -135,6 +138,14 @@ def dispatch_remote(payload: Mapping[str, str], *, policy: RemotePolicy, registr
         if clock is not None:
             task_kwargs["clock"] = clock
         result = run_task(worker, payload["prompt"], folder, ignore_user_config=True, **task_kwargs)
+
+    combined = (result.get("stderr") or "") + "\n" + (result.get("stdout") or "")
+    if result.get("exit_code") == 0:
+        clear_worker_health(worker.id, path=health_state_path)
+    else:
+        reason = auth_failure_reason(combined)
+        if reason:
+            quarantine_worker(worker.id, path=health_state_path, reason=reason)
 
     return {
         "worker": result["worker"],

@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Iterable, Union
 
+from .worker_health import status as worker_health_status
+
 
 class WorkerError(ValueError):
     """Raised when a worker registry or invocation is invalid."""
@@ -88,9 +90,20 @@ def _worker_env(worker: Worker) -> dict[str, str]:
     return env
 
 
-def probe(worker: Worker, *, run: Run = subprocess.run, codex_bin: str = "codex") -> dict:
+def probe(worker: Worker, *, run: Run = subprocess.run, codex_bin: str = "codex",
+          health_state_path: str | os.PathLike[str] | None = None) -> dict:
     if not worker.enabled:
-        return {"worker": worker.id, "ready": False, "reason": "disabled"}
+        return {"worker": worker.id, "ready": False, "reason": "disabled", "auth": "unavailable"}
+    try:
+        quarantined = worker_health_status(worker.id, path=health_state_path)
+    except (OSError, ValueError):
+        return {"worker": worker.id, "ready": False, "auth": "unavailable",
+                "reason": "health_state_invalid"}
+    if quarantined and quarantined.get("status") == "quarantined":
+        return {
+            "worker": worker.id, "ready": False, "auth": "unavailable",
+            "reason": quarantined.get("reason", "quarantined"),
+        }
     result = run(
         [codex_bin, "login", "status"],
         capture_output=True,
@@ -117,6 +130,7 @@ def select_worker(
     *,
     run: Run = subprocess.run,
     codex_bin: str = "codex",
+    health_state_path: str | os.PathLike[str] | None = None,
 ) -> tuple[Worker, list[dict]]:
     candidates = list(workers)
     if requested != "auto":
@@ -126,7 +140,7 @@ def select_worker(
     candidates = sorted((w for w in candidates if w.enabled), key=_rank)
     probes = []
     for worker in candidates:
-        status = probe(worker, run=run, codex_bin=codex_bin)
+        status = probe(worker, run=run, codex_bin=codex_bin, health_state_path=health_state_path)
         probes.append(status)
         if status["ready"]:
             return worker, probes

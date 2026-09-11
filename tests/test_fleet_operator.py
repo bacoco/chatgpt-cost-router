@@ -86,6 +86,47 @@ class FleetOperatorTests(unittest.TestCase):
             out = r.read_file("macbook", "/Users/loic/work/repo/README.md", max_bytes=100); self.assertEqual(out["stdout"], "hello"); self.assertEqual(out["path"], "/Users/loic/work/repo/README.md")
             with self.assertRaises(FleetError): r.read_file("macbook", "/etc/passwd")
 
+    def test_read_mode_rejects_interpreters_and_mutating_subcommands(self):
+        with tempfile.TemporaryDirectory() as td:
+            r = FleetRunner(self.make_config(td), run=Mock(return_value=Proc()))
+            for argv in (
+                ["python3", "-c", "open('/tmp/pwned','w').write('x')"],
+                ["git", "pull"],
+                ["git", "reset", "--hard"],
+            ):
+                with self.subTest(argv=argv):
+                    with self.assertRaises(FleetError):
+                        r.execute("macbook", argv, mode="read")
+
+    def test_read_mode_allows_safe_git_status(self):
+        with tempfile.TemporaryDirectory() as td:
+            run = Mock(return_value=Proc(out=b"## main\n"))
+            r = FleetRunner(self.make_config(td), run=run)
+            out = r.execute("macbook", ["git", "status", "--short", "--branch"],
+                            cwd="/Users/loic/work/repo", mode="read")
+            self.assertEqual(out.exit_code, 0)
+            self.assertEqual(run.call_count, 1)
+
+    def test_read_mode_blocks_find_exec_and_delete(self):
+        with tempfile.TemporaryDirectory() as td:
+            cfg = self.make_config(td)
+            host = cfg.hosts["macbook"]
+            data = {
+                "version": 1, "max_output_bytes": 4096,
+                "hosts": {"macbook": {
+                    "ssh_target": host.ssh_target,
+                    "allowed_roots": list(host.allowed_roots),
+                    "read_commands": list(host.read_commands | {"find"}),
+                    "write_commands": list(host.write_commands),
+                }},
+            }
+            path = Path(td) / "find.json"; path.write_text(json.dumps(data))
+            r = FleetRunner(FleetConfig.load(path), run=Mock(return_value=Proc()))
+            for argv in (["find", "/Users/loic/work", "-delete"],
+                         ["find", "/Users/loic/work", "-exec", "touch", "x", ";"]):
+                with self.assertRaises(FleetError):
+                    r.execute("macbook", argv, mode="read")
+
     def test_local_transport_skips_ssh(self):
         with tempfile.TemporaryDirectory() as td:
             data = {"version": 1, "max_output_bytes": 4096, "hosts": {"gateway": {"transport": "local", "allowed_roots": ["/tmp"], "read_commands": ["uname"], "write_commands": []}}}
