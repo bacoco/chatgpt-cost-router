@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "job_id": "job-t37-reload-services-20260911",
+  "host": "macbook",
+  "action": "exec_write",
+  "args": {
+    "argv": ["bash", "-lc", "(sleep 15; launchctl kickstart -k gui/$(id -u)/pro.chatgpt-cost-router.fleet-relay; launchctl kickstart -k gui/$(id -u)/pro.chatgpt-cost-router.fleet-operator) >/tmp/t37-fleet-reload.log 2>&1 & echo reload_scheduled"],
+    "timeout_seconds": 30
+  },
+  "expires_at_unix": 1789104600
+}
