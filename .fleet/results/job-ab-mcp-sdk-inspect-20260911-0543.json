@@ -1,0 +1,9 @@
+{
+  "error": "job expired",
+  "finished_at_unix": 1789112417.7053661,
+  "job_id": "job-ab-mcp-sdk-inspect-20260911-0543",
+  "job_sha256": "2bd140e54077e7d1e38c3ac5f38bbbc31bdea16ac7d077eaefbcf399618af478",
+  "started_at_unix": 1789112417.642217,
+  "status": "ERROR",
+  "version": 1
+}
