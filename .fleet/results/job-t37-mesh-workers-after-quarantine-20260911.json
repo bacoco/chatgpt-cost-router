@@ -1,0 +1,28 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789097498.870456,
+  "host": "macstudio",
+  "job_id": "job-t37-mesh-workers-after-quarantine-20260911",
+  "job_sha256": "f30094bf55a2f22b3e3e294208d6cf0fe71066205357d43918ab38b53ca2dfa3",
+  "result": {
+    "argv": [
+      "python3",
+      "scripts/mesh_client.py",
+      "--url",
+      "https://mac-studio.taildc96f0.ts.net:8444",
+      "workers"
+    ],
+    "cwd": "/Users/macstudio/remote-worker-test",
+    "elapsed_seconds": 0.431,
+    "exit_code": 0,
+    "host": "macstudio",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "{\n  \"workers\": [\n    {\n      \"mesh_worker\": \"macbook-pro-de-loic/openai-B\",\n      \"node_id\": \"macbook-pro-de-loic\",\n      \"auth\": \"chatgpt\",\n      \"budget\": {\n        \"five_hour_remaining_pct\": null,\n        \"status\": \"unknown\",\n        \"weekly_remaining_pct\": null\n      },\n      \"cost_class\": \"included\",\n      \"priority\": 20,\n      \"provider\": \"openai\",\n      \"ready\": true,\n      \"worker\": \"openai-B\"\n    },\n    {\n      \"mesh_worker\": \"macstudio-worker/openai-A\",\n      \"node_id\": \"macstudio-worker\",\n      \"auth\": \"chatgpt\",\n      \"budget\": {\n        \"five_hour_remaining_pct\": null,\n        \"status\": \"unknown\",\n        \"weekly_remaining_pct\": null\n      },\n      \"cost_class\": \"included\",\n      \"priority\": 10,\n      \"provider\": \"openai\",\n      \"ready\": true,\n      \"worker\": \"openai-A\"\n    },\n    {\n      \"mesh_worker\": \"spark-lolo/openai-A\",\n      \"node_id\": \"spark-lolo\",\n      \"auth\": \"unavailable\",\n      \"budget\": {\n        \"five_hour_remaining_pct\": null,\n        \"status\": \"unknown\",\n        \"weekly_remaining_pct\": null\n      },\n      \"cost_class\": \"included\",\n      \"priority\": 10,\n      \"provider\": \"openai\",\n      \"ready\": false,\n      \"worker\": \"openai-A\"\n    }\n  ]\n}\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789097498.3767328,
+  "status": "PASS",
+  "version": 1
+}
