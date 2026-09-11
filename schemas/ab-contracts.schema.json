@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chatgpt-cost-router.local/schemas/ab-contracts.schema.json",
+  "title": "A/B public request interchange, version 1",
+  "$comment": "Static interchange schemas only. Runtime authorization, capability TTL, read-only rules, references, budgets and idempotency remain mandatory.",
+  "$defs": {
+    "workflow": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "project_id": {
+          "type": "string",
+          "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+        },
+        "deadline": {
+          "type": "number",
+          "minimum": 0
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+              },
+              "resource": {
+                "type": "string",
+                "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+              },
+              "action": {
+                "type": "string",
+                "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+              },
+              "arguments": {
+                "type": "object"
+              },
+              "preflight": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+                  },
+                  "arguments": {
+                    "type": "object"
+                  },
+                  "expect": {
+                    "type": "object",
+                    "minProperties": 1
+                  }
+                },
+                "required": [
+                  "action",
+                  "arguments",
+                  "expect"
+                ],
+                "additionalProperties": false
+              },
+              "verify": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+                  },
+                  "arguments": {
+                    "type": "object"
+                  },
+                  "expect": {
+                    "type": "object",
+                    "minProperties": 1
+                  },
+                  "recover_output": {
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "action",
+                  "arguments",
+                  "expect"
+                ],
+                "additionalProperties": false
+              },
+              "recovery": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+                  },
+                  "arguments": {
+                    "type": "object"
+                  },
+                  "expect": {
+                    "type": "object",
+                    "minProperties": 1
+                  }
+                },
+                "required": [
+                  "action",
+                  "arguments",
+                  "expect"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "id",
+              "resource",
+              "action",
+              "arguments"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "version",
+        "project_id",
+        "idempotency_key",
+        "deadline",
+        "steps"
+      ],
+      "additionalProperties": false
+    },
+    "process_request": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "project_id": {
+          "type": "string",
+          "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+        },
+        "node_id": {
+          "type": "string",
+          "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+        },
+        "profile": {
+          "type": "string",
+          "pattern": "^(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+        },
+        "inputs": {
+          "type": "object"
+        },
+        "deadline": {
+          "type": "number",
+          "minimum": 0
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "repo": {
+              "type": "string"
+            },
+            "sha": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            }
+          },
+          "required": [
+            "repo",
+            "sha"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "version",
+        "project_id",
+        "idempotency_key",
+        "node_id",
+        "profile",
+        "inputs",
+        "deadline"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/workflow"
+    },
+    {
+      "$ref": "#/$defs/process_request"
+    }
+  ]
+}
