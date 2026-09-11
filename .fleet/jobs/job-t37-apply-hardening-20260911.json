@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "job_id": "job-t37-apply-hardening-20260911",
+  "host": "macbook",
+  "action": "exec_write",
+  "args": {
+    "argv": ["bash", "-lc", "set -euo pipefail; cd /Users/loic/codex-t30-broker-test; test -z \"$(git status --porcelain)\"; git fetch origin main fleet/commands; git checkout main; git pull --ff-only origin main; git show origin/fleet/commands:.fleet/patches/t37-fleet.patch >/tmp/t37-fleet.patch; git show origin/fleet/commands:.fleet/patches/t37-worker.patch >/tmp/t37-worker.patch; git apply --check /tmp/t37-fleet.patch; git apply --check /tmp/t37-worker.patch; git apply /tmp/t37-fleet.patch; git apply /tmp/t37-worker.patch; python3 -m unittest discover -s tests -v; git add fleet_operator/core.py tests/test_fleet_operator.py cost_router/workers.py cost_router/worker_health.py cost_router/remote_worker.py cost_router/worker_budget.py tests/test_workers.py tests/test_remote_worker.py; git commit -m 'feat: harden Fleet read mode and quarantine auth failures'; git push origin main"],
+    "timeout_seconds": 900
+  },
+  "expires_at_unix": 1789104600
+}
