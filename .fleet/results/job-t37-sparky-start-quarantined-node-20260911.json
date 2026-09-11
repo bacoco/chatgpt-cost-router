@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789097447.86512,
+  "host": "sparky",
+  "job_id": "job-t37-sparky-start-quarantined-node-20260911",
+  "job_sha256": "ad7cd16a9651a5b72245d65f52b27cd1036f7647602eb104493b8d8b9072e370",
+  "result": {
+    "argv": [
+      "bash",
+      "-lc",
+      "set -euo pipefail; cd /home/baconnier/chatgpt-cost-router; export PATH=/home/baconnier/.nvm/versions/node/v20.20.0/bin:$PATH; export COST_ROUTER_MESH_CONTROL_URL=https://mac-studio.taildc96f0.ts.net:8444; export COST_ROUTER_REMOTE_WORKERS=openai-A; bash scripts/start_mesh_node.sh; sleep 2; tail -n 40 /home/baconnier/.local/state/chatgpt-cost-router/mesh-node/agent.log"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 3.397,
+    "exit_code": 0,
+    "host": "sparky",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "mesh node agent started: pid 19708\ncontrol=https://mac-studio.taildc96f0.ts.net:8444\nworkers=openai-A\nlog=/home/baconnier/.local/state/chatgpt-cost-router/mesh-node/agent.log\n{\n  \"registered\": true,\n  \"node\": {\n    \"node_id\": \"spark-lolo\",\n    \"endpoint\": \"https://spark-lolo.taildc96f0.ts.net:8443\",\n    \"location\": \"remote\",\n    \"workers\": [\n      {\n        \"worker\": \"openai-A\",\n        \"provider\": \"openai\",\n        \"cost_class\": \"included\",\n        \"priority\": 10,\n        \"ready\": false,\n        \"auth\": \"unavailable\",\n        \"budget\": {\n          \"status\": \"unknown\",\n          \"five_hour_remaining_pct\": null,\n          \"weekly_remaining_pct\": null\n        }\n      }\n    ],\n    \"last_seen\": 1789097445.0748632\n  }\n}\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789097444.427258,
+  "status": "PASS",
+  "version": 1
+}
