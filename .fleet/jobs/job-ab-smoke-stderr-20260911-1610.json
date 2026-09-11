@@ -1,0 +1,1 @@
+{"version":1,"job_id":"job-ab-smoke-stderr-20260911-1610","host":"macstudio","action":"read_file","args":{"path":"/Users/macstudio/.local/share/chatgpt-cost-router/ab/node-state/runs/f112ecf5f4414b5aab03032031249ed0/stderr.log","max_bytes":8192},"expires_at_unix":1789146901}
