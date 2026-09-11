@@ -1,0 +1,30 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789142388.738421,
+  "host": "macstudio",
+  "job_id": "job-ab-node-list-20260911-1615",
+  "job_sha256": "4db96f23f42755ce124079dce316b119c6bd921316339a6413934cd2d0e14079",
+  "result": {
+    "argv": [
+      "/Users/macstudio/.local/share/chatgpt-cost-router/ab/venvs/10b3ee3e438d57b210b1155e2dbaf19aac9b00db/bin/python",
+      "/Users/macstudio/.local/share/chatgpt-cost-router/ab/source/10b3ee3e438d57b210b1155e2dbaf19aac9b00db/scripts/fleet_jobs.py",
+      "--config",
+      "/Users/macstudio/.local/share/chatgpt-cost-router/ab/config/node.json",
+      "list",
+      "--project",
+      "chatgpt-cost-router"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.438,
+    "exit_code": 0,
+    "host": "macstudio",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "{\n  \"jobs\": [\n    {\n      \"run_id\": \"f112ecf5f4414b5aab03032031249ed0\",\n      \"project_id\": \"chatgpt-cost-router\",\n      \"node_id\": \"macstudio\",\n      \"state\": \"UNCERTAIN\",\n      \"profile\": \"smoke\",\n      \"isolation\": \"trusted-local\",\n      \"source\": null,\n      \"created\": 1789142009.147218,\n      \"updated\": 1789142009.2603378,\n      \"metrics\": {\n        \"cpu_seconds\": null,\n        \"observed_at\": 1789142009.2574131,\n        \"rss_bytes\": null,\n        \"scope\": \"direct foreground process, not a container or descendant aggregate\"\n      },\n      \"heartbeat\": 1789142009.230352,\n      \"progress\": {\n        \"current\": 0,\n        \"total\": 1\n      },\n      \"last_output_at\": 1789142009.230352,\n      \"exit_code\": null,\n      \"reason\": \"PermissionError\",\n      \"runtime_revision\": \"10b3ee3e438d57b210b1155e2dbaf19aac9b00db\",\n      \"extra_model_calls\": 0\n    }\n  ],\n  \"_node\": {\n    \"node_id\": \"macstudio\",\n    \"runtime_revision\": \"10b3ee3e438d57b210b1155e2dbaf19aac9b00db\",\n    \"policy_revision\": \"a8456899eb16bda6dade7672df5dd78853fe1672bc0be954cf1bde428ffc6d19\"\n  }\n}\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789142388.2371898,
+  "status": "PASS",
+  "version": 1
+}
