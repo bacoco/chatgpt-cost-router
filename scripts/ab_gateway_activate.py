@@ -7,14 +7,15 @@ from pathlib import Path
 import subprocess
 import sys
 import time
-from urllib.request import Request, urlopen
+from urllib.request import Request, build_opener, ProxyHandler
 
 
 def rpc(port, method, params):
     body={'jsonrpc':'2.0','id':1,'method':method,'params':params}
     request=Request(f'http://127.0.0.1:{port}/mcp',data=json.dumps(body).encode(),
         headers={'Content-Type':'application/json','Accept':'application/json, text/event-stream'})
-    with urlopen(request,timeout=30) as response:
+    # Local service checks must not inherit an external HTTP proxy or system PAC.
+    with build_opener(ProxyHandler({})).open(request,timeout=30) as response:
         data=json.loads(response.read(1048576))
     if 'error' in data: raise RuntimeError('MCP error: '+str(data['error']))
     return data['result']
