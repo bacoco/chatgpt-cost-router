@@ -51,57 +51,30 @@ The MCP ToolAnnotations describe the real behavior. Write tools are not mislabel
 - SSH uses `BatchMode=yes`, strict host-key checking, connection timeout and keepalive;
 - commands are argv arrays and are shell-quoted by the gateway;
 - each host has explicit read/write executable allowlists;
-- `sudo`, `su`, reboot/shutdown, raw disk tools and similar admin commands are hard blocked;
-- `rm`, `kill`/`pkill`, destructive `git` and destructive `launchctl` require `allow_destructive=true`;
+- read mode is command-aware: interpreters/build tools are rejected and multi-purpose CLIs are constrained to known read-only subcommands/actions;
+- direct root/admin commands are hard blocked;
+- direct destructive commands require `allow_destructive=true`;
 - filesystem reads/cwd are limited to locally configured roots;
 - stdout/stderr are bounded and timeout is enforced;
 - fan-out is bounded to 32 concurrent hosts;
 - SSH targets, credentials and key material never appear in inventory results.
 
+T37 validates the bounded read lane in live use. The write lane is not yet claimed strongly command-safe because shell/interpreter execution can bypass executable-level classification; separating that high-risk capability is the next hardening target.
+
 ## macOS gateway packaging
 
-`requirements-fleet-operator.txt` pins the MCP SDK. The current SDK requires Python 3.10+. The installer now discovers a compatible installed interpreter (including Homebrew Python) rather than assuming the system `python3`, creates a private versioned virtualenv and a per-user LaunchAgent, and never runs as root.
-
-```bash
-python3 scripts/fleet_operator_macos.py bootstrap \
-  --local-host gateway /absolute/allowed/root \
-  --ssh-host worker-1 user@worker-1.example.ts.net /absolute/allowed/root
-```
-
-This creates the local fleet policy, starts the MCP server, and starts the GitHub relay described below. The relay is deliberately useful even before the ChatGPT MCP app is connected.
+`requirements-fleet-operator.txt` pins the MCP SDK. The current SDK requires Python 3.10+. The installer discovers a compatible installed interpreter (including Homebrew Python), creates a private virtualenv and a per-user LaunchAgent, and never runs as root.
 
 ## Secure MCP Tunnel
 
-On macOS the supported OpenAI tunnel client installation is:
-
-```bash
-brew install openai/tools/tunnel-client
-```
-
-Create a tunnel and a restricted runtime API key in OpenAI Platform. Put only the runtime key in a local mode-0600 file, then install the supervised tunnel:
-
-```bash
-python3 scripts/fleet_operator_macos.py install-tunnel \
-  --tunnel-id tunnel_<32-hex> \
-  --runtime-key-file ~/.config/chatgpt-cost-router/secrets/fleet-tunnel.key
-```
-
-The generated tunnel config refers to the key with `file:...`; neither the key nor its value is placed in the LaunchAgent plist. The tunnel forwards the `main` MCP channel to `http://127.0.0.1:8810/mcp` and keeps its health/UI loopback-only.
-
-In ChatGPT, create/connect the custom app using **Connection: Tunnel** and select/paste the same tunnel ID.
-
-## Important plan boundary
-
-As of 2026-09-10, OpenAI documents full custom-MCP write/modify actions for ChatGPT Business and Enterprise/Edu. ChatGPT Pro can build Apps SDK apps and connect custom MCPs with read/fetch permissions, but full MCP write actions are not enabled. Therefore the direct SSH-write tools are implemented correctly but must not be claimed as callable from this Pro chat until product access changes or the account is in an eligible workspace.
-
-The next section provides a compatibility lane that works with a ChatGPT context that already has GitHub write access.
+The MCP server is prepared for an outbound OpenAI Secure MCP Tunnel and remains loopback-only. Direct custom-app attachment is separate from the already-working GitHub relay path.
 
 ## GitHub command relay for current ChatGPT contexts
 
-`fleet_operator.relay` polls a dedicated `fleet/commands` branch. ChatGPT can write a bounded job with its existing GitHub connector; the supervised gateway executes the job through the same FleetRunner policy and pushes the sanitized result to deterministic branch `fleet/results/<job_id>`. This is not an arbitrary shell daemon: the job schema is versioned and action-limited, expires within 24 hours, and a local ledger rejects replay.
+`fleet_operator.relay` polls a dedicated `fleet/commands` branch. ChatGPT can write a bounded job with its existing GitHub connector; the supervised gateway executes it through FleetRunner and pushes a sanitized deterministic result branch `fleet/results/<job_id>`. Jobs are versioned, expire within 24 hours and are replay-protected locally.
 
 See `docs/FLEET_OPERATOR_RELAY.md` and `schemas/fleet-operator-job.schema.json`.
 
 ## Verification state
 
-Local verification covers policy/config/SSH construction, root-command blocking, destructive authorization, root confinement, output/timeout bounds, parallel ordering, local transport, LaunchAgent/tunnel config redaction, job schema/expiry and relay replay protection. Live evidence now additionally proves autonomous GitHub-relay execution on the gateway MacBook and on a remote Mac Studio over SSH/Tailscale. The loopback MCP server is installed and running on port 8810 under Python 3.11. Secure MCP Tunnel and a direct ChatGPT MCP invocation remain untested.
+Live evidence proves autonomous GitHub-relay execution on the gateway MacBook and remote machines over SSH/Tailscale. T37 adds command-aware read semantics and durable worker-auth quarantine; the full repository suite passed 100 tests. In live verification, `exec_read` blocked interpreter-based mutation while preserving safe `git status`, and a real Codex authentication failure quarantined a worker so the mesh advertised it `ready=false`. Secure MCP Tunnel and a direct ChatGPT MCP invocation remain untested.
