@@ -1,0 +1,32 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789097406.0302851,
+  "host": "macstudio",
+  "job_id": "job-t37-sparky-trigger-auth-failure-20260911",
+  "job_sha256": "724d4eccc852bf2e651d18de5344dfa390a450d11f26d403bbae4304a721a661",
+  "result": {
+    "argv": [
+      "python3",
+      "scripts/remote_worker_client.py",
+      "--url",
+      "https://spark-lolo.taildc96f0.ts.net:8443",
+      "run",
+      "--worker",
+      "openai-A",
+      "--prompt",
+      "Return exactly SHOULD_NOT_RUN"
+    ],
+    "cwd": "/Users/macstudio/remote-worker-test",
+    "elapsed_seconds": 3.912,
+    "exit_code": 2,
+    "host": "macstudio",
+    "stderr": "{\"error\": \"HTTP Error 502: Bad Gateway\"}\n",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789097402.073173,
+  "status": "FAILED",
+  "version": 1
+}
