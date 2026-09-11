@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "job_id": "job-ab-mcp-sdk-inspect-20260911-0543",
+  "host": "macbook",
+  "action": "exec_write",
+  "args": {
+    "argv": ["/Users/loic/.local/share/chatgpt-cost-router/fleet-operator-venv/bin/python", "-c", "import mcp,inspect,importlib.metadata,pkgutil,mcp.client,mcp.server; print('VERSION',importlib.metadata.version('mcp')); print('MCP_EXPORTS',[(n,str(inspect.signature(v))) for n,v in vars(mcp).items() if inspect.isclass(v) and ('Client' in n or 'Session' in n)]); print('CLIENT_MODULES',[x.name for x in pkgutil.iter_modules(mcp.client.__path__)]); print('SERVER_EXPORTS',[n for n in vars(mcp.server) if not n.startswith('_')]); print('SERVER',inspect.signature(mcp.server.MCPServer)); print('RUN',inspect.signature(mcp.server.MCPServer.run)); print('TOOL',inspect.signature(mcp.server.MCPServer.tool))"],
+    "timeout_seconds": 30
+  },
+  "expires_at_unix": 1789108937
+}
