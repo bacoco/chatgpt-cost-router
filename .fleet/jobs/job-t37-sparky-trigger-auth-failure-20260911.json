@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "job_id": "job-t37-sparky-trigger-auth-failure-20260911",
+  "host": "macstudio",
+  "action": "exec_write",
+  "args": {
+    "argv": ["python3", "scripts/remote_worker_client.py", "--url", "https://spark-lolo.taildc96f0.ts.net:8443", "run", "--worker", "openai-A", "--prompt", "Return exactly SHOULD_NOT_RUN"],
+    "cwd": "/Users/macstudio/remote-worker-test",
+    "timeout_seconds": 60
+  },
+  "expires_at_unix": 1789120000
+}
