@@ -1,12 +1,12 @@
 # Current project checkpoint
 
-Task: post-T37 operational hardening after autonomous multi-node mesh validation
-Status: `HARDENED_FLEET_AND_WORKER_HEALTH_LIVE` — T37 is PASS. Fleet Operator read execution now enforces command-aware read-only semantics, and real Codex authentication failures durably quarantine a worker so a stale `codex login status` cannot keep poisoning mesh readiness.
+Task: strategic pause — separate Chat orchestration and Fleet Operator
+Status: `STRATEGIC_REVIEW_TWO_PROJECTS` — the owner clarified two independent needs: maximize work orchestrated from Chat, and operate/monitor processes across machines, with placement optional. NVIDIA PAIR is the Personal AI Router, not PER/PIR. The proposed split and researched PAIR scope are recorded in `docs/TWO_PROJECTS_AND_PAIR_2026-09-11.md`. No implementation, deployment, or live test is authorized by this documentation-only review.
 
 Repository: `bacoco/chatgpt-cost-router`
 Default branch: `main`
 
-## Validated core
+## Previously validated core — historical evidence, not a new live fleet check
 
 - T01-T34: PASS where recorded, except intentionally deferred/blocked experiments documented in the authoritative status.
 - T28A/T28B: PASS for two distinct authorized OpenAI account workers isolated by `CODEX_HOME`.
@@ -28,7 +28,15 @@ The GitHub relay remains the immediately usable execution path from this ChatGPT
 
 ## Next useful action
 
-Harden Fleet Operator write execution so shells/interpreters cannot bypass executable-level admin/destructive policy. After that, the largest routing gap remains trustworthy automatic 5-hour/weekly allowance ingestion.
+Review and approve the two-project boundary before resuming implementation:
+
+1. Chat Orchestration: evidence gathering, reasoning, plans, issues/PRs and other authorized connector actions across projects. Serena is optional code-context tooling; a fleet job is not mandatory.
+2. Fleet Operator: node enrollment/access, bounded process execution, supervision, monitoring and results; optional placement across machines and optional Codex/Claude/local-inference adapters. It must also be usable without Chat.
+3. Shared contract: project/repository/SHA, authorized operation, run identity, permitted resources/account reference, budget, status and evidence. No credentials in requests or GitHub receipts.
+
+Keep T38 and further installations paused. Do not install PAIR or Serena, move code, split repositories, change services, or submit fleet jobs as part of this review. The broad write-lane risk remains an open issue; this pause does not certify it safe. PAIR is a candidate for local inference only, not a general process manager or subscription-account router. Keep existing test receipts and the authoritative validation snapshot unchanged.
+
+The design stays in the existing repository for review. Separate repositories are a later packaging decision, not a prerequisite for independent responsibilities. Next acceptance scenarios should separately prove (A) a real Chat-to-GitHub project deliverable without an extra model call and (B) an enrolled node running and monitoring a bounded non-LLM task. These are plans, not executed tests.
 
 Fleet Operator spec: `docs/FLEET_OPERATOR_PLUGIN.md`.
 Relay spec: `docs/FLEET_OPERATOR_RELAY.md`.
