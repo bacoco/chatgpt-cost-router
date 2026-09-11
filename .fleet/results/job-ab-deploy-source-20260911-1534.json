@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789140806.479281,
+  "host": "macbook",
+  "job_id": "job-ab-deploy-source-20260911-1534",
+  "job_sha256": "6fa86a756b94b61f759034328dfb6064f78aacb5203030e5e7c3c7faedc6509a",
+  "result": {
+    "argv": [
+      "python3",
+      "-c",
+      "import subprocess,gzip,base64,hashlib,json,pathlib; repo=str(pathlib.Path.home()/'codex-t30-broker-test'); sha='d0ba6a97db198a11f19bc8f35ac7b70fab400c69'; subprocess.run(['git','-C',repo,'fetch','origin','feat/ab-products-20260911'],check=True,capture_output=True,timeout=45); paths=['cost_router','fleet_operator','chat_ops','operation_contracts','tests','examples','schemas','policy','scripts','skills','.agents','.chatgpt','requirements.txt','requirements-dev.txt','requirements-fleet-operator.txt','.gitignore','SPEC.md','README.md','docs','pyproject.toml','setup.py','MANIFEST.in','.github']; raw=subprocess.check_output(['git','-C',repo,'archive','--format=tar',sha]+paths,timeout=30); data=gzip.compress(raw,mtime=0); assert len(data)<180000,'export exceeds bound'; print(json.dumps({'commit':sha,'sha256':hashlib.sha256(data).hexdigest(),'archive_b64':base64.b64encode(data).decode()}))"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 1.358,
+    "exit_code": 1,
+    "host": "macbook",
+    "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\nAssertionError: export exceeds bound\n",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789140805.070695,
+  "status": "FAILED",
+  "version": 1
+}
