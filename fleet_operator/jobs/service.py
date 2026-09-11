@@ -129,7 +129,7 @@ class Jobs:
         current = artifacts({"artifacts":[item["name"] for item in receipt["artifacts"]]},root_for(self.config,id_) / "workspace")
         if current != receipt["artifacts"]:
             raise ContractError("recorded artifacts changed")
-        self.journal.transition(id_,{"UNCERTAIN"},receipt["state"],{**receipt,"receipt_digest":digest(receipt)},token=expected[2])
+        self.journal.transition(id_,{"UNCERTAIN"},receipt["state"],{"**receipt":receipt},token=expected[2])
         return self.result(project,id_)
 
     def artifact(self, project, id_, name, offset=0, limit=65536):
@@ -165,4 +165,10 @@ class Jobs:
             rows = db.execute("SELECT id,project FROM operations WHERE principal=? AND kind='process' AND state='QUEUED' ORDER BY created,id LIMIT 200",
                               (self.config.principal,)).fetchall()
         for row in rows:
-            self.start(row["project"],row["id"])
+            try:
+                self.start(row["project"],row["id"])
+            except ContractError:
+                # A revoked project/grant must not stop unrelated queued work.
+                # This query is principal-scoped; CAS preserves any concurrent start.
+                self.journal.transition(row["id"], {"QUEUED"}, "BLOCKED",
+                                        {"reason":"queued request no longer authorized by node policy"})
