@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789097859.268919,
+  "host": "macbook",
+  "job_id": "job-t38-enable-high-risk-nonroot-20260911",
+  "job_sha256": "82d026f9d68d918dd33baf7209693045992728e5738b54b1c00b11329d68f42c",
+  "result": {
+    "argv": [
+      "python3",
+      "-c",
+      "import json,os; from pathlib import Path; p=Path.home()/'.config/chatgpt-cost-router/fleet-operator.json'; d=json.loads(p.read_text()); [(v.__setitem__('allow_unrestricted_exec', True)) for v in d['hosts'].values()]; t=p.with_suffix('.tmp'); t.write_text(json.dumps(d,indent=2,sort_keys=True)+'\\n'); os.chmod(t,0o600); t.replace(p); os.chmod(p,0o600); print('enabled_high_risk_for_nonroot_aliases=',sorted(d['hosts']))"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 2.727,
+    "exit_code": 0,
+    "host": "macbook",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "enabled_high_risk_for_nonroot_aliases= ['macbook', 'macstudio', 'macstudioprod', 'omen', 'sparky']\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789097855.692609,
+  "status": "PASS",
+  "version": 1
+}
