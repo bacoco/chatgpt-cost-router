@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
+import stat
 import re
 from pathlib import Path
 
@@ -72,7 +74,9 @@ def _nonfinite(_):
 
 
 def loads(text):
-    if len(text) > 1_048_576:
+    if not isinstance(text, (str, bytes)):
+        raise ContractError("expected UTF-8 JSON text")
+    if len(text.encode("utf-8") if isinstance(text, str) else text) > 1_048_576:
         raise ContractError("JSON exceeds 1 MiB")
     try:
         return json.loads(text, object_pairs_hook=_pairs, parse_constant=_nonfinite)
@@ -81,7 +85,13 @@ def loads(text):
 
 
 def load(path):
-    return loads(Path(path).expanduser().read_text(encoding="utf-8"))
+    fd = os.open(Path(path).expanduser(), os.O_RDONLY | os.O_NONBLOCK)
+    try:
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            raise ContractError("JSON input must be a regular file")
+        return loads(os.read(fd, 1_048_577))
+    finally:
+        os.close(fd)
 
 
 def no_credentials(value, depth=0):

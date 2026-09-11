@@ -14,8 +14,14 @@ TERMINAL = frozenset({"SUCCEEDED", "FAILED", "CANCELLED", "TIMED_OUT", "BLOCKED"
 
 class Journal:
     def __init__(self, path):
-        self.path = Path(path).expanduser().resolve()
+        supplied = Path(path).expanduser()
+        if supplied.is_symlink():
+            raise ContractError("journal cannot be a symlink")
+        self.path = supplied.absolute()
         self.path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        fd = os.open(self.path, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+        os.fchmod(fd, 0o600)
+        os.close(fd)
         with self.transaction() as db:
             db.executescript("""
                 CREATE TABLE IF NOT EXISTS operations(
@@ -110,6 +116,8 @@ class Journal:
             return True
 
     def events(self, principal, project, id_, after=0):
+        from .common import integer
+        integer(after, 0, 2**63-1, "event offset")
         self.get(principal, project, id_)
         with self.transaction() as db:
             return [{**dict(row), "data": json.loads(row["data"])} for row in db.execute(
@@ -149,3 +157,18 @@ class Journal:
         with self.transaction() as db:
             row = db.execute("SELECT digest FROM approvals WHERE operation=? AND step=?", (id_,step)).fetchone()
             return bool(row and row["digest"] == digest(request))
+
+    def claim_invocation(self, id_, step, expected, data, read_only):
+        """Fence cancellation/deadline and competing invocations in one transaction."""
+        with self.transaction() as db:
+            parent = self.decode(db.execute("SELECT * FROM operations WHERE id=?", (id_,)).fetchone())
+            if parent["state"] != "RUNNING":
+                raise ContractError("workflow no longer authorizes an invocation")
+            if not read_only and (parent["data"].get("cancel_requested") or parent["request"]["deadline"] <= time.time()):
+                raise ContractError("workflow no longer authorizes a mutation")
+            current = db.execute("SELECT * FROM effects WHERE operation=? AND step=?", (id_,step)).fetchone()
+            if not current or current["state"] != expected["state"] or json.loads(current["data"]) != expected["data"]:
+                return False
+            db.execute("UPDATE effects SET state='PENDING',data=? WHERE operation=? AND step=?", (canonical(data),id_,step))
+            self._event(db,id_,"effect-pending",{"step":step,"kind":data["pending"]["kind"]})
+            return True

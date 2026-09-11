@@ -1,6 +1,7 @@
 """Atomic private local records, separate from GitHub delivery receipts."""
 import os
 import tempfile
+import stat
 from pathlib import Path
 from .common import canonical, loads, ContractError
 
@@ -27,8 +28,10 @@ def atomic_json(path, payload):
 
 
 def private_json(path):
-    fd = os.open(Path(path), os.O_RDONLY | os.O_NOFOLLOW)
+    fd = os.open(Path(path), os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
     try:
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            raise ContractError("record must be a regular file")
         data = os.read(fd, 1_048_577)
         if len(data) > 1_048_576:
             raise ContractError("record exceeds limit")
