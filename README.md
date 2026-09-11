@@ -46,7 +46,7 @@ cd chatgpt-cost-router
 python3.11 -m venv .venv
 . .venv/bin/activate
 python -m pip install .
-python scripts/demo_ab.py --output /tmp/ab-first-demo
+python scripts/ab_demo.py --directory /tmp/ab-first-demo
 ```
 
 Use a fresh demo directory. A uses simulated connectors; B runs a real local process. The example does not contact your email, website or fleet. Never reuse its simulated capability observations as live authorizations. See the [examples](examples/).
