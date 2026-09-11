@@ -1,0 +1,9 @@
+{
+  "error": "read execution forbids interpreter/build tool: python3",
+  "finished_at_unix": 1789097245.911617,
+  "job_id": "job-t37-read-python-blocked-20260911",
+  "job_sha256": "f005c1a4614a48e71b8b58a8a06000f1834e3843bd739066b60ec1fcd775d7fe",
+  "started_at_unix": 1789097245.854953,
+  "status": "ERROR",
+  "version": 1
+}
