@@ -5,6 +5,7 @@ from operation_contracts.common import ContractError, digest
 from .catalog import Catalog
 from .capability_store import CapabilityStore, SURFACES
 from .workflows import validate_workflow, resolve
+from .lifecycle import serialized, cancel, events
 
 
 class Operations:
@@ -50,6 +51,7 @@ class Operations:
                 "extra_model_calls":0,
                 "partial":any(step["state"] == "VERIFIED" for step in steps) and row["state"] != "SUCCEEDED"}
 
+    @serialized
     def approve(self, project, id_, step_id):
         row = self.row(project, id_)
         step = next((step for step in row["request"]["steps"] if step["id"] == step_id), None)
@@ -70,17 +72,13 @@ class Operations:
                 "connector":binding["connector"], "account_ref":binding["account_ref"],
                 "tool_name":capability["tool_name"], "read_only":self.catalog.get(spec["action"])["read_only"]}
 
+    @serialized
     def next(self, project, id_):
         row = self.row(project, id_)
         if row["state"] in {"SUCCEEDED", "FAILED", "BLOCKED", "CANCELLED", "UNCERTAIN"}:
             return self.status(project, id_)
         if row["policy"] != self.policy:
             raise ContractError("project/action policy changed; review before continuing")
-        if row["request"]["deadline"] <= time.time():
-            effects = [self.journal.effect(id_, step["id"]) for step in row["request"]["steps"]]
-            pending = any(effect and effect["state"] in {"PENDING", "READY_VERIFY"} for effect in effects)
-            self.journal.transition(id_, {"QUEUED", "RUNNING"}, "UNCERTAIN" if pending else "BLOCKED", {"reason":"deadline"})
-            return self.status(project, id_)
         self.journal.transition(id_, {"QUEUED"}, "RUNNING")
         outputs = self.outputs(row)
         for step in row["request"]["steps"]:
@@ -94,6 +92,10 @@ class Operations:
             if state not in {"READY", "READY_CALL", "READY_VERIFY"}:
                 return self.status(project, id_)
             kind = "preflight" if state == "READY" and "preflight" in step else "verify" if state == "READY_VERIFY" else "call"
+            if kind != "verify" and (row["request"]["deadline"] <= time.time() or row["data"].get("cancel_requested")):
+                stopped = "CANCELLED" if row["data"].get("cancel_requested") else "BLOCKED"
+                self.journal.transition(id_, {"QUEUED", "RUNNING"}, stopped, {"reason":"cancelled or expired before a new call"})
+                return self.status(project, id_)
             invocation = self.invocation(project, step, kind, outputs)
             exact = {**step, "arguments":resolve(step["arguments"], outputs)}
             if kind == "call" and self.catalog.get(step["action"])["confirmation"] and not self.journal.approved(id_, step["id"], exact):
@@ -107,13 +109,18 @@ class Operations:
         self.journal.transition(id_, {"RUNNING"}, "SUCCEEDED", {"outputs_digest":digest(outputs)})
         return self.status(project, id_)
 
+    @serialized
     def record(self, project, id_, step, token, output, *, error=False, evidence_source="native-tool-observation"):
         from .results import record
         return record(self, project, id_, step, token, output, error=error, evidence_source=evidence_source)
 
+    @serialized
     def reconcile(self, project, id_, step):
         from .results import reconcile
         return reconcile(self, project, id_, step)
+
+    cancel = cancel
+    events = events
 
     def run(self, project, id_, transport):
         from .results import drive

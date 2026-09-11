@@ -14,7 +14,7 @@ def record(engine, project, id_, step_id, token, output, *, error=False, evidenc
     if pending.get("session",engine.session) != engine.session or pending.get("surface",engine.surface) != engine.surface:
         raise ContractError("pending invocation belongs to another conversation context")
     data = {key:val for key,val in effect["data"].items() if key != "pending"}
-    data.update(evidence_source=evidence_source, tool_result_digest=digest(output))
+    data.update(evidence_source=evidence_source, tool_result_digest=digest(output), last_phase=pending["kind"])
     parent_state = None
     if error:
         data["reason"] = "tool outcome uncertain; do not redispatch"
@@ -25,6 +25,7 @@ def record(engine, project, id_, step_id, token, output, *, error=False, evidenc
     else:
         expectations = resolve(step[pending["kind"]]["expect"], engine.outputs(row))
         passed = matches(output, expectations)
+        data[pending["kind"]+"_output"] = output
         if pending["kind"] == "preflight":
             new = "READY_CALL" if passed else "BLOCKED"
         else:
@@ -50,9 +51,13 @@ def reconcile(engine, project, id_, step_id):
         raise ContractError("policy changed; operator review required")
     step = next((step for step in row["request"]["steps"] if step["id"] == step_id), None)
     effect = engine.journal.effect(id_, step_id)
-    if not step or not effect or effect["state"] not in {"UNCERTAIN", "PENDING"}:
+    if not step or not effect or effect["state"] not in {"UNCERTAIN", "PENDING", "READY_VERIFY"}:
         raise ContractError("no uncertain effect to reconcile")
-    if "verify" in step:
+    phase = effect["data"].get("pending", {}).get("kind", effect["data"].get("last_phase"))
+    if phase == "preflight":
+        engine.invocation(project, step, "preflight", engine.outputs(row))
+        new = "READY"
+    elif "verify" in step:
         engine.invocation(project, step, "verify", engine.outputs(row))
         new = "READY_VERIFY"
     elif engine.catalog.get(step["action"])["read_only"]:
