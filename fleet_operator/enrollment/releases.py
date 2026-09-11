@@ -84,7 +84,8 @@ def activation(root, revision, node_config, python, *, apply=False):
         raise ContractError("invalid activation revision")
     root = Path(root).resolve()
     release = verify(root / "releases" / revision)
-    executable = Path(python).resolve()
+    # Preserve a virtualenv interpreter path: resolving its symlink discards the venv.
+    executable = Path(python).expanduser().absolute()
     if not executable.is_file() or not os.access(executable, os.X_OK):
         raise ContractError("operator Python executable is unavailable")
     config = NodeConfig.from_file(node_config)
