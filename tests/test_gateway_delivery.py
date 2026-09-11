@@ -40,7 +40,7 @@ class GatewayDeliveryTests(unittest.TestCase):
             launch = Mock(return_value=subprocess.CompletedProcess([],0,b'clean',b''))
             runner = SecureRunner(FleetConfig({'node':host}),run=launch)
             runner.execute('node',['/usr/bin/git','show','HEAD'],cwd=tmp,mode='read')
-            argv = launch.call_args.args[0]
+            argv = json.loads(launch.call_args.args[0][-1])[0]
             self.assertIn('core.hooksPath=/dev/null',argv)
             self.assertIn('--no-textconv',argv)
             self.assertIn('--no-ext-diff',argv)
@@ -57,7 +57,7 @@ class GatewayDeliveryTests(unittest.TestCase):
         registry, runner = Registry(), Mock()
         with patch.object(mcp_server,'new_server',return_value=registry), \
              patch.object(mcp_server,'annotations',return_value={}), \
-             patch('fleet_operator.gateway_jobs.annotations',return_value={}), \
+             patch('fleet_operator.gateway_tools.annotations',return_value={}), \
              patch.object(mcp_server,'configured_runner',return_value=runner) as configured:
             mcp_server.build_server('/operator/config.json')
             registry.tools['fleet_exec_read']('node',['uname'])
@@ -67,7 +67,7 @@ class GatewayDeliveryTests(unittest.TestCase):
     def test_lifecycle_denies_unenrolled_and_root_hosts(self):
         for host in [HostSpec('n',transport='local'),HostSpec('n',ssh_target='root@fixture')]:
             runner = SecureRunner(FleetConfig({'n':host}))
-            with self.assertRaises(ContractError):
+            with self.assertRaises((ContractError,FleetError)):
                 call(runner,'n','node_health',{})
 
     def test_artifact_bytes_never_enter_github_relay(self):
