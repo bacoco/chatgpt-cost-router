@@ -1,0 +1,9 @@
+{
+  "error": "argv elements must not contain NUL/newlines",
+  "finished_at_unix": 1789140802.079377,
+  "job_id": "job-ab-deploy-inspect-20260911-1534",
+  "job_sha256": "748a3a5236c84c264c01fda12796b5bd3aa5234aa88a9953ac71aadcd1fdd418",
+  "started_at_unix": 1789140802.046315,
+  "status": "ERROR",
+  "version": 1
+}
