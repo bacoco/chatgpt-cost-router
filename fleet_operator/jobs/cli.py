@@ -17,12 +17,15 @@ def main(argv=None):
     request.add_argument("--request")
     request.add_argument("--request-json")
     submit.add_argument("--start",action="store_true")
-    for name in ("start","status","cancel","result","reconcile","logs","events"):
+    for name in ("start","status","cancel","result","reconcile","logs","events","artifact"):
         action = sub.add_parser(name)
         action.add_argument("--project",required=True)
         action.add_argument("--run",required=True)
-        if name == "logs":
-            action.add_argument("--stream",choices=("stdout","stderr"),default="stdout")
+        if name in {"logs", "artifact"}:
+            if name == "logs":
+                action.add_argument("--stream",choices=("stdout","stderr"),default="stdout")
+            else:
+                action.add_argument("--name", required=True)
             action.add_argument("--offset",type=int,default=0)
             action.add_argument("--limit",type=int,default=32768)
         if name == "events":
@@ -42,8 +45,7 @@ def main(argv=None):
             if args.start:
                 output = service.start(req["project_id"],output["run_id"])
         elif args.command == "health":
-            output = {"ok":True,"node_id":config.node_id,"runtime_revision":config.document.get("runtime_revision"),
-                      "policy_revision":config.revision,"model_runtime_required":False}
+            output = service.health()
         elif args.command == "serve-queue":
             while True:
                 service.recover_stale()
@@ -60,10 +62,14 @@ def main(argv=None):
         elif args.command == "events":
             service.row(args.project,args.run)
             output = {"events":service.journal.events(config.principal,args.project,args.run,args.after)}
+        elif args.command == "artifact":
+            output = service.artifact(args.project,args.run,args.name,args.offset,args.limit)
         elif args.command == "logs":
             output = service.logs(args.project,args.run,args.stream,args.offset,args.limit)
         else:
             output = getattr(service,args.command)(args.project,args.run)
+        output["_node"] = {"node_id":config.node_id,"runtime_revision":config.document.get("runtime_revision"),
+                           "policy_revision":config.revision}
         print(json.dumps(output,indent=2,ensure_ascii=False,allow_nan=False))
         return 0
     except (ContractError,OSError,ValueError) as exc:

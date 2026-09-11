@@ -15,9 +15,7 @@ def build_server(path):
 
     @server.tool(annotations=annotations(True))
     def fleet_node_health() -> dict:
-        config = NodeConfig.from_file(path)
-        return {"ok":True,"node_id":config.node_id,"policy_revision":config.revision,
-                "runtime_revision":config.document.get("runtime_revision"),"model_runtime_required":False}
+        return service().health()
 
     @server.tool(annotations=annotations(True))
     def fleet_profiles(project_id: str) -> dict:
@@ -58,6 +56,17 @@ def build_server(path):
         jobs = service()
         jobs.row(project_id,run_id)
         return {"events":jobs.journal.events(jobs.config.principal,project_id,run_id,after)}
+
+    @server.tool(annotations=annotations(True))
+    def fleet_artifact(project_id: str, run_id: str, name: str, offset: int = 0, limit: int = 65536) -> dict:
+        return service().artifact(project_id, run_id, name, offset, limit)
+
+    @server.tool(annotations=annotations(True))
+    def fleet_jobs(project_id: str) -> dict:
+        jobs = service()
+        jobs.config.projects.project(jobs.config.principal, project_id)
+        return {"jobs":[jobs.status(project_id, row["id"]) for row in
+                        jobs.journal.list(jobs.config.principal, project_id, "process")]}
 
     return server
 
