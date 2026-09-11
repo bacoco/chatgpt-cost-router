@@ -1,5 +1,7 @@
 """One supervisor for one owned child. No arbitrary restored PID is ever signalled."""
 import argparse
+import os
+import signal
 import subprocess
 import time
 from operation_contracts.common import ContractError, digest
@@ -9,7 +11,6 @@ from .service import Jobs
 from .workspace import prepare, root_for, artifacts
 from .command import command
 from .monitor import monitor, signal_child
-import signal
 
 
 def execute(config, project, id_, token):
@@ -23,7 +24,19 @@ def execute(config, project, id_, token):
     if row["state"] == "CANCELLING":
         service.journal.transition(id_,{"CANCELLING"},"CANCELLED",{},token=token)
         return 0
+    # One durable claim per supervisor. A restarted worker must reconcile, not spawn again.
+    with service.journal.transaction() as db:
+        claimed = service.journal.decode(db.execute("SELECT * FROM operations WHERE id=?", (id_,)).fetchone())
+        if claimed["state"] not in {"RUNNING", "CANCELLING"} or claimed["data"].get("token") != token:
+            return 0
+        if claimed["data"].get("supervisor_claimed"):
+            return 0
+        from operation_contracts.common import canonical
+        claimed["data"]["supervisor_claimed"] = time.time()
+        db.execute("UPDATE operations SET data=? WHERE id=?", (canonical(claimed["data"]), id_))
+    previous_umask = os.umask(0o077)
     process = None
+    cleanup_complete = False
     try:
         profile = config.profile(row["request"]["profile"])
         root, work, home = prepare(config,row)
@@ -38,6 +51,10 @@ def execute(config, project, id_, token):
                                        stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True,close_fds=True)
             service.journal.transition(id_,{"RUNNING"},"RUNNING",{"child_started":time.time()},token=token)
             state = monitor(process,service.journal,row,token,root,profile)
+        if process is not None and profile["isolation"] == "container":
+            from .command import cleanup_container
+            state.update(cleanup_container(profile, root))
+            cleanup_complete = True
         state["artifacts"] = artifacts(profile,work)
         receipt = {"version":1,"run_id":id_,"request_digest":row["digest"],"policy":row["policy"],"token":token,
                    "source":row["request"].get("source"),"runtime_revision":config.document.get("runtime_revision","unversioned"),
@@ -45,11 +62,18 @@ def execute(config, project, id_, token):
         atomic_json(root / "result.json",receipt)
         service.journal.transition(id_,{"RUNNING","CANCELLING"},state["state"],{**state,"receipt_digest":digest(receipt)},token=token)
     except Exception as exc:
-        service.journal.transition(id_,{"RUNNING","CANCELLING"},"FAILED",{"reason":type(exc).__name__},token=token)
+        service.journal.transition(id_,{"RUNNING","CANCELLING"},"UNCERTAIN" if process is not None else "FAILED",{"reason":type(exc).__name__},token=token)
     finally:
-        if process is not None and process.poll() is None:
+        os.umask(previous_umask)
+        if process is not None and process.returncode is None:
             signal_child(process, signal.SIGKILL)
             process.wait(timeout=5)
+        if process is not None and profile["isolation"] == "container" and not cleanup_complete:
+            from .command import cleanup_container
+            try:
+                cleanup_container(profile, root)
+            except Exception:
+                pass  # The durable outcome is already UNCERTAIN; never report verified cleanup.
     return 0
 
 
