@@ -1,0 +1,9 @@
+{
+  "deadline": 1798757999,
+  "idempotency_key": "demo-plain-process",
+  "inputs": {},
+  "node_id": "demo-node",
+  "profile": "plain-python",
+  "project_id": "demo",
+  "version": 1
+}

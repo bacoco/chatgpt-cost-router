@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68,<83"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chatgpt-cost-router"
+version = "0.2.0"
+description = "Independent Chat-first Operations and Fleet Operator runtimes"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["jsonschema>=4.25.1,<5"]
+
+[project.optional-dependencies]
+mcp = ["mcp==2.2.0"]
+dev = ["PyYAML==6.0.2"]
+
+[project.scripts]
+chat-operations = "chat_ops.cli:main"
+fleet-jobs = "fleet_operator.jobs.cli:main"
+fleet-gateway = "fleet_operator.mcp_server:main"
+fleet-enroll = "fleet_operator.enrollment.cli:main"
+fleet-runtime = "fleet_operator.enrollment.cli:active_main"
+
+[tool.setuptools.packages.find]
+include = ["chat_ops*", "cost_router*", "fleet_operator*", "operation_contracts*"]

@@ -1,0 +1,46 @@
+{
+  "projects": {
+    "demo": {
+      "members": [
+        "local-demo"
+      ],
+      "nodes": [
+        "demo-node"
+      ],
+      "profiles": [
+        "plain-python"
+      ],
+      "resources": {
+        "mail": {
+          "account_ref": "demo-mail",
+          "actions": [
+            "gmail.read",
+            "gmail.send"
+          ],
+          "connector": "gmail"
+        },
+        "repo": {
+          "account_ref": "demo-git",
+          "actions": [
+            "github.read",
+            "github.write"
+          ],
+          "bindings": {
+            "owner": "fixture",
+            "repo": "demo"
+          },
+          "connector": "github"
+        },
+        "site": {
+          "account_ref": "demo-site",
+          "actions": [
+            "cowboy.read",
+            "cowboy.publish"
+          ],
+          "connector": "cowboy"
+        }
+      }
+    }
+  },
+  "version": 1
+}

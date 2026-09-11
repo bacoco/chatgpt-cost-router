@@ -1,179 +1,78 @@
 # Chat-first Operations & Fleet Operator
 
-This repository, historically named **ChatGPT Cost & Capability Router**, serves
-**two independent needs**. They can cooperate, but neither requires the other.
+**Complete useful work from Chat. Run ordinary programs on your own machines. Keep evidence of what actually happened.**
 
-| Product | Purpose | Default execution |
+This repository contains two independent products. Its historical name, `chatgpt-cost-router`, is retained: cost routing supports the products but does not define their whole purpose.
+
+| Product | What it is for | What it adds |
 | --- | --- | --- |
-| **A — Chat-first Operations** | Complete authorized work from normal Chat across Gmail, GitHub, WordPress/Cowboy and all other available apps/connectors. | Chat reasons, invokes tools, acts and verifies; no Work switch or additional coding-agent/model-API call by default. |
-| **B — Fleet Operator** | Access machines, launch processes, manage their lifecycle, monitor progress/resources and retrieve results. | Ordinary processes and services; placement, coding agents and local inference are optional capabilities. |
+| **A — Chat-first Operations** | Read, analyze, edit, send, publish and verify through authorized Gmail, GitHub, Cowboy and other connectors. | Durable workflows, project/account permissions, exact approvals and recovery from uncertain results. |
+| **B — Fleet Operator** | Run scripts, tests and foreground services on enrolled machines, with or without Chat. | Named process profiles, queueing, supervision, cancellation, logs, progress and verified result files. |
 
-**A is not limited to creating issues, preparing specifications or handing work to
-another agent. B is not limited to running Codex or distributing GPU inference.**
+**A is not just an issue generator. B is not a Codex wrapper.** Neither core requires an extra model call. Connector/account permissions and service quotas still apply.
 
-> **Current state: documentation-aligned strategic pause.** The A/B responsibilities
-> are defined; the physical code split and full product implementation are not
-> complete. T38 and new deployments remain paused. Historical validation is recorded
-> through T37; this README update is not a new live test or deployment authorization.
-> Start with [CURRENT](.chatgpt/CURRENT.md), the
-> [A/B decision](docs/TWO_PROJECTS_AND_PAIR_2026-09-11.md) and the
-> [implementation map](docs/ARCHITECTURE.md).
+## Why use it?
 
-## A — Complete work from Chat and its tools
+An email can be sent even when its response is lost. A remote command can be accepted without finishing. A chat can lose the context needed to distinguish those states. This project records workflow and process state so those situations are not mistaken for success or permission to blindly repeat an action.
 
-The economic priority is to use the capability already included in Chat and avoid
-unnecessary additional Work/Codex/Claude/model-API usage. This is a routing objective,
-not a promise of unlimited usage or zero cost for every connector and machine.
+A can coordinate an authorized email-to-repository-to-publication workflow and verify each change. B can run tests on a configured Mac or Linux machine, expose progress, cancel the process and return the output with an integrity check. A can call B; connector-only work does not require a fleet, and fleet work does not require Chat.
 
-| Connected system | Intended authorized operations |
-| --- | --- |
-| Gmail | Search/read messages, prepare and verify drafts, send requested mail and verify the result. |
-| GitHub | Read/analyze repositories, edit files, commit, manage branches/issues/PRs, perform authorized merges and verify exact state. |
-| WordPress through Cowboy | Read, edit and publish content, then verify the resulting site. Do not substitute WPVibe. |
-| Other apps/connectors | Use their actual document, calendar, contact, search, publishing and other capabilities. |
-| Cross-app workflows | Carry the correct task/project context across systems, execute authorized steps and verify each external effect. |
+The default preference is to use capabilities already available in Chat and ordinary local processes. Work, Codex, Claude, provider APIs, local inference, Serena and PAIR are optional choices, not hidden execution steps. This does not promise unlimited subscription quotas or free external services.
 
-For example: read permitted emails, analyze their information, update a repository
-or website, and send a verified report. Direct connector actions are the primary
-lane; a machine task is optional. An issue is only one possible output.
+## Start from Chat
 
-Capabilities must be checked per **action, account/resource, surface and session**.
-ChatGPT.com Chat, Codex Mac Chat, Work, CLI and Scheduled Tasks are distinct contexts.
-Visible tools are not automatically invocable or verified. Reuse historical receipts
-without turning a success or denial on one surface into a universal product claim.
-See the [surface map](docs/SURFACE_CAPABILITY_MAP.md) and
-[capability contract](docs/CAPABILITIES.md).
-
-The repository supplies workflow skills, scoped evidence, handoffs and a
-deterministic decision engine. Gmail, Cowboy and other app implementations are
-external integrations, not newly implemented adapters in this repository.
-Serena is an **optional** code-context/editing tool to evaluate, not A's foundation.
-
-## B — Machine access, execution and monitoring
-
-B owns machine enrollment/access, authorization, execution, supervision, monitoring
-and results. A can use it as a tool; a CLI, API or another authorized client must
-also be able to use it without Chat. No second LLM is required for an ordinary task.
+Read [deployment status](docs/DEPLOYMENT_STATUS.md) first: it identifies what is actually installed, verified or blocked. Then use this prompt with the authorized GitHub connector:
 
 ```text
-A: Chat + authorized apps --------> Gmail / GitHub / Cowboy / other systems
-          |
-          | optional scoped machine task
-          v
-B: Fleet Operator <--------------- CLI / API / other authorized clients
-          |
-          +--> tests, builds, scripts and supervised services
-          +--> optional Codex / Claude adapters
-          +--> optional local inference, with PAIR as a candidate
+Read README.md, .chatgpt/CURRENT.md and docs/DEPLOYMENT_STATUS.md from
+bacoco/chatgpt-cost-router, main. My objective is: [describe the actual work].
+Use the available native connectors to complete and verify that work, not merely
+create an issue. Keep actions within the named project and account.
+For machine work, use an enrolled Fleet profile and inspect completion, logs and
+results. Follow docs/FLEET_OPERATOR_RELAY.md for the GitHub relay.
+Do not switch to Work or invoke another model/API without explicit authorization.
+Never repeat an uncertain send, publication or launch without reconciliation.
 ```
 
-The diagram is the product boundary, not a claim that every adapter is implemented.
-The existing Fleet gateway provides local/SSH command execution, an MCP server,
-a GitHub relay, bounded outputs and macOS packaging. Separate worker modules add
-Codex dispatch, Tailscale endpoints, heartbeat discovery and auth quarantine.
+Native connector actions do not automatically become journalled A workflows. To use A's durable engine, attach its private MCP interface or operate its CLI/native-driver loop. The engine returns a tool instruction; the driver must call the real connector and record the real result. Installing a server is not the same as attaching it to a Chat account.
 
-**B is still a prototype, not a complete multi-tenant job platform.** Host reachable,
-supervisor loaded, process running, progress observed, job complete and result
-verified are distinct states. General durable job lifecycle/cancellation,
-project isolation and resource monitoring still need consolidation.
+## Try the local example
 
-T37 added command-aware read checks and worker-auth quarantine; it did not prove
-a complete OS sandbox. Broad write execution and relay recovery after uncertain
-effects remain open risks. Do not expose the gateway publicly or to untrusted users.
-The direct ChatGPT MCP attachment is not yet a recorded live PASS; GitHub relay
-proof is a separate transport result. Client/workspace permissions must be verified,
-not inferred from a blanket Pro read-only claim.
-
-PAIR is a candidate for **local inference routing**, not a replacement for general
-process management or subscription-account routing. Neither PAIR nor Serena has
-been integrated by this review. See the [comparison](docs/TWO_PROJECTS_AND_PAIR_2026-09-11.md).
-
-## Multiple projects, machines and accounts
-
-Do not equate a machine with a project, GitHub identity or model-provider account.
-A request must carry explicit project/task context; repository and immutable SHA
-apply when code is involved, not to every email. Concurrent chats must not share a
-mutable global "active project". Permissions come from the authorized service,
-not from instructions that a repository grants itself.
-
-The proposed A/B contract includes requester, context, operation, inputs, allowed
-resources, deadline/idempotency key and optional account/budget reference. Results
-include run identity, status, diagnostics and evidence. **This unified contract is
-a design target**, not an already-enforced field set in every runtime adapter.
-
-Keep credentials out of requests and repository receipts. Aggregate provider usage
-per account across machines/projects; do not count each worker as a separate quota.
-Quota observations remain unknown when unavailable. Additional-model use must be
-explicit rather than hidden inside a connector or remote process.
-
-## Start with the appropriate entry point
-
-**For A:** use normal Chat with the connectors required by the task. No Fleet,
-Codex or GPU installation is required for connector-only work. For a GitHub-backed
-project, use [PROJECT_BOOTSTRAP_PROMPT](docs/PROJECT_BOOTSTRAP_PROMPT.md) and
-[PROJECT_BOOTSTRAP_PROTOCOL](docs/PROJECT_BOOTSTRAP_PROTOCOL.md).
-That kit is the GitHub-project lane, not a prerequisite for mail or other app tasks.
-
-[INSTALLATION_KIT_INDEX](docs/INSTALLATION_KIT_INDEX.md) covers the project workspace
-and supported launcher/handoff setup. Scheduled Tasks are optional where available.
-A [Codex handoff](docs/CHATGPT_TO_CODEX_HANDOFF.md) is an explicit escalation for a
-real capability boundary, not the automatic next step after Chat.
-
-**For B:** review [FLEET_OPERATOR_PLUGIN](docs/FLEET_OPERATOR_PLUGIN.md),
-[FLEET_OPERATOR_RELAY](docs/FLEET_OPERATOR_RELAY.md) and the
-[roadmap](docs/ROADMAP.md) before deployment. The relay is a transitional/fallback
-transport, not a mandatory route for Gmail, GitHub or Cowboy operations in A.
-Existing installation/run recipes are not an instruction to resume paused services.
-
-## Existing implementation and physical layout
-
-| Area | Current location | Responsibility |
-| --- | --- | --- |
-| Chat project workflows and optional delegation | `skills/`, `.chatgpt/`, workflow docs | A and shared handoff conventions |
-| Cost/capability recommendation and validation | `cost_router/router.py`, `capabilities.py`, `validation.py`, `__main__.py` | Decision support; does not itself invoke Chat apps or machines |
-| Versioned policy, schemas and local operation state | `policy/`, `schemas/`, `cost_router/handoff.py`, `cost_router/ledger.py` | Shared building blocks |
-| Machine access, MCP, relay and packaging | `fleet_operator/`, `scripts/fleet_operator*.py` | B |
-| Codex broker, budgets, health, remote endpoints, mesh and supervision | Worker/mesh modules in `cost_router/` and `scripts/` | B; still physically mixed into the historical package |
-| Durable test evidence | `.chatgpt/test-receipts/`, dated validation documents | Historical action-scoped proofs, not current fleet telemetry |
-
-The [architecture review](docs/ARCHITECTURE.md) maps the real modules and remaining
-coupling. The [engine specification](SPEC.md) describes that component, not the
-whole A/B product. No module, import path or CLI was renamed during this review.
-
-## Local deterministic example — not a fleet/model call
-
-Use Python 3.11+ for the documented development setup, from this checkout:
+Python 3.11+, Git and repository access are required:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m pip install -r requirements-dev.txt
-python3 -m cost_router route examples/request.json --at 2026-09-05T00:30:00Z
-python3 -m cost_router validate handoff examples/handoff.json
-python3 -m unittest discover -s tests -v
+git clone https://github.com/bacoco/chatgpt-cost-router.git
+cd chatgpt-cost-router
+python3.11 -m venv .venv
+. .venv/bin/activate
+python -m pip install .
+python scripts/demo_ab.py --output /tmp/ab-first-demo
 ```
 
-These are opt-in development instructions, not commands executed by this review.
-Fixtures and prices are synthetic. `--at` replays fixture time; real decisions need
-fresh observations. The CLI recommends/validates without launching a surface.
-Exit codes are `0` valid/routed, `2` invalid input and `3` blocked.
-See [ROUTING_SPEC](docs/ROUTING_SPEC.md) and [EXECUTION_PROTOCOL](docs/EXECUTION_PROTOCOL.md).
+Use a fresh demo directory. A uses simulated connectors; B runs a real local process. The example does not contact your email, website or fleet. Never reuse its simulated capability observations as live authorizations. See the [examples](examples/).
 
-## Evidence, skills and next work
+## Find the right guide
 
-Use [VALIDATION_STATUS_2026-09-11](docs/VALIDATION_STATUS_2026-09-11.md) for the
-authoritative historical snapshot. T14-alt's Gmail proof belongs to Codex Mac Chat
-with built-in Gmail, not automatically to a scheduled Developer-MCP lane.
-T35B-T37 record relay/SSH, multinode dispatch and hardening proofs, not complete
-product certification or a guarantee that the fleet is currently online.
+| Need | Guide |
+| --- | --- |
+| What is really deployed, tested or blocked? | [Deployment status](docs/DEPLOYMENT_STATUS.md) |
+| How do I install A, B or both? | [Installation](docs/INSTALLATION.md) |
+| How do I operate workflows and jobs? | [A/B usage](docs/AB_USAGE.md) |
+| How does the native GitHub connector reach machines? | [Fleet relay](docs/FLEET_OPERATOR_RELAY.md) |
+| How is the code organized and protected? | [Architecture](docs/ARCHITECTURE.md) |
+| What remains? | [Roadmap](docs/ROADMAP.md) |
+| Which older documents are historical? | [Documentation index](docs/README.md) |
 
-Five canonical skills live in `skills/`: `capability-router`, `surface-handoff`,
-`project-workspace-bootstrap`, `cloud-to-codex-handoff` and `codex-to-cloud-return`.
-Read them from the pinned repository revision; cloning alone does not prove that a
-host loaded them. See [INSTALLATION](docs/INSTALLATION.md).
+## Implementation map
 
-The [A/B roadmap](docs/ROADMAP.md) separates connector operations, machine lifecycle
-and the minimal shared contract. Cost-savings percentages in older economics/audit
-documents remain hypotheses. Do not restart the stopped quota-burn experiment.
-Assess useful completed outcomes, optional model calls and known/unknown costs
-without making a new token experiment a prerequisite for A.
+`chat_ops/` owns A. `fleet_operator/jobs/` owns B's independent job service. `fleet_operator/` provides the guarded local/SSH gateway and durable relay. `fleet_operator/enrollment/` provides exact-revision staging and controlled activation. Owner-operated `scripts/ab_*` installers create separate user services only when explicitly invoked.
+
+`operation_contracts/` owns project/resource/account grants and private journals. `fleet_operator/workers/` contains optional worker/mesh integrations. `cost_router/` retains deterministic routing and compatibility imports. [SPEC.md](SPEC.md) describes that decision engine, not the whole A/B product.
+
+## Trust and evidence
+
+A write needs authorization and read-back. Lost results remain uncertain; reconciliation reads evidence instead of repeating the write. B distinguishes acceptance, running state and a completed result. Retrieved artifacts must match the completion receipt.
+
+`trusted-local` means trusted owner code in a separate workspace, **not an OS sandbox**. Container profiles require real-engine validation before accepting untrusted workloads. MCP servers bind to loopback and need a separately configured authenticated connection for external access.
+
+Credentials, private host addresses, operator configuration and journals stay outside Git. Publish only sanitized deployment receipts. Historical experiment reports are evidence of those runs, not today's telemetry. **T38 remains paused; deployment does not resume quota-burning experiments.**

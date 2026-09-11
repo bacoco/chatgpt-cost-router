@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from cost_router.remote_worker import (
+from fleet_operator.workers.remote_worker import (
     RemoteWorkerError,
     dispatch_remote,
     list_remote_workers,
@@ -18,7 +18,7 @@ from cost_router.remote_worker import (
     policy_from_env,
     tailscale_identity,
 )
-from cost_router.workers import WorkerError
+from fleet_operator.workers.workers import WorkerError
 
 
 class Handler(BaseHTTPRequestHandler):

@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "generated_at": "2026-09-11T15:14:28.208238+00:00",
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "platform": "Linux-6.18.35-x86_64-with-glibc2.41",
+  "dependencies": {
+    "jsonschema": "4.26.0",
+    "mcp": "NOT_INSTALLED",
+    "setuptools": "82.0.1",
+    "PyYAML": "6.0.3"
+  },
+  "tests_run": 201,
+  "passed": 200,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 1,
+  "successful": true,
+  "source_unchanged_during_tests": true,
+  "seconds": 46.810703,
+  "log_sha256": "38ebbb0324de93bb3ca8a0598f537dd2d6348441706e178f6d894829c3614fbd",
+  "repository": "bacoco/chatgpt-cost-router",
+  "branch": "feat/ab-products-20260911",
+  "validated_code_commit": "93944d8f6b7a973946d54cc6d0d4bdb77d4e1870",
+  "command": "python scripts/validate_ab.py --output /mnt/data/ab-combined-validation-20260911",
+  "git_tree_sha1": {
+    "chat_ops": "99bbc0fb722c0c6c77c34df1875c7666b9be84c1",
+    "cost_router": "7dc8f14e17bba721e90dd661f55d18a3c515a235",
+    "examples": "f10c7106129358bc1d058522df6e7c137a653d34",
+    "fleet_operator": "5850cddd76661859ecfec2574f9e8682d49f0269",
+    "operation_contracts": "2d139abd93ef5b431e2efc3df86eaee68a7ded0f",
+    "policy": "c915f052ac17f5ab17baaa93ba68644b3f098391",
+    "schemas": "2a205aba3da388ee605e2b3e9e8e692dd150ad11",
+    "scripts": "4cd2313dcac0eef7a4b1b1153a61c09b0b24ca4b",
+    "skills": "6531266c83238adf3978746cfca8ef93c0c8a742",
+    "tests": "3f0b6dcb7253b1ebf1a032960e74f09a65ff4d75"
+  },
+  "remote_tree_matches_tested_source": true,
+  "original_artifact_baseline": "cd897ddf3856ffdabef68ba1a71b43dd99efad46",
+  "parallel_commits_integrated": [
+    "65d1bea42cba65f4eda08ecbc6c34fd7eea7869e",
+    "5aeee53b652a319b829b7e7a8f790ce1842602a1",
+    "54df9ff9bdad04284976dbaf75960e853accae09"
+  ],
+  "skipped_cases": [
+    {
+      "test": "test_gateway_integration_local.GatewayTests.test_actual_mcp_sdk_inprocess_discovery_and_health",
+      "state": "SKIPPED",
+      "seconds": 1.9e-05,
+      "detail": "optional official mcp SDK unavailable in this environment"
+    }
+  ],
+  "source_file_count": 134,
+  "live_gates": {
+    "native_chat_attachment": "NOT_RUN",
+    "real_connectors": "NOT_RUN",
+    "user_fleet_ssh": "NOT_RUN",
+    "macos_service_installation": "NOT_RUN",
+    "container_engine": "NOT_RUN",
+    "feature_branch_publication": "PERFORMED",
+    "main_merge": "NOT_PERFORMED",
+    "deployment": "NOT_PERFORMED",
+    "T38": "PAUSED"
+  }
+}

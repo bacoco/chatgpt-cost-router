@@ -1,85 +1,24 @@
-# Roadmap — independent A and B products
+# Roadmap and remaining acceptance gates
 
-Status: strategic pause; documentation alignment only.
-Scope: [A/B decision](TWO_PROJECTS_AND_PAIR_2026-09-11.md).
-Source-level mapping: [ARCHITECTURE](ARCHITECTURE.md).
-Historical proofs: [VALIDATION_STATUS_2026-09-11](VALIDATION_STATUS_2026-09-11.md).
-This roadmap does not authorize deployments, app mutations, fleet jobs or T38 work.
+Read [deployment status](DEPLOYMENT_STATUS.md) for the current evidence and exact runtime revision. The A/B deployment is authorized; the earlier blanket deployment pause is obsolete. **T38 and quota-burning experiments remain paused.**
 
-## A — Chat-first Operations
+## Implemented and under live acceptance
 
-**Goal:** complete authorized work from normal Chat through the full plugin/connector
-toolbox. Gmail, GitHub, WordPress/Cowboy, documents and other apps are first-class.
-Issues, specifications and code handoffs are examples, not the product's limits.
+A has durable native/direct connector workflows, project/account/session scopes, exact approvals, verification, cancellation and non-replaying recovery. B has independent jobs, supervised processes, logs/progress, receipts/artifacts, typed gateway routing and durable relay publication. Optional worker/mesh code is separated with compatible imports. Owner installers create separate revision-pinned user services.
 
-Existing building blocks include repository workflows/skills, scoped capability
-evidence, checkpoints, deterministic route validation and historical connector tests.
-These do not amount to a newly packaged implementation of every external app.
+Two acceptance classes must remain separate: a passing source test suite and a live service completing the owner's actual operation. Never infer either from a successful Git push or queue submission.
 
-Next design work:
-1. Consolidate an action-level matrix across ChatGPT.com Chat, Codex Mac Chat, Work,
-   CLI and Scheduled Tasks, reusing existing evidence rather than repeating it.
-2. Bind project/task context and authenticated resources explicitly in multi-app
-   workflows; preserve user scope and required confirmations for external effects.
-3. Define completion and reconciliation for mail, repository operations, publication
-   and other apps, including cross-app workflows with partial failures.
-4. Keep normal Chat/direct tools as the preferred lane; make machine execution and
-   additional model delegation explicit rather than implicit product dependencies.
-5. Evaluate Serena only where targeted code context/editing adds useful capability.
+## Next operational gates
 
-Acceptance categories, to exercise only when authorized: completed and verified mail
-operations; exact GitHub changes; authorized publication/other-app operations; and
-a cross-app/multiproject task without mixed accounts, recipients or permissions.
-An issue alone does not validate A. Do not restart the stopped quota-burn experiment.
+| Gate | Required evidence |
+| --- | --- |
+| Complete fleet coverage | Resolve the `macstudio` permission failure without replaying its uncertain job; restore authorized SSH availability on Sparky and Omen, then perform completion/cancellation/artifact checks. |
+| A attached to a real Chat account | Authenticated app/transport attachment, fresh capability discovery and a real approved connector workflow, with native read-back. Local MCP discovery is not that attachment. |
+| Application-specific use | Enroll the required projects, accounts and named script/build/service profiles. Current owner defaults are smoke and release validation. |
+| Untrusted workloads | Exercise the real container engine, filesystem/network/resource restrictions and cleanup under failures. |
+| Operational durability | Reboot/login persistence, backup/restore, staged upgrade and rollback with real service reload and uncertain-job handling. |
+| Retire older paths | Check other projects' dependencies before disabling legacy relay/mesh/worker services; do not silently break them. |
 
-## B — Fleet Operator
+## Optional, not prerequisites
 
-**Goal:** reliable access to machines, process lifecycle management, monitoring and
-results, usable with or without Chat. Placement/load distribution is secondary.
-
-Existing building blocks include local/SSH execution, MCP/relay interfaces, macOS
-supervision, Codex broker, heartbeat discovery, budget observations and quarantine.
-Historical T35B-T37 proofs do not certify full lifecycle or multi-tenant readiness.
-
-Next design work:
-1. Close the broad-write/path-isolation risks; agree actual execution containment
-   before resuming T38. A risk acknowledgement is not an OS sandbox.
-2. Harden relay recovery so publication failure or interruption cannot silently
-   repeat an already-executed operation. Preserve uncertain outcomes for reconciliation.
-3. Define a stable submit/status/progress/logs/cancel/result contract for ordinary
-   processes as well as optional agent tasks. Distinguish reachability from progress.
-4. Specify repeatable enrollment, pinned runtime versions, capability checks,
-   project assignments, resource limits and rollback; preserve unrelated services.
-5. Keep model workers optional. Design provider/account-scoped budgets and auth
-   lifecycle; unknown quota is not available quota.
-6. Qualify the direct MCP client attachment separately from the already-recorded
-   relay path. Evaluate PAIR for local inference only, not generic job management.
-
-Acceptance categories, to exercise only when authorized: a bounded non-LLM task
-through its lifecycle on an enrolled machine; safe cancellation/failure recovery;
-another client using B without Chat; and multiproject isolation. Reuse the existing
-multinode and restart receipts. No new model smoke is required by this roadmap.
-
-## Shared contract and code organization
-
-Requester, task/project, GitHub identity, OS identity, machine and provider account
-must remain separate concepts. Bind exact repository/SHA when applicable, operation
-scope, allowed resources, optional model budget, run/idempotency identity and evidence.
-Project content may restrict a request; it cannot increase service permissions.
-
-Keep the existing repository for now. Map A, B and shared ownership before moving
-modules. The deterministic engine/SQLite ledger and the Fleet runtime currently
-coexist; the relay is not automatically covered by every shared-ledger invariant.
-
-After approval, migrate behind compatible imports/CLIs and verify both connector-only
-A and Chat-independent B behavior. Do not split repositories, install Serena/PAIR,
-change services, create test messages/posts/issues or enqueue jobs during this pause.
-
-## Economics and deferred work
-
-Prefer capability already included in Chat; do not hide extra inference/API spend
-inside a plugin. Track known/unknown monetary spend, model usage and compute costs
-separately when ordinary task telemetry makes them observable.
-Older savings percentages remain hypotheses, not rollout gates or instructions to
-resume artificial token-burning tests. Concurrency, additional providers and GPU
-routing follow demonstrated workload needs, not the desire to add another numbered test.
+Load distribution, local inference, extra provider workers, Serena and PAIR can be evaluated separately. They must not delay ordinary connector work or become implicit paid-model calls. Repository restructuring/branding beyond the implemented package boundaries is not needed to operate the current A/B path.

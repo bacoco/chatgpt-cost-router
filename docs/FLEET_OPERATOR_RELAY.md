@@ -1,64 +1,43 @@
-# Fleet Operator GitHub relay
+# Fleet access from Chat through GitHub
 
-## Purpose
-
-The relay is the immediate compatibility path when ChatGPT can write GitHub but cannot invoke custom MCP write tools. It lets ChatGPT enqueue a bounded machine operation without making the user paste terminal commands.
+This compatibility path uses the authorized GitHub connector and a user-level relay, not a new model call, Codex task or GitHub Actions runner. Consult [deployment status](DEPLOYMENT_STATUS.md) to see whether the new relay is live.
 
 ```text
-ChatGPT GitHub connector
-    |
-    | .fleet/jobs/<job_id>.json on fleet/commands
-    v
-Fleet relay LaunchAgent on gateway
-    |
-    | same FleetRunner allowlists
-    v
-local / SSH host
-    |
-    v
-fleet/results/<job_id> branch
-    |
-    v
-ChatGPT reads .fleet/results/<job_id>.json
+Chat + authorized GitHub connector
+    -> fleet/ab-commands : .fleet/jobs/<job-id>.json
+    -> separate A/B relay -> enrolled node / named profile
+    -> fleet/ab-results/<job-id> : .fleet/results/<job-id>.json
 ```
+
+The older `fleet/commands` and `fleet/results/` branches belong to the retained historical relay. **Never submit the same operation to both queues.** Source belongs on `main`; queue write access is execution authority.
 
 ## Job contract
 
-Jobs are JSON files at `.fleet/jobs/<job_id>.json` on branch `fleet/commands`.
+Use a unique 8–80 character safe ID, a configured host alias and a future Unix expiry no more than 24 hours away. Filename and job ID must match. This example deliberately has an expired timestamp until prepared for a real execution:
 
 ```json
 {
   "version": 1,
-  "job_id": "job-20260910-example",
-  "host": "worker-1",
-  "action": "exec_read",
-  "args": {
-    "argv": ["git", "status", "--short", "--branch"],
-    "cwd": "/allowed/repo"
-  },
-  "expires_at_unix": 1789069000
+  "job_id": "job-owner-health-unique",
+  "host": "macbook",
+  "action": "node_health",
+  "args": {},
+  "expires_at_unix": 0
 }
 ```
 
-Supported actions are `status`, `exec_read`, `exec_write`, `read_file`, and `git_pull`. `exec_write` still passes through the FleetRunner command allowlist and destructive-command gate.
+For `process_submit`, arguments contain a `request` and optional boolean `start`. The request contains version, project_id, node_id, profile, inputs, idempotency_key and deadline. The node checks its own private project/profile policy.
 
-## Execution semantics
+Typed actions include node_health, process_profiles, process_list, process_submit, process_start, process_status, process_cancel, process_logs, process_result, process_events and process_reconcile. `fleet_operator/remote_jobs.py` and `relay_service.py` define exact arguments. Raw mutation, including unrestricted exec_write or Git pull, is refused by the new guarded policy; use approved profiles.
 
-1. fetch only the configured command branch;
-2. list only `.fleet/jobs/*.json`;
-3. validate version, exact filename/job id, action, args and expiry;
-4. skip completed job ids using a local mode-0600 ledger;
-5. execute through FleetRunner;
-6. write a local mode-0600 result first;
-7. push a sanitized result commit to `fleet/results/<job_id>`;
-8. only then mark the job complete locally.
+## Completion and private results
 
-If result push fails, the ledger is intentionally left open so the next poll retries instead of silently losing evidence.
+A commit proves submission, not execution. Read the exact result branch. An ACCEPTED/running reply is not completion; use its run ID with a new bounded status/result read and inspect the terminal state and receipt. Retrieve logs/events independently.
 
-## Trust boundary
+Artifact bytes use the private CLI/MCP transport, not GitHub. They are returned as data_base64 with full-file sha256, verified, offsets and EOF. Assemble and verify the file locally. Do not publish private bytes to make retrieval easier.
 
-The command branch is an execution authority. Protect write access to it as carefully as code deployment access. The relay does not execute PR content, issue text or arbitrary branches. It does not make model/API calls. Root/admin commands remain blocked by FleetRunner.
+## Failure and replay
 
-## Result
+The relay claims durably, saves the private result and uses a publication outbox. A publication failure retries delivery of that saved result without executing the operation again, even if the original command is no longer listed. An interrupted claim without a completion receipt remains uncertain. Conflicting reuse of a job ID is rejected; differing existing result evidence is not overwritten.
 
-The result branch contains `.fleet/results/<job_id>.json` with host alias, action, timing, exit status and bounded stdout/stderr. It never contains the SSH target or authentication material.
+Credentials and raw SSH destinations stay on the gateway. Restrict command-branch writes as carefully as deployment access. An issue, PR or untrusted document does not grant execution authority by itself.

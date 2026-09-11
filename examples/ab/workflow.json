@@ -1,0 +1,75 @@
+{
+  "deadline": 1798757999,
+  "idempotency_key": "demo-four-app-steps",
+  "project_id": "demo",
+  "steps": [
+    {
+      "action": "gmail.read",
+      "arguments": {
+        "message_id": "fixture"
+      },
+      "id": "readmail",
+      "resource": "mail"
+    },
+    {
+      "action": "github.write",
+      "arguments": {
+        "content": {
+          "$ref": "readmail.text"
+        },
+        "owner": "fixture",
+        "repo": "demo"
+      },
+      "id": "edit",
+      "resource": "repo",
+      "verify": {
+        "action": "github.read",
+        "arguments": {
+          "owner": "fixture",
+          "repo": "demo"
+        },
+        "expect": {
+          "verified": true
+        }
+      }
+    },
+    {
+      "action": "cowboy.publish",
+      "arguments": {
+        "text": {
+          "$ref": "readmail.text"
+        }
+      },
+      "id": "publish",
+      "resource": "site",
+      "verify": {
+        "action": "cowboy.read",
+        "arguments": {},
+        "expect": {
+          "verified": true
+        }
+      }
+    },
+    {
+      "action": "gmail.send",
+      "arguments": {
+        "body": {
+          "$ref": "publish.url"
+        },
+        "to": "fixture@example.invalid"
+      },
+      "id": "send",
+      "resource": "mail",
+      "verify": {
+        "action": "gmail.read",
+        "arguments": {
+          "message_id": "fixture-sent"
+        },
+        "expect": {
+          "verified": true
+        }
+      }
+    }
+  ],
+  "version": 1
+}

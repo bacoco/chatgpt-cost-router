@@ -1,121 +1,53 @@
-# Architecture — A/B responsibilities and implementation review
+# Architecture: independent A and B, shared contracts
 
-Status: documentation-only review; no runtime refactor or deployment.
-Reviewed source: `18c36ea51e970659d7a30eed7d9330c38a395cea` on
-`bacoco/chatgpt-cost-router/main`. Later documentation commits do not change the
-runtime analyzed here. Product scope is defined in the
-[A/B decision](TWO_PROJECTS_AND_PAIR_2026-09-11.md).
-
-## Independent products
-
-**A — Chat-first Operations** completes authorized work from normal Chat through
-Gmail, GitHub, WordPress/Cowboy and other apps: read, reason, edit, send, publish,
-coordinate and verify. It is neither issue-only nor code-only. Direct connector
-actions are the primary lane. Work, another coding agent and paid model APIs are
-not default dependencies. Serena is an optional tool, not the product.
-
-**B — Fleet Operator** provides machine access, process execution/management,
-supervision, monitoring and results. Distribution is optional. Ordinary tasks do
-not require an LLM. B must also serve CLI/API/other clients independently of Chat.
-
-A can call B when machine execution is needed. Chat reasoning, connector access,
-machine transport, process supervision and optional model delegation are distinct
-roles. MCP is an interface choice; it does not itself provide project isolation,
-provider budgets or durable job management.
-
-## Current code ownership, not new directories
-
-| Actual source | Logical owner | What exists |
-| --- | --- | --- |
-| `skills/`, `.chatgpt/`, project-workflow docs | A / shared | Repository-backed workflow instructions, project checkpoints and handoff conventions |
-| `cost_router/__main__.py`, `router.py`, `capabilities.py`, `validation.py` | Decision support used by A / shared | Deterministic recommendation and scoped-evidence validation; no app or remote execution in the CLI |
-| `policy/routing.json`, `schemas/`, `cost_router/handoff.py` | Shared | Versioned routing and delegation contracts; these are not yet the universal A/B job contract |
-| `cost_router/ledger.py` | Shared building block | Local SQLite operation claims/state; not automatically adopted by every adapter |
-| `fleet_operator/core.py` | B | Local/SSH execution by host alias, command checks, path/cwd checks, timeouts and output caps |
-| `fleet_operator/mcp_server.py` | B interface | Host inventory/status, file read, read/write command fan-out, Git status/pull and local relay-result tools |
-| `fleet_operator/relay.py` | B transport | GitHub job polling, local result files and deterministic result branches |
-| `fleet_operator/macos.py`, `scripts/fleet_operator*.py` | B packaging | Gateway, relay and intended tunnel installation/entry points |
-| `cost_router/workers.py`, `worker_budget.py`, `worker_health.py` | B optional model adapter | Codex dispatch, budget-aware choice, telemetry and auth quarantine |
-| `cost_router/remote_worker.py`, `mesh.py`; remote-worker/mesh scripts | B optional model-routing extension | Tailscale-facing Codex endpoints, node heartbeat/TTL and cross-node dispatch |
-| `cost_router/macos_launchd.py`, `scripts/macos_mesh_service.py`, `scripts/mesh_service_runner.py` | B supervision | macOS service installation and restart supervision |
-| `tests/`, receipts and dated validation documents | A / B / shared evidence | Recorded checks with scoped limitations, not live monitoring |
-
-**Physical separation is incomplete.** The historical `cost_router` package mixes
-decision/contracts with B's worker and mesh implementation. The existing MCP
-server is a Fleet interface, not a universal host for Gmail/GitHub/Cowboy.
-Those apps supply their own integrations outside this repository.
-
-## Implemented execution paths
+[Deployment status](DEPLOYMENT_STATUS.md) is the authority for live installation. This document describes implemented responsibilities and remaining trust boundaries, not an assertion that every connector and host is deployed.
 
 ```text
-A: user -> Chat -> authorized app action -> external result verification
-                          |
-                          | optional machine execution
-                          v
-B: Fleet MCP or GitHub relay -> FleetRunner -> local process / SSH process
-
-B model extension:
-client -> mesh control -> chosen remote-worker endpoint -> Codex CLI
+Native Chat connectors         Optional direct MCP endpoints
+          |                                  |
+          +-------- A / chat_ops ------------+
+                         |
+            operation_contracts
+          projects, accounts, journals
+                         |
+               optional A-to-B calls
+                         |
+   GitHub relay / private MCP / local CLI
+                         |
+      B gateway -> enrolled node -> named profile
+                         |
+          owned process, logs, receipt, artifacts
 ```
 
-The first path is driven by the client and its actual tools, not by a standalone
-Python orchestration loop in this repository. Only invoke actions that are
-available and authorized in the current context.
+## Ownership
 
-The second path has historical relay/SSH evidence. The local MCP server and its
-direct ChatGPT attachment are separate verification steps. Do not infer a blanket
-plan restriction or guaranteed write capability from either the transport or a
-past observation in another surface.
-
-The third path **does invoke another model**. It is an optional B adapter, not a
-requirement for A. The implemented worker registry accepts `codex-exec`; Claude,
-PAIR and other-provider adapters are not implemented by this architecture review.
-
-## Concrete gaps found in the reviewed implementation
-
-| Observation in current source | Consequence for the A/B split |
+| Module | Responsibility |
 | --- | --- |
-| `dispatch_mesh` accepts `worker` and `prompt`, not a project/run envelope. | Do not describe the mesh as a project-aware general process API. |
-| Relay actions are `status`, `read_file`, `exec_read`, `exec_write`, `git_pull`. | A unified submit/status/progress/logs/cancel/result lifecycle is still a target. |
-| Relay's `status` executes `uname`; worker probes read local login/quarantine state. | Host reachability and cheap auth probes do not establish task progress or valid end-to-end service. |
-| `worker_health.py` persists auth-failure quarantine. | Preserve this protection; no permanent live-health guarantee follows from one PASS. |
-| A relay result is saved locally before push, but the completed ledger is marked only after result publication. | Publish failure or interruption can leave executed work unmarked; recovery/idempotency must be hardened before replay guarantees are claimed. |
-| The SQLite operation ledger and Fleet relay ledger are different implementations. | A good shared contract is not proof that the relay enforces its uncertain-outcome semantics. |
-| Path/cwd checks are lexical; broad write commands can invoke interpreters. | T37 is targeted hardening, not filesystem/tenant isolation or complete write safety. T38 remains unfinished. |
-| Budgets are observed per worker; no unified account/project registry is enforced across all endpoints. | Cross-project/account permissions and quota aggregation still need design and implementation. |
+| `chat_ops/` | Workflows, native-driver instructions, account/session-scoped capability observations, exact approval and read-back. |
+| `operation_contracts/` | Project/resource grants, account reservations, private records, durable journals and common validation. |
+| `fleet_operator/jobs/` | Independent process requests, immutable source workspaces, supervision, cancellation, metrics, logs and receipt-bound artifacts. |
+| `fleet_operator/` | Guarded local/SSH transport, typed runtime-bound calls and durable relay publication. |
+| `fleet_operator/enrollment/` | Revision staging/integrity, idle activation and planned gateway enrollment. |
+| `fleet_operator/workers/` | Optional worker/mesh integrations, physically separated from routing. |
+| `cost_router/` | Deterministic cost/capability decisions and compatible historical imports. |
+| `scripts/ab_*` | Explicit owner deployment/validation tools; not an unrestricted public command API. |
 
-This is a source-level scope/coupling review, not a comprehensive security audit.
-No unit tests, host commands or live connector workflows were run to revalidate
-these historical runtime claims during the documentation update.
+A and B can run independently. The retained optional mesh/provider workers do not define B's ordinary process contract. `SPEC.md` describes only the decision engine.
 
-## Proposed shared contract — not implemented everywhere
+## Evidence and recovery
 
-Requests should bind requester identity, explicit project/task context, operation
-profile, inputs, allowed resources, deadline and idempotency key. Add repository
-owner/name and immutable base SHA for code-related work. Model delegation adds an
-explicit account reference, usage class and budget; never credentials.
+A observations are scoped to principal, project, resource, account, surface and session. Native evidence remains caller-observed; it is not a provider-signed receipt. The actual connector enforces its own account authorization. Workflow decisions are serialized, write approval binds resolved inputs and successful writes need a separate verification read.
 
-Results should bind run identity, lifecycle state, node/workspace/software version,
-exit status, bounded diagnostics, artifact references and verification evidence.
+A missing response creates an uncertain state, not permission to repeat the mutation. Verification may recover the lost output for downstream steps. Cancellation/deadlines stop new dispatch; they do not undo completed external effects.
 
-A mail task need not invent a Git repository. A machine may serve many projects.
-OS identity, connector/GitHub identity and provider account are separate.
-Repository instructions cannot grant additional service permissions. Do not share
-a mutable global active project between chats. Aggregate provider budgets across
-machines/projects by account rather than pretending each worker owns a new quota.
+B distinguishes submission, owned execution and terminal completion. Journal/receipt tokens bind results to the requested policy and run. Process supervision and private logs have bounds. Artifact delivery checks the durable receipt and complete file hash before returning a bounded `data_base64` chunk with `verified`, offsets and EOF.
 
-## Migration boundaries
+The relay's outbox separates effect execution from result publication. A lost push can retry the stored result without re-running the effect. Conflicting job/result identities are rejected. The current private queue and the old compatibility queue must not both receive one operation.
 
-Keep one repository and existing import paths during the strategic pause.
-A later approved refactor can separate workflow/connector-facing logic, shared
-contracts and B runtime modules behind compatibility facades. Update imports,
-entry points and tests together; do not move files merely to make the tree look split.
+## Deployment boundaries
 
-Retain the GitHub relay as a transitional/fallback B transport, not an A dependency.
-Assess PAIR only for the local-inference extension and Serena only where targeted
-code operations add value. Neither is installed or adopted by this review.
+Runtime code is staged by exact SHA, uses a private virtualenv and is selected through explicit policy. Source delivery, configuration, service start, health, end-to-end completion and Chat attachment are distinct gates. Preserve the virtualenv executable path during activation.
 
-Historical proofs remain in [VALIDATION_STATUS_2026-09-11](VALIDATION_STATUS_2026-09-11.md).
-The [roadmap](ROADMAP.md) separates A, B and shared acceptance categories.
-The [engine specification](../SPEC.md) and [routing algorithm](ROUTING_SPEC.md)
-retain the implemented deterministic invariants.
+`trusted-local` assumes trusted owner code; its workspace is not an OS security boundary. Real container isolation remains an acceptance gate. MCP is loopback-only unless placed behind separately configured authentication. A configured principal or session ID is not authentication for arbitrary internet callers. Multi-user deployment needs correctly authenticated contexts.
+
+The installed owner profiles are deliberately narrow. Additional applications need their own project grants and profiles. Legacy services are retained separately for recovery; their retirement is not implied by deploying A/B. See [roadmap](ROADMAP.md).

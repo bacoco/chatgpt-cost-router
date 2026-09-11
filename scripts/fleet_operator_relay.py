@@ -1,29 +1,27 @@
 #!/usr/bin/env python3
-"""Poll the GitHub Fleet Operator command branch and execute bounded jobs."""
-from pathlib import Path
+"""Supervised safe relay; historic ledger is migrated without replay."""
 import argparse
-import json
+from pathlib import Path
 import sys
-
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+    sys.path.insert(0,str(ROOT))
+from fleet_operator.relay import RelayConfig
+from fleet_operator.relay_service import run_forever, run_once
 
-from fleet_operator.relay import RelayConfig, run_forever, run_once
 
-
-def main(argv=None):
-    p = argparse.ArgumentParser()
-    p.add_argument("--config", default="~/.config/chatgpt-cost-router/fleet-relay.json")
-    p.add_argument("--once", action="store_true")
-    args = p.parse_args(argv)
-    cfg = RelayConfig.load(args.config)
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config",required=True)
+    parser.add_argument("--once",action="store_true")
+    args = parser.parse_args()
+    config = RelayConfig.load(args.config)
     if args.once:
-        print(json.dumps(run_once(cfg), indent=2))
-        return 0
-    run_forever(cfg)
-    return 0
+        import json
+        print(json.dumps(run_once(config),indent=2))
+    else:
+        run_forever(config)
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()
