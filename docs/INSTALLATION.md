@@ -1,39 +1,81 @@
-# Installation and skill loading
+# Install and deploy A/B
 
-Clone the full repository and install requirements in a Python environment from the
-checkout. Python 3.11+ is supported; CI exercises 3.11 and 3.12.
+Read [deployment status](DEPLOYMENT_STATUS.md) before changing an existing installation. Installing code, configuring private policy, starting services and attaching a Chat account are separate operations.
+
+## Local installation
+
+Use Python 3.11+ and a private virtual environment:
 
 ```bash
-git clone https://github.com/bacoco/chatgpt-cost-router.git
-cd chatgpt-cost-router
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements-dev.txt
-python -m unittest discover -s tests -v
+python3.11 -m venv .venv
+. .venv/bin/activate
+python -m pip install .
+chat-operations --help
+fleet-jobs --help
+fleet-enroll --help
 ```
 
-On Windows, activate with `.venv\Scripts\Activate.ps1`. Git symlinks may require
-Developer Mode or an appropriate Git configuration. Keep skill links resolved to
-the full checkout; the references deliberately share the repository contracts.
+MCP is optional and pinned separately:
 
-## Native repository skills
+```bash
+python -m pip install '.[mcp]'
+```
 
-The `.agents/skills` entries link to `skills/capability-router` and
-`skills/surface-handoff`. A compatible host can discover them when working in this
-checkout. Check its actual skill catalog; file presence and valid frontmatter do
-not prove loading or invocation. Do not copy only SKILL.md into another directory.
+The ordinary A/B core does not require Codex, Claude, Docker or an LLM API account. Installation can download Python packages; `pyproject.toml` is the dependency authority.
 
-## GitHub-backed use
+## Working example and tests
 
-A host with GitHub file reading can read SKILL.md as instructions, then resolve linked
-contracts relative to the same immutable commit. Native installation is not required
-for manual reading. Python execution remains a separate capability: if absent, label
-policy application as reasoned and arrange an authorized validator elsewhere when
-needed. Do not claim a native skill ran just because its text was fetched.
+```bash
+python scripts/ab_demo.py --directory /tmp/ab-new-demo
+python -m pip install -r requirements-dev.txt
+python scripts/validate_ab.py --output /tmp/ab-validation
+```
 
-## Reproducible policy
+The demo's A connectors are simulated; B actually runs a local process. Do not reuse simulated observations as real permissions. An existing demo directory is refused. Full source validation requires the tracked `skills/` metadata as well as code and tests.
 
-Record the repository commit plus policy version and canonical JSON SHA-256 returned
-by the evaluator. Pin a reviewed revision for a scheduled run; changes to policy
-require re-evaluation. Secrets and real capability manifests belong in appropriately
-controlled operational storage, not these synthetic examples or a public repository.
+## Real policy and access
+
+Keep project registries, `chat.json`, `node.json`, gateway configuration and journals outside Git with private permissions. A project names members, resources, accounts, actions, nodes and profiles. A node profile fixes its executable, arguments, timeout, output bounds and artifacts. Requests supply structured inputs, not shell commands or credentials. See [usage](AB_USAGE.md).
+
+```bash
+python -m chat_ops.mcp_server --config /operator/chat.json --transport stdio
+python -m fleet_operator.jobs.mcp_server --config /operator/node.json --transport stdio
+fleet-gateway --config /operator/gateway.json --transport streamable-http --port 8813
+```
+
+These are private server examples, not external authentication setup. Separately configure a supported authenticated connection/tunnel and discover actual tools in the current Chat account/session. Never expose the raw loopback server publicly as an authentication shortcut.
+
+## Owner-operated fleet deployment
+
+The installer only accepts aliases already present in the private gateway configuration. It retains SSH host-key checks, does not use root, does not copy credentials and does not switch the owner's working checkout. It transfers an exact Git revision with an archive integrity check.
+
+```bash
+python scripts/ab_fleet_deploy.py \
+  --repo /operator/existing-repository \
+  --revision FULL_40_CHARACTER_COMMIT \
+  --gateway-config /operator/legacy-gateway.json \
+  --hosts macbook,macstudio
+```
+
+This performs a real installation beneath `~/.local/share/chatgpt-cost-router/ab/`. It installs the package, tests process completion, verified artifact retrieval and cancellation, then creates new user services. The local gateway also installs A's MCP service and runs the full test suite. Inspect each node result: a successfully executed rollout command can still contain blocked nodes.
+
+Default profiles are `smoke` and `validate-release`, not arbitrary command execution. Enroll explicitly approved profiles for application-specific workloads.
+
+After verified node receipts exist:
+
+```bash
+python scripts/ab_gateway_activate.py \
+  --rollout /operator/ab/rollout.json \
+  --legacy-config /operator/legacy-gateway.json \
+  --repo /operator/existing-repository
+```
+
+This creates separate gateway/relay policy, pins node runtime/policy identities, installs new services and tests local MCP discovery and node health. The branch `fleet/ab-commands` must exist. It differs from the historical relay queue; do not submit an operation to both.
+
+## Service ownership and recovery
+
+New labels are `pro.chatgpt-cost-router.ab-node`, `.ab-chat`, `.ab-gateway` and `.ab-relay`, depending on host role. macOS uses LaunchAgents in the operator's login session; Linux uses user systemd. Old mesh, worker, gateway and relay services are not replaced by this installer.
+
+The installer refuses differing existing configuration/service definitions. Before an upgrade, drain jobs and reconcile uncertain outcomes; retain the old revision/configuration and explicitly stop only the affected A/B service. Do not kill unrelated processes. `fleet-enroll stage/verify/activate` provides a separate checked idle-node activation path; selecting an older staged SHA is its rollback operation.
+
+A startup acknowledgement is not proof of a healthy service. Inspect its state, private logs, MCP health and a real completed job. Startup does not prove persistence across logout or reboot. Deployment receipts/logs live in the private `ab/` directory; publish only sanitized summaries.
