@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from cost_router.mesh import MeshError, build_local_registration, validate_endpoint
+from fleet_operator.workers.mesh import MeshError, build_local_registration, validate_endpoint
 
 
 def tailscale_self():

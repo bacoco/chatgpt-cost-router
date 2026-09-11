@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from cost_router.macos_launchd import LABELS, LaunchdError, install_control, install_worker_node, remove
+from fleet_operator.workers.macos_launchd import LABELS, LaunchdError, install_control, install_worker_node, remove
 
 
 def status(home: Path) -> dict:

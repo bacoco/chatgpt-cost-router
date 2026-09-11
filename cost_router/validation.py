@@ -10,6 +10,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 
 ROOT = Path(__file__).resolve().parents[1]
+DATA = ROOT if (ROOT / 'schemas').is_dir() else Path(__file__).resolve().parent / 'data'
 SURFACES = ('CHAT', 'SCHEDULED_CHAT', 'LOCAL_TOOL', 'CODEX', 'WORK', 'EXTERNAL_API')
 
 
@@ -61,7 +62,7 @@ def digest(value):
 def validator(name):
     if name not in ('common', 'request', 'capabilities', 'handoff', 'decision'):
         raise ValueError('Unknown schema: ' + name)
-    schemas = [load_json(p) for p in sorted((ROOT / 'schemas').glob('*.schema.json'))]
+    schemas = [load_json(p) for p in sorted((DATA / 'schemas').glob('*.schema.json'))]
     for schema in schemas:
         Draft202012Validator.check_schema(schema)
     # Only these local resources are resolvable; no remote schema retrieval.
@@ -76,7 +77,7 @@ def validate(name, value):
 
 
 def policy_config(value=None):
-    policy = load_json(ROOT / 'policy/routing.json') if value is None else dict(value)
+    policy = load_json(DATA / 'policy/routing.json') if value is None else dict(value)
     expected = {'version', 'cost_unit', 'tie_break_order', 'max_transfers',
                 'min_transfer_savings_units', 'max_capability_age_seconds'}
     if set(policy) != expected or policy['cost_unit'] != 'usd_micro':
