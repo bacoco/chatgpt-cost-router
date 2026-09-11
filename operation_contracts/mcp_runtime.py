@@ -33,14 +33,22 @@ def serve(builder, argv=None, default_port=8812):
     if args.transport == "stdio":
         server.run(transport="stdio")
         return
-    options = {"host":"127.0.0.1", "port":args.port, "streamable_http_path":"/mcp",
-               "stateless_http":True, "json_response":True}
+
+    # FastMCP SDK versions differ: some expose mutable settings fields, while
+    # others reject host/port assignment because Settings is a strict model.
+    # Prefer configuring supported settings; otherwise pass transport options
+    # directly to run().  In every case the HTTP listener remains loopback-only.
     settings = getattr(server, "settings", None)
-    # v2 retains Settings, but moved HTTP options onto run(). Test the fields,
-    # not the existence of Settings; never fall back to an unspecified bind.
-    if settings is not None and all(hasattr(settings, key) for key in options):
-        for key, value in options.items():
-            setattr(settings, key, value)
+    fields = getattr(type(settings), "model_fields", getattr(type(settings), "__fields__", {})) if settings is not None else {}
+    if settings is not None and {"host", "port"}.issubset(fields):
+        settings.host = "127.0.0.1"
+        settings.port = args.port
+        if "stateless_http" in fields:
+            settings.stateless_http = True
+        if "json_response" in fields:
+            settings.json_response = True
         server.run(transport="streamable-http")
-    else:
-        server.run(transport="streamable-http", **options)
+        return
+
+    server.run(transport="streamable-http",host="127.0.0.1",port=args.port,
+               streamable_http_path="/mcp",stateless_http=True,json_response=True)
