@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789141597.519362,
+  "host": "macbook",
+  "job_id": "job-ab-rollout-20260911-1546",
+  "job_sha256": "ce6ef4af331bd97783c452f1653d21763efb1097a68f7bd88e7f1d5ed04dc5be",
+  "result": {
+    "argv": [
+      "python3",
+      "-c",
+      "import pathlib,subprocess; h=pathlib.Path.home(); r=h/'codex-t30-broker-test'; sha='31e238bb88523477868a43aec5ba73fac4349c56'; subprocess.run(['git','-C',str(r),'fetch','origin','feat/ab-products-20260911'],check=True,capture_output=True,timeout=60); code=subprocess.check_output(['git','-C',str(r),'show',sha+':scripts/ab_fleet_deploy.py'],timeout=20); folder=h/'.local/share/chatgpt-cost-router/ab/bootstrap'; folder.mkdir(parents=True,exist_ok=True,mode=448); script=folder/(sha+'.py'); script.write_bytes(code); script.chmod(384); subprocess.run(['python3',str(script),'--repo',str(r),'--revision',sha,'--gateway-config',str(h/'.config/chatgpt-cost-router/fleet-operator.json'),'--hosts','macbook,macstudio,macstudioprod,sparky'],check=True,timeout=850)"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 3.471,
+    "exit_code": 0,
+    "host": "macbook",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "{\"version\": 1, \"revision\": \"31e238bb88523477868a43aec5ba73fac4349c56\", \"archive_sha256\": \"98ab1e6cb9d6e7444ea364f0ce2bbae1eea20786e5c8754ed7fce7d669502ad5\", \"nodes\": {\"macbook\": {\"alias\": \"macbook\", \"state\": \"BLOCKED\", \"error\": \"  File \\\"/Users/loic/.local/share/chatgpt-cost-router/ab/source/31e238bb88523477868a43aec5ba73fac4349c56/scripts/ab_host_install.py\\\", line 58\\n    projects = {'version':1,'projects':{project:{'members':['loic'], 'nodes':[alias],\\n               ^\\nSyntaxError: '{' was never closed\\n\"}, \"macstudio\": {\"alias\": \"macstudio\", \"state\": \"BLOCKED\", \"error\": \"  File \\\"/Users/macstudio/.local/share/chatgpt-cost-router/ab/source/31e238bb88523477868a43aec5ba73fac4349c56/scripts/ab_host_install.py\\\", line 58\\n    projects = {'version':1,'projects':{project:{'members':['loic'], 'nodes':[alias],\\n               ^\\nSyntaxError: '{' was never closed\\n\"}, \"macstudioprod\": {\"alias\": \"macstudioprod\", \"state\": \"BLOCKED\", \"error\": \"non-root Python 3.11+ unavailable\"}, \"sparky\": {\"alias\": \"sparky\", \"state\": \"BLOCKED\", \"error\": \"ssh: connect to host 100.98.112.93 port 22: Connection refused\\r\\n\"}}, \"legacy_services_changed\": false}\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789141594.002163,
+  "status": "PASS",
+  "version": 1
+}
