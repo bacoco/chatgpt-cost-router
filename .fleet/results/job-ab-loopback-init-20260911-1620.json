@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789143507.365246,
+  "host": "macbook",
+  "job_id": "job-ab-loopback-init-20260911-1620",
+  "job_sha256": "af72492f436157fd95785039fcdf83033429a5946ccc2d0d35259ab9e05710fa",
+  "result": {
+    "argv": [
+      "python3",
+      "-c",
+      "import json; from urllib.request import Request,build_opener,ProxyHandler; body={'jsonrpc':'2.0','id':1,'method':'initialize','params':{'protocolVersion':'2025-03-26','capabilities':{},'clientInfo':{'name':'owner-loopback-check','version':'1'}}}; headers={'Content-Type':'application/json','Accept':'application/json, text/event-stream'}; opener=build_opener(ProxyHandler({})); a=opener.open(Request('http://127.0.0.1:8812/mcp',data=json.dumps(body).encode(),headers=headers),timeout=15); b=opener.open(Request('http://127.0.0.1:8813/mcp',data=json.dumps(body).encode(),headers=headers),timeout=15); print(json.dumps({'chat':json.loads(a.read(65536)),'gateway':json.loads(b.read(65536))}))"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.381,
+    "exit_code": 1,
+    "host": "macbook",
+    "stderr": "Traceback (most recent call last):\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py\", line 1346, in do_open\n    h.request(req.get_method(), req.selector, req.data, headers,\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py\", line 1257, in request\n    self._send_request(method, url, body, headers, encode_chunked)\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py\", line 1303, in _send_request\n    self.endheaders(body, encode_chunked=encode_chunked)\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py\", line 1252, in endheaders\n    self._send_output(message_body, encode_chunked=encode_chunked)\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py\", line 1012, in _send_output\n    self.send(msg)\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py\", line 952, in send\n    self.connect()\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/client.py\", line 923, in connect\n    self.sock = self._create_connection(\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py\", line 843, in create_connection\n    raise err\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socket.py\", line 831, in create_connection\n    sock.connect(sa)\nConnectionRefusedError: [Errno 61] Connection refused\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py\", line 517, in open\n    response = self._open(req, data)\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py\", line 534, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py\", line 494, in _call_chain\n    result = func(*args)\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py\", line 1375, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/request.py\", line 1349, in do_open\n    raise URLError(err)\nurllib.error.URLError: <urlopen error [Errno 61] Connection refused>\n",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789143506.916542,
+  "status": "FAILED",
+  "version": 1
+}
