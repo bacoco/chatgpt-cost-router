@@ -69,8 +69,21 @@ def build_server(path):
         e = engine()
         return {**e.status(project_id,run_id),"outputs":e.outputs(e.row(project_id,run_id))}
 
+    @server.tool(annotations=annotations(False))
+    def chat_cancel(project_id: str, run_id: str) -> dict:
+        return engine().cancel(project_id, run_id)
+
+    @server.tool(annotations=annotations(True))
+    def chat_events(project_id: str, run_id: str, after: int = 0) -> dict:
+        return engine().events(project_id, run_id, after)
+
     return server
 
 
+
+def main(argv=None):
+    serve(build_server, argv=argv, default_port=8812)
+
+
 if __name__ == "__main__":
-    serve(build_server,default_port=8812)
+    main()

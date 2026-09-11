@@ -42,7 +42,7 @@ class Client:
             if any(k.lower() not in {"authorization","x-api-key"} for k in data):
                 raise ContractError("unsupported authentication header")
             self.headers = data
-        self.session, self.protocol, self.sequence = None, "2025-06-18", 0
+        self.session, self.protocol, self.sequence = None, "2025-11-25", 0
         self.initialized = False
 
     def _post(self, method, params, notify=False):
@@ -57,7 +57,7 @@ class Client:
         if self.session:
             headers["MCP-Session-Id"] = self.session
         request = Request(self.config["url"],data=json.dumps(body).encode(),headers=headers,method="POST")
-        deadline = time.monotonic()+30
+        deadline = time.monotonic() + 30
         with self.opener.open(request,timeout=30) as response:
             self.session = response.headers.get("MCP-Session-Id",self.session)
             if notify:
@@ -69,7 +69,7 @@ class Client:
                         raise ContractError("MCP response exceeded its wall-clock deadline")
                     line = response.readline(65537)
                     total += len(line)
-                    if total > 1_048_576 or not line:
+                    if total > 1_048_576 or not line or time.monotonic() > deadline:
                         raise ContractError("no bounded correlated MCP response")
                     if line.startswith(b"data:"):
                         data_lines.append(line[5:].strip())
@@ -91,7 +91,7 @@ class Client:
             return
         result = self._post("initialize",{"protocolVersion":self.protocol,"capabilities":{},
                                          "clientInfo":{"name":"chat-first-operations","version":"1.0.0"}})
-        if result.get("protocolVersion") not in {"2025-06-18","2025-03-26","2024-11-05"}:
+        if result.get("protocolVersion") not in {"2025-11-25","2025-06-18","2025-03-26"}:
             raise ContractError("MCP protocol version not supported by this adapter")
         self.protocol = result["protocolVersion"]
         self.initialized = True
@@ -119,9 +119,21 @@ class Client:
         readonly = annotations.get("readOnlyHint",annotations.get("read_only_hint",False))
         if invocation["read_only"] and readonly is not True:
             raise ContractError("read action is not backed by a read-only tool")
+        from jsonschema import Draft202012Validator
+        from referencing import Registry
+        schema = tool.get("inputSchema")
+        if not isinstance(schema, dict):
+            raise ContractError("bound tool has no input schema")
+        try:
+            Draft202012Validator.check_schema(schema)
+            Draft202012Validator(schema, registry=Registry()).validate(invocation["arguments"])
+        except Exception as exc:
+            raise ContractError("arguments do not satisfy the discovered tool schema") from exc
         result = self._post("tools/call",{"name":invocation["tool_name"],"arguments":invocation["arguments"]})
         if result.get("isError") or result.get("is_error"):
             raise ContractError("MCP invocation returned an error; outcome requires reconciliation")
+        if "structured_content" in result:
+            return result["structured_content"]
         if "structuredContent" in result:
             return result["structuredContent"]
         content = result.get("content",[])
@@ -135,17 +147,23 @@ class Client:
 
 class MCPTransport:
     def __init__(self, endpoints):
+        if not isinstance(endpoints, dict):
+            raise ContractError("MCP endpoints must be an operator-owned mapping")
         self.clients = {}
-        for name, config in endpoints.items():
-            connector = config.get("connector",name)
-            client = Client({key:val for key,val in config.items() if key != "connector"})
-            key = (connector,config["account_ref"])
-            if key in self.clients:
-                raise ContractError("duplicate connector/account endpoint")
-            self.clients[key] = client
+        for connector, bindings in endpoints.items():
+            configs = bindings if isinstance(bindings, list) else [bindings]
+            for config in configs:
+                if not isinstance(config, dict):
+                    raise ContractError("MCP endpoint binding must be an object")
+                family = config.get("connector", connector)
+                client = Client({key:val for key,val in config.items() if key != "connector"})
+                key = (family, config["account_ref"])
+                if key in self.clients:
+                    raise ContractError("duplicate connector/account MCP binding")
+                self.clients[key] = client
 
     def invoke(self, invocation):
-        key = (invocation["connector"],invocation["account_ref"])
+        key = (invocation["connector"], invocation["account_ref"])
         if key not in self.clients:
-            raise ContractError("no direct MCP adapter; use the native Chat tool driver")
+            raise ContractError("no direct MCP adapter for this account; use the native Chat tool driver")
         return self.clients[key].call(invocation)

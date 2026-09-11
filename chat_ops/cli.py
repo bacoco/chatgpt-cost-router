@@ -17,12 +17,14 @@ def main(argv=None):
     observe = sub.add_parser("observe")
     for name in ("project","resource","action","evidence"):
         observe.add_argument("--"+name,required=True)
-    for name in ("next","status","result","run","approve","record","reconcile"):
+    for name in ("next","status","result","run","approve","record","reconcile","cancel","events"):
         action = sub.add_parser(name)
         action.add_argument("--project",required=True)
         action.add_argument("--run",required=True)
         if name in {"approve","record","reconcile"}:
             action.add_argument("--step",required=True)
+        if name == "events":
+            action.add_argument("--after",type=int,default=0)
         if name == "record":
             action.add_argument("--token",required=True)
             action.add_argument("--result",required=True)
@@ -45,6 +47,8 @@ def main(argv=None):
             out = engine.record(args.project,args.run,args.step,args.token,load(args.result),error=args.error)
         elif args.command in {"approve","reconcile"}:
             out = getattr(engine,args.command)(args.project,args.run,args.step)
+        elif args.command == "events":
+            out = engine.events(args.project,args.run,args.after)
         elif args.command == "result":
             out = {**engine.status(args.project,args.run),"outputs":engine.outputs(engine.row(args.project,args.run))}
         elif args.command == "run":
