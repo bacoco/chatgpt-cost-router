@@ -75,7 +75,7 @@ def build_server(path):
 
     @server.tool(annotations=annotations(True))
     def chat_events(project_id: str, run_id: str, after: int = 0) -> dict:
-        return engine().events(project_id,run_id,after)
+        return engine().events(project_id, run_id, after)
 
     @server.tool(annotations=annotations(True))
     def chat_list(project_id: str) -> dict:

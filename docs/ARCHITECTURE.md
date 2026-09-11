@@ -1,121 +1,107 @@
-# Architecture — A/B responsibilities and implementation review
+# A/B implementation architecture
 
-Status: documentation-only review; no runtime refactor or deployment.
-Reviewed source: `18c36ea51e970659d7a30eed7d9330c38a395cea` on
-`bacoco/chatgpt-cost-router/main`. Later documentation commits do not change the
-runtime analyzed here. Product scope is defined in the
-[A/B decision](TWO_PROJECTS_AND_PAIR_2026-09-11.md).
-
-## Independent products
-
-**A — Chat-first Operations** completes authorized work from normal Chat through
-Gmail, GitHub, WordPress/Cowboy and other apps: read, reason, edit, send, publish,
-coordinate and verify. It is neither issue-only nor code-only. Direct connector
-actions are the primary lane. Work, another coding agent and paid model APIs are
-not default dependencies. Serena is an optional tool, not the product.
-
-**B — Fleet Operator** provides machine access, process execution/management,
-supervision, monitoring and results. Distribution is optional. Ordinary tasks do
-not require an LLM. B must also serve CLI/API/other clients independently of Chat.
-
-A can call B when machine execution is needed. Chat reasoning, connector access,
-machine transport, process supervision and optional model delegation are distinct
-roles. MCP is an interface choice; it does not itself provide project isolation,
-provider budgets or durable job management.
-
-## Current code ownership, not new directories
-
-| Actual source | Logical owner | What exists |
-| --- | --- | --- |
-| `skills/`, `.chatgpt/`, project-workflow docs | A / shared | Repository-backed workflow instructions, project checkpoints and handoff conventions |
-| `cost_router/__main__.py`, `router.py`, `capabilities.py`, `validation.py` | Decision support used by A / shared | Deterministic recommendation and scoped-evidence validation; no app or remote execution in the CLI |
-| `policy/routing.json`, `schemas/`, `cost_router/handoff.py` | Shared | Versioned routing and delegation contracts; these are not yet the universal A/B job contract |
-| `cost_router/ledger.py` | Shared building block | Local SQLite operation claims/state; not automatically adopted by every adapter |
-| `fleet_operator/core.py` | B | Local/SSH execution by host alias, command checks, path/cwd checks, timeouts and output caps |
-| `fleet_operator/mcp_server.py` | B interface | Host inventory/status, file read, read/write command fan-out, Git status/pull and local relay-result tools |
-| `fleet_operator/relay.py` | B transport | GitHub job polling, local result files and deterministic result branches |
-| `fleet_operator/macos.py`, `scripts/fleet_operator*.py` | B packaging | Gateway, relay and intended tunnel installation/entry points |
-| `cost_router/workers.py`, `worker_budget.py`, `worker_health.py` | B optional model adapter | Codex dispatch, budget-aware choice, telemetry and auth quarantine |
-| `cost_router/remote_worker.py`, `mesh.py`; remote-worker/mesh scripts | B optional model-routing extension | Tailscale-facing Codex endpoints, node heartbeat/TTL and cross-node dispatch |
-| `cost_router/macos_launchd.py`, `scripts/macos_mesh_service.py`, `scripts/mesh_service_runner.py` | B supervision | macOS service installation and restart supervision |
-| `tests/`, receipts and dated validation documents | A / B / shared evidence | Recorded checks with scoped limitations, not live monitoring |
-
-**Physical separation is incomplete.** The historical `cost_router` package mixes
-decision/contracts with B's worker and mesh implementation. The existing MCP
-server is a Fleet interface, not a universal host for Gmail/GitHub/Cowboy.
-Those apps supply their own integrations outside this repository.
-
-## Implemented execution paths
+## Product boundaries
 
 ```text
-A: user -> Chat -> authorized app action -> external result verification
-                          |
-                          | optional machine execution
-                          v
-B: Fleet MCP or GitHub relay -> FleetRunner -> local process / SSH process
-
-B model extension:
-client -> mesh control -> chosen remote-worker endpoint -> Codex CLI
+Native Chat driver / optional bound MCP adapter
+  -> chat_ops (A) -> authorized Gmail / GitHub / Cowboy / other tools
+        | optional, explicit fleet action
+        v
+CLI / private MCP -> Fleet gateway -> fixed node CLI -> fleet_operator.jobs (B)
+                                                        |
+                                                        +-- owned ordinary process
+                                                        +-- immutable workspace + receipt
 ```
 
-The first path is driven by the client and its actual tools, not by a standalone
-Python orchestration loop in this repository. Only invoke actions that are
-available and authorized in the current context.
+`operation_contracts` is the common authorization/journal boundary, not an agent.
+A imports neither a worker runtime nor a model provider. B's ordinary job service
+requires neither Chat nor the cost decision engine. Legacy workers now physically
+live in `fleet_operator/workers`; `cost_router` compatibility modules alias their
+exact module identity so old imports and patch points continue to work.
 
-The second path has historical relay/SSH evidence. The local MCP server and its
-direct ChatGPT attachment are separate verification steps. Do not infer a blanket
-plan restriction or guaranteed write capability from either the transport or a
-past observation in another surface.
+## A workflow state and external effects
 
-The third path **does invoke another model**. It is an optional B adapter, not a
-requirement for A. The implemented worker registry accepts `codex-exec`; Claude,
-PAIR and other-provider adapters are not implemented by this architecture review.
+Workflows carry version/project/idempotency/deadline and ordered named steps.
+The runtime checks resource/action grants before work and exact resource arguments
+when references resolve. Catalog descriptors cannot weaken built-in write rules.
 
-## Concrete gaps found in the reviewed implementation
+Each step has a journaled state, optional preflight, one call, required write
+verification, optional read-only recovery and an input-bound approval. Capability
+observations have a scoped identity, current surface/session, TTL and evidence ref.
+Visibility, invocability, verification and denial are different facts.
 
-| Observation in current source | Consequence for the A/B split |
-| --- | --- |
-| `dispatch_mesh` accepts `worker` and `prompt`, not a project/run envelope. | Do not describe the mesh as a project-aware general process API. |
-| Relay actions are `status`, `read_file`, `exec_read`, `exec_write`, `git_pull`. | A unified submit/status/progress/logs/cancel/result lifecycle is still a target. |
-| Relay's `status` executes `uname`; worker probes read local login/quarantine state. | Host reachability and cheap auth probes do not establish task progress or valid end-to-end service. |
-| `worker_health.py` persists auth-failure quarantine. | Preserve this protection; no permanent live-health guarantee follows from one PASS. |
-| A relay result is saved locally before push, but the completed ledger is marked only after result publication. | Publish failure or interruption can leave executed work unmarked; recovery/idempotency must be hardened before replay guarantees are claimed. |
-| The SQLite operation ledger and Fleet relay ledger are different implementations. | A good shared contract is not proof that the relay enforces its uncertain-outcome semantics. |
-| Path/cwd checks are lexical; broad write commands can invoke interpreters. | T37 is targeted hardening, not filesystem/tenant isolation or complete write safety. T38 remains unfinished. |
-| Budgets are observed per worker; no unified account/project registry is enforced across all endpoints. | Cross-project/account permissions and quota aggregation still need design and implementation. |
+Dispatch atomically compares the current effect data and fences cancellation and
+expired writes. Pending calls use single-use tokens; late results cannot overwrite
+a newer reconciliation token. Cancellation stops future effects, not past external
+changes. Read-back may finish after the workflow deadline without permitting new writes.
 
-This is a source-level scope/coupling review, not a comprehensive security audit.
-No unit tests, host commands or live connector workflows were run to revalidate
-these historical runtime claims during the documentation update.
+A lost write return is UNCERTAIN. Reconciliation issues only a read. When the read
+requires a lost object ID, an explicit independently addressable recovery read must
+recover it; absence of that read fails closed. Reconciliation never assumes that
+an exception means the external write did not happen.
 
-## Proposed shared contract — not implemented everywhere
+## B execution and ownership
 
-Requests should bind requester identity, explicit project/task context, operation
-profile, inputs, allowed resources, deadline and idempotency key. Add repository
-owner/name and immutable base SHA for code-related work. Model delegation adds an
-explicit account reference, usage class and budget; never credentials.
+A node owns its principal, project grants, named profiles, repositories and state
+root. Requests cannot select arbitrary commands, filesystem roots or credentials.
+Profiles fix argv, timeout, output bounds, artifacts and isolation mode. Source
+snapshots come from the bound repository's exact commit, not its dirty working tree.
 
-Results should bind run identity, lifecycle state, node/workspace/software version,
-exit status, bounded diagnostics, artifact references and verification evidence.
+SQLite registers an idempotency key, immutable request and policy digest. Concurrent
+submissions deduplicate. Starting claims a slot, then a supervisor; the supervisor
+claim is itself single-use. A duplicate or stale invocation cannot spawn again.
+Policy changes block continued execution under stale authorization.
 
-A mail task need not invent a Git repository. A machine may serve many projects.
-OS identity, connector/GitHub identity and provider account are separate.
-Repository instructions cannot grant additional service permissions. Do not share
-a mutable global active project between chats. Aggregate provider budgets across
-machines/projects by account rather than pretending each worker owns a new quota.
+The supervisor owns a process group, bounded stdout/stderr, heartbeat and optional
+`FLEET_PROGRESS` records. Timeouts/cancellation target that owned group. Result files
+are private and fsynced before SQL completion. A receipt saved before a SQL failure
+can be reconciled exactly; an unknown outcome stays UNCERTAIN and is not restarted.
 
-## Migration boundaries
+Artifact retrieval opens only manifest-listed regular files without following
+symlinks, checks full size/hash and returns bounded base64 chunks with chunk hashes.
+Linux `/proc` yields direct-process CPU/RSS; unsupported platforms return unknown,
+not invented metrics. Health includes queue counts, capacity, load and free disk.
 
-Keep one repository and existing import paths during the strategic pause.
-A later approved refactor can separate workflow/connector-facing logic, shared
-contracts and B runtime modules behind compatibility facades. Update imports,
-entry points and tests together; do not move files merely to make the tree look split.
+## Gateway and relay
 
-Retain the GitHub relay as a transitional/fallback B transport, not an A dependency.
-Assess PAIR only for the local-inference extension and Serena only where targeted
-code operations add value. Neither is installed or adopted by this review.
+The public MCP builder uses `configured_runner`, not the broader historical runner.
+The command policy accepts a small bounded read set and fast-forward Git pull;
+ordinary computation uses a project-bound profile. Git hook/fsmonitor/pager/config
+escape options, relative executables and raw destructive commands are rejected.
+Filesystem helper code is fixed, component-confined and does not follow symlinks.
+Operator-owned repository metadata and local binaries remain trusted.
 
-Historical proofs remain in [VALIDATION_STATUS_2026-09-11](VALIDATION_STATUS_2026-09-11.md).
-The [roadmap](ROADMAP.md) separates A, B and shared acceptance categories.
-The [engine specification](../SPEC.md) and [routing algorithm](ROUTING_SPEC.md)
-retain the implemented deterministic invariants.
+Typed node calls use configured runtime paths and strict JSON. Replies can be pinned
+to node/runtime/policy identity. A submit acknowledgement is not job success.
+
+The relay claims once, saves a result and separately publishes its outbox. Failed
+publication can retry independently of the original command file or gateway config.
+Recovery checks a saved private result before creating an UNCERTAIN result. Payload
+conflicts never overwrite the saved result or cause re-execution. Legacy entry points
+delegate to this canonical path. GitHub result branches are not secret storage.
+
+## Enrollment and release management
+
+Local operator commands stage exact Git revisions with file hashes, verify releases,
+produce enrollment plans tied to current configuration and apply only reviewed
+host bindings. No arbitrary unconfigured SSH destination is added by a request.
+Activation and rollback require an idle journal with no uncertain jobs. They atomically
+switch an active record but do not reload a service. Bootstrap verifies the selected
+release and pins a node configuration before executing it.
+
+User launchd/systemd definitions are generated but never installed or loaded by the
+renderer. Actual SSH enrollment requires installing the same verified runtime and
+private configuration on the target, then binding its real paths and validating
+reachability. Remote copying, OS provisioning and public OAuth are not implicit.
+
+## Trust and compatibility boundaries
+
+Project isolation is logical authorization plus separate workspaces. `trusted-local`
+is not containment against hostile code under the same OS user. Container command
+construction and owned-ID cleanup are implemented; engine, macOS and real SSH tests
+remain deployment gates. Use a separately tested container/VM for untrusted code.
+
+Legacy mesh speaks worker/prompt and remains a private opt-in compatibility API;
+it is not relabelled as a complete multi-project scheduler. Account reservations are
+operator budgets, not provider quota telemetry. External auth, native Chat attachment,
+Serena, PAIR and model APIs are distinct optional integrations.
