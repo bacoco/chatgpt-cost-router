@@ -1,0 +1,35 @@
+{
+  "action": "node_health",
+  "finished_at_unix": 1789143361.060894,
+  "host": "macbook",
+  "job_id": "job-ab-live-health-macbook-20260911-1616",
+  "job_sha256": "9e523ba7940333c2c9d78de2f5cd06d4259a24e5d57d650296262e7304f8c68d",
+  "result": {
+    "_node": {
+      "node_id": "macbook",
+      "policy_revision": "bb19aa845899914084698db00917c7d9798bfa1332bad1f1df3315c91a560dcc",
+      "runtime_revision": "10b3ee3e438d57b210b1155e2dbaf19aac9b00db"
+    },
+    "cpu_count": 10,
+    "disk_free_bytes": 25676320768,
+    "jobs_by_state": {
+      "CANCELLED": 2,
+      "SUCCEEDED": 2
+    },
+    "load_average": [
+      3.15625,
+      3.18115234375,
+      3.02001953125
+    ],
+    "max_concurrency": 2,
+    "model_runtime_required": false,
+    "node_id": "macbook",
+    "observed_at": 1789143361.041535,
+    "ok": true,
+    "policy_revision": "bb19aa845899914084698db00917c7d9798bfa1332bad1f1df3315c91a560dcc",
+    "runtime_revision": "10b3ee3e438d57b210b1155e2dbaf19aac9b00db"
+  },
+  "started_at_unix": 1789143360.850338,
+  "status": "PASS",
+  "version": 1
+}
