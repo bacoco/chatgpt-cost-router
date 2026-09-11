@@ -29,9 +29,11 @@ Read `README.md`, `.chatgpt/CURRENT.md`, `docs/ARCHITECTURE.md` and
 `docs/TWO_PROJECTS_AND_PAIR_2026-09-11.md`; historical verification is recorded in
 `docs/VALIDATION_STATUS_2026-09-11.md` and the exact test receipts.
 
-The A/B split is currently logical/documented, not a completed physical code
-refactor. T38, installations and new fleet jobs remain paused unless the owner
-explicitly resumes them. A documentation review is not a deployment instruction.
+A/shared changes are published after the owner authorized implementation. A safety
+review blocked a B dependency publication batch; the complete prepared source is
+a separate artifact, not this branch. Read `docs/AB_DELIVERY_STATUS_2026-09-11.md`.
+T38, installations and user-machine jobs remain paused. No main merge or deployment
+is authorized by a local test result.
 
 ## Preferred execution, subject to the current task and pause
 

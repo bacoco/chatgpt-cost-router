@@ -1,57 +1,21 @@
-# Current project checkpoint
+# Current checkpoint
 
-Task: strategic pause — complete Chat-first operations and independent Fleet Operator
-Status: `STRATEGIC_REVIEW_TWO_PROJECTS` — owner correction: A means completing authorized operations entirely through normal Chat and all its plugins/connectors (Gmail, GitHub, WordPress/Cowboy and others), without default Work/Codex/model-API delegation. It is not limited to issues, specifications or code analysis. B independently provides machine access, process execution/management and monitoring; placement is optional. NVIDIA PAIR is the Personal AI Router, not PER/PIR. The proposed split and researched PAIR scope are recorded in `docs/TWO_PROJECTS_AND_PAIR_2026-09-11.md`. No implementation, deployment, or live test is authorized by this documentation-only review.
+Status: `A_SHARED_PUBLISHED_B_PUBLICATION_BLOCKED`.
+Repository: `bacoco/chatgpt-cost-router`; default branch: `main`.
+Delivery branch: `feat/ab-runtime-completion-20260911`, derived from
+`feat/ab-products-20260911` at `cd897ddf3856ffdabef68ba1a71b43dd99efad46`.
 
-Repository: `bacoco/chatgpt-cost-router`
-Default branch: `main`
+A/shared changes and ten new A tests are published. A B dependency batch was blocked
+by the connector for safety review. Its dependent B source changes were restored,
+so the branch stays coherent. No alternate route published the blocked batch.
+Full prepared source is supplied separately as a chat artifact, not a Git commit.
 
-## Documentation and implementation alignment review
+Published subset: 134 local tests passed. Prepared full A/B source: 177 tests run,
+176 passed, one optional official-SDK smoke skipped. Do not conflate the two trees.
+No new CI success is implied. Read [delivery status](../docs/AB_DELIVERY_STATUS_2026-09-11.md).
 
-`README.md`, `docs/ARCHITECTURE.md`, `docs/ROADMAP.md`, `.chatgpt/PROJECT.md`
-and the component scope in `SPEC.md` now reflect the full A/B boundary.
-The source-level review is pinned to `18c36ea51e970659d7a30eed7d9330c38a395cea`;
-it maps current modules and remaining coupling, not a completed runtime refactor.
-The historical `cost_router/` package still mixes decision/shared components with
-B's worker/mesh implementation. General project isolation, job lifecycle and relay
-uncertain-outcome recovery remain gaps. No source module, import, CLI, service,
-scheduler or historical receipt is changed by this documentation update.
-
-## Previously validated core — historical evidence, not a new live fleet check
-
-- T01-T34: PASS where recorded, except intentionally deferred/blocked experiments documented in the authoritative status.
-- T28A/T28B: PASS for two distinct authorized OpenAI account workers isolated by `CODEX_HOME`.
-- T30: PASS for live local broker alias dispatch.
-- T31A: PASS for deterministic quota/budget-aware selection logic; provider quota ingestion itself remains unproven.
-- T32: PASS for private second-device Tailscale dispatch to `openai-B`.
-- T33: PASS for heartbeat registration and cross-machine `--worker auto` mesh dispatch.
-- T34: PASS for per-user LaunchAgent supervision and forced-crash recovery without manual restart or model call.
-- T35A: CODE COMPLETE / LOCAL TESTS PASS for Fleet Operator.
-- T35B: PASS for autonomous ChatGPT -> GitHub relay -> gateway -> host -> GitHub result, including remote SSH/Tailscale execution and a live loopback MCP server.
-- T36: PASS for real multi-node automatic selection. `macbook-pro-de-loic/openai-B` and `macstudio-worker/openai-A` were simultaneously ready, and live `--worker auto` selected the priority-10 Mac Studio worker and returned `MULTINODE_OK` using `gpt-6-astra`, 4,896 reported tokens, exit 0, read-only/ephemeral, paid-API environment removed.
-- T37: PASS for live safety hardening. The full repository suite passed 100 tests. After reloading Fleet Operator, `exec_read` rejected an attempted `python3 -c` file write before execution while allowing `git status`. A real Sparky Codex authentication failure then persisted `openai-A` as `quarantined/auth_failure`; the next mesh heartbeat advertised `ready=false`, `auth=unavailable`, while the valid MacBook and Mac Studio workers remained `ready=true`.
-
-## Fleet Operator boundary
-
-The gateway resolves only locally configured host aliases. SSH destinations/credentials stay on the gateway. SSH is batch/strict-host-key mode. Runtime policy/config lives outside GitHub with mode `0600`. Read mode is command-aware after T37; the write lane remains broader and is the next safety-hardening target.
-
-The GitHub relay remains the immediately usable execution path from this ChatGPT context. Direct Secure MCP Tunnel/custom-app attachment is separate and does not block autonomous fleet operation.
-
-## Next useful action
-
-Review and approve the two-project boundary before resuming implementation:
-
-1. Chat-first Operations: use normal Chat and the full verified plugin/connector toolbox to read, reason, write, edit, send, publish, coordinate workflows and verify outcomes across Gmail, GitHub, Cowboy and other systems. An issue is one action among many. Prefer capability already included in Chat; no Work switch, extra coding-agent inference or paid model API by default. Serena is optional, not the product foundation. A can directly invoke B as a tool when machine work is needed, without making a second LLM mandatory.
-2. Fleet Operator: node enrollment/access, bounded process execution, supervision, monitoring and results; optional placement across machines and optional Codex/Claude/local-inference adapters. It must also be usable without Chat.
-3. Shared contract: explicit project/task context, repository/SHA when applicable, authorized operation, run identity, permitted resources/account reference, budget, status and evidence. No credentials in requests or GitHub receipts. Separate user identity, GitHub identity, model account and machine.
-
-Keep T38 and further installations paused. Do not install PAIR or Serena, move code, split repositories, change services, or submit fleet jobs as part of this review. The broad write-lane risk remains an open issue; this pause does not certify it safe. PAIR is a candidate for local inference only, not a general process manager or subscription-account router. Keep existing test receipts and the authoritative validation snapshot unchanged.
-
-The design stays in the existing repository for review. Separate repositories are a later packaging decision, not a prerequisite for independent responsibilities. A's acceptance categories cover completed mail, repository, publication/other-app and cross-app workflows, not merely one issue or PR. B's category covers a node running and monitoring a bounded non-LLM task. Reuse the existing plugin test receipts; maintain an action-level matrix distinguishing ChatGPT.com Chat, Codex Mac Chat, Work, CLI and Scheduled Tasks. Visibility is not execution, and proof on one surface does not validate every other surface. Do not restart the stopped quota-burn experiment. These are plans, not executed tests.
-
-Fleet Operator spec: `docs/FLEET_OPERATOR_PLUGIN.md`.
-Relay spec: `docs/FLEET_OPERATOR_RELAY.md`.
-T36 receipt: `.chatgpt/test-receipts/T36_TWO_NODE_MESH_LIVE_2026-09-10.md`.
-T37 receipt: `.chatgpt/test-receipts/T37_FLEET_READ_AND_WORKER_QUARANTINE_LIVE_2026-09-11.md`.
-
-Paid OpenAI API use for recorded validation: none. T37 required no successful model call.
+The owner authorized code implementation and local checks. T38, new user-machine
+jobs, deployments and service changes remain paused. No main merge, model API,
+external mail/site mutation or PAIR/Serena installation was performed.
+Historical T01-T37 receipts remain unchanged. Next work must start by reading the
+actual branch and the publication incident, not assuming the entire artifact landed.
