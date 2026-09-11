@@ -46,8 +46,7 @@ def main(argv=None):
             if args.start:
                 output = service.start(req["project_id"],output["run_id"])
         elif args.command == "health":
-            output = {"ok":True,"node_id":config.node_id,"runtime_revision":config.document.get("runtime_revision"),
-                      "policy_revision":config.revision,"model_runtime_required":False}
+            output = service.health()
         elif args.command == "serve-queue":
             while True:
                 service.recover_stale()
@@ -70,6 +69,8 @@ def main(argv=None):
             output = service.logs(args.project,args.run,args.stream,args.offset,args.limit)
         else:
             output = getattr(service,args.command)(args.project,args.run)
+        output["_node"] = {"node_id":config.node_id,"runtime_revision":config.document.get("runtime_revision"),
+                           "policy_revision":config.revision}
         print(json.dumps(output,indent=2,ensure_ascii=False,allow_nan=False))
         return 0
     except (ContractError,OSError,ValueError) as exc:

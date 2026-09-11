@@ -23,8 +23,17 @@ def _progress(line):
         return None
 
 
+def exited(process):
+    # Keep the group leader unreaped until group cleanup. Its PID cannot be reused.
+    if process.returncode is not None:
+        return True
+    if hasattr(os, "waitid") and hasattr(os, "WNOWAIT"):
+        return os.waitid(os.P_PID, process.pid, os.WEXITED | os.WNOHANG | os.WNOWAIT) is not None
+    return process.poll() is not None
+
+
 def signal_child(process, sig):
-    if process.poll() is None:
+    if process.returncode is None:
         try:
             os.killpg(process.pid, sig)
         except ProcessLookupError:
@@ -52,7 +61,7 @@ def monitor(process, journal, row, token, root, profile):
             os.set_blocking(stream.fileno(), False)
             selector.register(stream, selectors.EVENT_READ, name)
             files[name] = (root / (name+".log")).open("xb")
-        while selector.get_map() or process.poll() is None:
+        while selector.get_map() or not exited(process):
             now = time.time()
             current = journal.get(row["principal"], row["project"], row["id"])
             if current["data"].get("token") != token or current["state"] == "UNCERTAIN":
@@ -89,16 +98,17 @@ def monitor(process, journal, row, token, root, profile):
                     for line in lines:
                         progress = _progress(line) or progress
             if now-last_pulse >= 1:
-                _heartbeat(journal,row,token,{"heartbeat":now,"last_output_at":last_output,"progress":progress})
+                from .metrics import process_metrics
+                _heartbeat(journal,row,token,{"heartbeat":now,"last_output_at":last_output,"progress":progress,
+                                              "metrics":process_metrics(process.pid)})
                 last_pulse = now
-            if process.poll() is not None:
+            if exited(process):
                 exit_at = now if exit_at is None else exit_at
                 if now-exit_at > 2 and selector.get_map():
                     stopped = "UNCERTAIN"
                     break
+        signal_child(process, signal.SIGKILL)  # foreground profile may not leave descendants
         process.wait(timeout=5)
-        if profile["isolation"] == "container" and stopped:
-            stopped = "UNCERTAIN"  # Killing the CLI does not prove daemon-owned container termination.
         return {"state":stopped or ("SUCCEEDED" if process.returncode == 0 else "FAILED"),
                 "exit_code":process.returncode, "output_truncated":truncated,
                 "progress":progress, "last_output_at":last_output}
@@ -109,6 +119,6 @@ def monitor(process, journal, row, token, root, profile):
         for stream in (process.stdout, process.stderr):
             if not stream.closed:
                 stream.close()
-        if process.poll() is None:
+        if process.returncode is None:
             signal_child(process, signal.SIGKILL)
             process.wait(timeout=5)

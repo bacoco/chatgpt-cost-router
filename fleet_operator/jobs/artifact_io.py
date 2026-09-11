@@ -93,4 +93,9 @@ def artifact(service, project, run_id, name, offset=0, limit=65536):
         raise ContractError('recorded artifact or receipt is unavailable') from exc
     return {'run_id': run_id, **observed, 'offset': offset, 'next_offset': offset + len(raw),
             'eof': offset + len(raw) == observed['size'], 'encoding': 'base64',
-            'data_base64': base64.b64encode(raw).decode('ascii'), 'verified': True}
+            'data_base64': base64.b64encode(raw).decode('ascii'), 'data': base64.b64encode(raw).decode('ascii'),
+            'chunk_sha256': hashlib.sha256(raw).hexdigest(), 'verified': True}
+
+
+# Backwards-compatible concurrent API name.
+read_artifact = artifact
