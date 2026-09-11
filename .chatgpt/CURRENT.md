@@ -6,6 +6,17 @@ Status: `STRATEGIC_REVIEW_TWO_PROJECTS` — owner correction: A means completing
 Repository: `bacoco/chatgpt-cost-router`
 Default branch: `main`
 
+## Documentation and implementation alignment review
+
+`README.md`, `docs/ARCHITECTURE.md`, `docs/ROADMAP.md`, `.chatgpt/PROJECT.md`
+and the component scope in `SPEC.md` now reflect the full A/B boundary.
+The source-level review is pinned to `18c36ea51e970659d7a30eed7d9330c38a395cea`;
+it maps current modules and remaining coupling, not a completed runtime refactor.
+The historical `cost_router/` package still mixes decision/shared components with
+B's worker/mesh implementation. General project isolation, job lifecycle and relay
+uncertain-outcome recovery remain gaps. No source module, import, CLI, service,
+scheduler or historical receipt is changed by this documentation update.
+
 ## Previously validated core — historical evidence, not a new live fleet check
 
 - T01-T34: PASS where recorded, except intentionally deferred/blocked experiments documented in the authoritative status.

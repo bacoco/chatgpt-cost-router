@@ -1,11 +1,18 @@
-# Product Specification
+# Decision Engine Specification
 
 ## Objective and implemented scope
 
-Recommend an authorized, sufficient plan with the lowest estimated total marginal
-cost among supplied candidates. The skills perform task interpretation; the Python
-engine deterministically checks a structured request. Live discovery and remote
-execution require host-specific adapters and are not supplied by this repository.
+This is the **deterministic decision-engine component specification**, not the
+complete product scope. The repository now serves A — full Chat-first operations
+across authorized apps — and B — independent machine/process management.
+See [README](README.md), [ARCHITECTURE](docs/ARCHITECTURE.md) and the
+[A/B decision](docs/TWO_PROJECTS_AND_PAIR_2026-09-11.md).
+
+The engine recommends an authorized, sufficient plan with the lowest estimated
+total marginal cost among supplied candidates. Skills perform task interpretation;
+the Python engine deterministically checks a structured request. The engine does
+not execute apps or machines. Separate Fleet/worker adapters now exist in this
+repository, with their own capabilities, risks and recorded verification.
 
 ## Requirements
 
