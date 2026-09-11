@@ -9,15 +9,15 @@ Private `chat.json` binds principal, projects file, state directory, surface and
 ```bash
 chat-operations --config /operator/chat.json projects
 chat-operations --config /operator/chat.json catalog
-chat-operations --config /operator/chat.json observe --project PROJECT --resource RESOURCE --action ACTION --file /operator/actual-observation.json
-chat-operations --config /operator/chat.json submit --file /operator/workflow.json
+chat-operations --config /operator/chat.json observe --project PROJECT --resource RESOURCE --action ACTION --evidence /operator/actual-observation.json
+chat-operations --config /operator/chat.json submit --workflow /operator/workflow.json
 chat-operations --config /operator/chat.json next --project PROJECT --run RUN
 ```
 
 `next` returns one exact native invocation and a token. The driver must call the real connector once, save the actual return and record it. A plan or guessed output is not evidence.
 
 ```bash
-chat-operations --config /operator/chat.json record --project PROJECT --run RUN --step STEP --token TOKEN --output /operator/actual-tool-return.json
+chat-operations --config /operator/chat.json record --project PROJECT --run RUN --step STEP --token TOKEN --result /operator/actual-tool-return.json
 chat-operations --config /operator/chat.json approve --project PROJECT --run RUN --step STEP
 chat-operations --config /operator/chat.json reconcile --project PROJECT --run RUN --step STEP
 chat-operations --config /operator/chat.json cancel --project PROJECT --run RUN
@@ -36,7 +36,7 @@ Node policy fixes identity, principal, state directory, projects and named profi
 
 ```bash
 fleet-jobs --config /operator/node.json profiles --project PROJECT
-fleet-jobs --config /operator/node.json submit --file /operator/request.json --start
+fleet-jobs --config /operator/node.json submit --request /operator/request.json --start
 fleet-jobs --config /operator/node.json status --project PROJECT --run RUN
 fleet-jobs --config /operator/node.json logs --project PROJECT --run RUN --stream stdout --offset 0
 fleet-jobs --config /operator/node.json result --project PROJECT --run RUN

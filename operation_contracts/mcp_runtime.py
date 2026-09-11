@@ -33,12 +33,14 @@ def serve(builder, argv=None, default_port=8812):
     if args.transport == "stdio":
         server.run(transport="stdio")
         return
-    if hasattr(server,"settings"):
-        server.settings.host = "127.0.0.1"
-        server.settings.port = args.port
-        server.settings.stateless_http = True
-        server.settings.json_response = True
+    options = {"host":"127.0.0.1", "port":args.port, "streamable_http_path":"/mcp",
+               "stateless_http":True, "json_response":True}
+    settings = getattr(server, "settings", None)
+    # SDK v1 exposes transport fields on Settings. SDK v2 retains Settings but
+    # takes those options on run(). Never start HTTP with an unspecified bind.
+    if settings is not None and all(hasattr(settings, key) for key in options):
+        for key, value in options.items():
+            setattr(settings, key, value)
         server.run(transport="streamable-http")
     else:
-        server.run(transport="streamable-http",host="127.0.0.1",port=args.port,
-                   streamable_http_path="/mcp",stateless_http=True,json_response=True)
+        server.run(transport="streamable-http", **options)

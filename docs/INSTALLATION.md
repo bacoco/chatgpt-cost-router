@@ -13,7 +13,7 @@ python -m pip install .
 chat-operations --help
 fleet-jobs --help
 fleet-enroll --help
-python scripts/demo_ab.py --output /tmp/ab-new-demo
+python scripts/ab_demo.py --directory /tmp/ab-new-demo
 ```
 
 A's demo connectors are simulated; B actually runs a local process. Use a fresh directory. MCP is optional: install `python -m pip install '.[mcp]'` to run private MCP servers. The core does not require Codex, Claude, Docker or an LLM API account. Installation can download packages; `pyproject.toml` is the dependency authority.

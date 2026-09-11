@@ -12,7 +12,7 @@ import subprocess
 import sys
 
 ROOTS=['chat_ops','fleet_operator','operation_contracts','cost_router','scripts','schemas','policy',
-       'tests','examples','skills','requirements.txt','requirements-dev.txt','requirements-fleet-operator.txt',
+       'tests','examples','skills','docs','requirements.txt','requirements-dev.txt','requirements-fleet-operator.txt',
        'pyproject.toml','setup.py','MANIFEST.in','README.md']
 PROBE="""import json,os,pathlib,subprocess,sys,shutil,glob
 home=pathlib.Path.home()
