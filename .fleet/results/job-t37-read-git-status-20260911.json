@@ -1,0 +1,27 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789097242.697752,
+  "host": "macbook",
+  "job_id": "job-t37-read-git-status-20260911",
+  "job_sha256": "fb5b4b8d3a9bab77dc2ad22863f51b68d2dee63c8b183f9950b599acaf2e4167",
+  "result": {
+    "argv": [
+      "git",
+      "status",
+      "--short",
+      "--branch"
+    ],
+    "cwd": "/Users/loic/codex-t30-broker-test",
+    "elapsed_seconds": 0.069,
+    "exit_code": 0,
+    "host": "macbook",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "## main...origin/main\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789097242.567144,
+  "status": "PASS",
+  "version": 1
+}
