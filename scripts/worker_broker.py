@@ -9,8 +9,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from cost_router.worker_budget import budget_summary, load_budget_state, select_economic_worker
-from cost_router.workers import WorkerError, load_registry, probe, run_task, select_worker
+from fleet_operator.workers.worker_budget import budget_summary, load_budget_state, select_economic_worker
+from fleet_operator.workers.workers import WorkerError, load_registry, probe, run_task, select_worker
 
 
 def _select(workers, args):

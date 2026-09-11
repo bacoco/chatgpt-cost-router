@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from cost_router.mesh import MeshError, NodeRegistry, dispatch_mesh, parse_json_body, policy_from_env, tailscale_identity
+from fleet_operator.workers.mesh import MeshError, NodeRegistry, dispatch_mesh, parse_json_body, policy_from_env, tailscale_identity
 
 
 class Handler(BaseHTTPRequestHandler):
