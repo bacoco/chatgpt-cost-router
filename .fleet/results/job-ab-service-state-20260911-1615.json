@@ -1,0 +1,26 @@
+{
+  "action": "exec_read",
+  "finished_at_unix": 1789142392.723304,
+  "host": "macstudioprod",
+  "job_id": "job-ab-service-state-20260911-1615",
+  "job_sha256": "bb0a29d0af1214f4b1e2ce03878aeae79b80d8b68bc99f2057a670717f23c92c",
+  "result": {
+    "argv": [
+      "launchctl",
+      "list",
+      "pro.chatgpt-cost-router.ab-node"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.319,
+    "exit_code": 0,
+    "host": "macstudioprod",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "{\n\t\"StandardOutPath\" = \"/Users/macstudioprod/.local/share/chatgpt-cost-router/ab/logs/pro.chatgpt-cost-router.ab-node.out.log\";\n\t\"LimitLoadToSessionType\" = \"Aqua\";\n\t\"StandardErrorPath\" = \"/Users/macstudioprod/.local/share/chatgpt-cost-router/ab/logs/pro.chatgpt-cost-router.ab-node.err.log\";\n\t\"Label\" = \"pro.chatgpt-cost-router.ab-node\";\n\t\"OnDemand\" = false;\n\t\"LastExitStatus\" = 0;\n\t\"PID\" = 7412;\n\t\"Program\" = \"/Users/macstudioprod/.local/share/chatgpt-cost-router/ab/venvs/10b3ee3e438d57b210b1155e2dbaf19aac9b00db/bin/python\";\n\t\"ProgramArguments\" = (\n\t\t\"/Users/macstudioprod/.local/share/chatgpt-cost-router/ab/venvs/10b3ee3e438d57b210b1155e2dbaf19aac9b00db/bin/python\";\n\t\t\"/Users/macstudioprod/.local/share/chatgpt-cost-router/ab/source/10b3ee3e438d57b210b1155e2dbaf19aac9b00db/scripts/fleet_jobs.py\";\n\t\t\"--config\";\n\t\t\"/Users/macstudioprod/.local/share/chatgpt-cost-router/ab/config/node.json\";\n\t\t\"serve-queue\";\n\t);\n};\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789142392.3444312,
+  "status": "PASS",
+  "version": 1
+}
