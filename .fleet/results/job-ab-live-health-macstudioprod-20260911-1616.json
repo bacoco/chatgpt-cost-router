@@ -1,0 +1,35 @@
+{
+  "action": "node_health",
+  "finished_at_unix": 1789143364.4682372,
+  "host": "macstudioprod",
+  "job_id": "job-ab-live-health-macstudioprod-20260911-1616",
+  "job_sha256": "f9ef9df2421e49667a375adf308c2e61f691a96f718ed3b2154cacd28504800c",
+  "result": {
+    "_node": {
+      "node_id": "macstudioprod",
+      "policy_revision": "704e25d0f02378557f182aa6e7cbf9834aefd6373561bb1a7189b511f0fe17ff",
+      "runtime_revision": "10b3ee3e438d57b210b1155e2dbaf19aac9b00db"
+    },
+    "cpu_count": 20,
+    "disk_free_bytes": 341830545408,
+    "jobs_by_state": {
+      "CANCELLED": 1,
+      "SUCCEEDED": 1
+    },
+    "load_average": [
+      1.5986328125,
+      1.70068359375,
+      1.8232421875
+    ],
+    "max_concurrency": 2,
+    "model_runtime_required": false,
+    "node_id": "macstudioprod",
+    "observed_at": 1789143364.263049,
+    "ok": true,
+    "policy_revision": "704e25d0f02378557f182aa6e7cbf9834aefd6373561bb1a7189b511f0fe17ff",
+    "runtime_revision": "10b3ee3e438d57b210b1155e2dbaf19aac9b00db"
+  },
+  "started_at_unix": 1789143364.16493,
+  "status": "PASS",
+  "version": 1
+}
