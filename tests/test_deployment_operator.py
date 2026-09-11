@@ -16,6 +16,21 @@ def module(name):
     out=importlib.util.module_from_spec(spec); spec.loader.exec_module(out); return out
 
 class DeploymentTests(unittest.TestCase):
+    def test_all_python_sources_compile(self):
+        for folder in ['scripts','fleet_operator','chat_ops','operation_contracts','cost_router']:
+            for path in (ROOT/folder).rglob('*.py'):
+                with self.subTest(path=path): compile(path.read_text(),str(path),'exec')
+    def test_deployment_profiles_validate_and_real_smoke(self):
+        import tempfile
+        from fleet_operator.jobs.config import NodeConfig
+        installer=module('ab_host_install')
+        with tempfile.TemporaryDirectory() as temp:
+            config=installer.configure(Path(temp),'a'*40,'fixture',Path(sys.executable))
+            node=NodeConfig.from_file(config/'node.json')
+            self.assertEqual(set(node.profiles),{'smoke','validate-release'})
+            result=installer.smoke(config,'a'*40)
+            self.assertTrue(result['artifact_verified'])
+            self.assertEqual(result['cancel_state'],'CANCELLED')
     def test_unconfigured_host_refused(self):
         with self.assertRaises(KeyError): module('ab_fleet_deploy').wire({'hosts':{}},'unknown',['uname'])
     def test_root_host_refused(self):

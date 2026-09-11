@@ -55,10 +55,12 @@ def install_service(command, label, logs):
 def configure(root, revision, alias, python):
     config = root/'config'; config.mkdir(parents=True, exist_ok=True, mode=0o700)
     project = 'chatgpt-cost-router'
-    projects = {'version':1,'projects':{project:{'members':['loic'], 'nodes':[alias],
-        'profiles':['smoke','validate-release'], 'resources':{'repo':{'connector':'github',
-        'account_ref':'bacoco','actions':['github.read','github.write'],
-        'bindings':{'owner':'bacoco','repo':project}}}}}
+    resource = {'connector':'github','account_ref':'bacoco',
+                'actions':['github.read','github.write'],
+                'bindings':{'owner':'bacoco','repo':project}}
+    project_policy = {'members':['loic'],'nodes':[alias],
+                      'profiles':['smoke','validate-release'],'resources':{'repo':resource}}
+    projects = {'version':1,'projects':{project:project_policy}}
     node = {'version':1,'node_id':alias,'principal':'loic','state_dir':str(root/'node-state'),
         'projects_file':str(config/'projects.json'),'runtime_revision':revision,'max_concurrency':2,
         'profiles':{'smoke':{'argv':[str(python),str(SOURCE/'scripts/ab_smoke_task.py')],

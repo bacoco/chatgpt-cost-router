@@ -14,9 +14,12 @@ import sys
 ROOTS=['chat_ops','fleet_operator','operation_contracts','cost_router','scripts','schemas','policy',
        'tests','examples','requirements.txt','requirements-dev.txt','requirements-fleet-operator.txt',
        'pyproject.toml','setup.py','MANIFEST.in','README.md']
-PROBE="""import json,os,pathlib,subprocess,sys
+PROBE="""import json,os,pathlib,subprocess,sys,shutil,glob
 home=pathlib.Path.home()
 candidates=[home/'.local/share/chatgpt-cost-router/fleet-operator-venv-py311/bin/python',pathlib.Path('/opt/homebrew/bin/python3.11'),pathlib.Path('/opt/homebrew/opt/python@3.11/bin/python3.11'),pathlib.Path('/opt/homebrew/bin/python3'),pathlib.Path('/usr/bin/python3'),pathlib.Path(sys.executable)]
+candidates.extend(pathlib.Path(v) for name in ['python3.14','python3.13','python3.12','python3.11'] for v in [shutil.which(name)] if v)
+for pattern in ['/opt/homebrew/opt/python@*/bin/python3.*',str(home/'.local/share/uv/python/*/bin/python3'),str(home/'.pyenv/versions/*/bin/python3'),'/opt/anaconda3/bin/python3']:
+ candidates.extend(pathlib.Path(v) for v in glob.glob(pattern))
 found=[]
 for p in candidates:
  if p.is_file():
