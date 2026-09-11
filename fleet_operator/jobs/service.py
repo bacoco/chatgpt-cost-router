@@ -39,7 +39,7 @@ class Jobs:
         return {"run_id":id_, "project_id":project, "node_id":self.config.node_id, "state":row["state"],
                 "profile":row["request"]["profile"], "isolation":data.get("isolation",profile.get("isolation","unknown")),
                 "source":row["request"].get("source"), "created":row["created"], "updated":row["updated"],
-                "heartbeat":data.get("heartbeat"), "progress":data.get("progress"),
+                "heartbeat":data.get("heartbeat"), "progress":data.get("progress"), "resources":data.get("resources"),
                 "last_output_at":data.get("last_output_at"), "exit_code":data.get("exit_code"),
                 "reason":data.get("reason"), "runtime_revision":data.get("runtime_revision"),
                 "extra_model_calls":0}
@@ -51,10 +51,10 @@ class Jobs:
         if before["policy"] != self.config.revision:
             self.journal.transition(id_,{"QUEUED"},"BLOCKED",{"reason":"operator policy changed"})
             return self.status(project,id_)
-        validate_request(before["request"], self.config)
         if before["request"]["deadline"] <= time.time():
             self.journal.transition(id_,{"QUEUED"},"TIMED_OUT",{"reason":"deadline before start"})
             return self.status(project,id_)
+        validate_request(before["request"], self.config)
         if self.config.path is None or not self.config.path.is_file():
             raise ContractError("durable node config file required")
         token = uuid.uuid4().hex
@@ -76,7 +76,8 @@ class Jobs:
         try:
             child = subprocess.Popen([sys.executable,str(script),"--config",str(self.config.path),"--project",project,
                                       "--run",id_,"--token",token], stdin=subprocess.DEVNULL,
-                                     stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,start_new_session=True,close_fds=True)
+                                     stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,start_new_session=True,close_fds=True,
+                                     env={"PATH":os.defpath,"HOME":str(Path.home()),"LANG":"C.UTF-8"})
             threading.Thread(target=child.wait,daemon=True).start()
         except OSError:
             self.journal.transition(id_,{"RUNNING"},"FAILED",{"reason":"supervisor spawn failed"},token=token)
@@ -116,6 +117,10 @@ class Jobs:
                 "output_truncated":row["data"].get("output_truncated",False),
                 "request_digest":row["digest"],"receipt_digest":row["data"].get("receipt_digest")}
 
+    def artifact(self, project, id_, name, offset=0, limit=32768):
+        from .artifact_store import retrieve
+        return retrieve(self, project, id_, name, offset, limit)
+
     def reconcile(self, project, id_):
         from operation_contracts.common import digest
         row = self.row(project,id_)
@@ -126,7 +131,7 @@ class Jobs:
         observed = (receipt.get("run_id"),receipt.get("request_digest"),receipt.get("token"),receipt.get("policy"))
         if expected != observed or receipt.get("state") not in TERMINAL-{"UNCERTAIN"}:
             raise ContractError("receipt does not prove the exact submitted execution")
-        current = artifacts({"artifacts":[item["name"] for item in receipt["artifacts"]]},root_for(self.config,id_) / "workspace")
+        current = artifacts({"artifacts":[item["name"] for item in receipt["artifacts"]]},root_for(self.config,id_) / ("artifacts" if receipt.get("artifact_store") == "artifacts" else "workspace"))
         if current != receipt["artifacts"]:
             raise ContractError("recorded artifacts changed")
         self.journal.transition(id_,{"UNCERTAIN"},receipt["state"],{**receipt,"receipt_digest":digest(receipt)},token=expected[2])
@@ -153,4 +158,7 @@ class Jobs:
             rows = db.execute("SELECT id,project FROM operations WHERE principal=? AND kind='process' AND state='QUEUED' ORDER BY created,id LIMIT 200",
                               (self.config.principal,)).fetchall()
         for row in rows:
-            self.start(row["project"],row["id"])
+            try:
+                self.start(row["project"],row["id"])
+            except ContractError:
+                self.journal.transition(row["id"], {"QUEUED"}, "BLOCKED", {"reason":"request no longer authorized"})
