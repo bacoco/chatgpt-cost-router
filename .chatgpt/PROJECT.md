@@ -29,9 +29,11 @@ Read `README.md`, `.chatgpt/CURRENT.md`, `docs/ARCHITECTURE.md` and
 `docs/TWO_PROJECTS_AND_PAIR_2026-09-11.md`; historical verification is recorded in
 `docs/VALIDATION_STATUS_2026-09-11.md` and the exact test receipts.
 
-The A/B split is currently logical/documented, not a completed physical code
-refactor. T38, installations and new fleet jobs remain paused unless the owner
-explicitly resumes them. A documentation review is not a deployment instruction.
+The A/B code split and core runtimes are committed on `feat/ab-products-20260911`.
+Read docs/AB_USAGE.md and docs/AB_VALIDATION.md for actual entry points and evidence.
+No main merge or deployment was performed. T38, installations and new fleet jobs
+remain paused unless the owner explicitly resumes them. Code validation and a
+feature-branch commit are not deployment instructions.
 
 ## Preferred execution, subject to the current task and pause
 

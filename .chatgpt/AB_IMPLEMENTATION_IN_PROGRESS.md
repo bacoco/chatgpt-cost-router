@@ -1,50 +1,24 @@
-# A/B implementation checkpoint
+# Historical checkpoint resolved by the A/B branch delivery
 
-This branch is work in progress. It must not be presented as a fully verified release.
-Base: `6a5b72c490b319f04d90c97ecd47dcb331ce19bd`.
-Branch: `feat/ab-products-20260911`.
+The earlier checkpoint on this branch was not validated and named concrete missing
+wiring/recovery work. The branch was subsequently reread at exact commit
+`9a24054bd9ad392a2b16f158fb326cb5e1367b4d`; the following are now implemented in the
+feature-branch delivery, with new tests rather than reuse of its historical test count.
 
-## Implemented source on this branch
+- Public Fleet MCP uses the bounded configured runner and typed job calls.
+- Remote jobs use configured runtime bindings and can pin node/runtime/policy identity.
+- Outbox connections close, saved receipts survive interrupted SQL updates and
+  publication can retry without re-execution or access to the original command file.
+- Legacy worker/mesh modules physically reside under Fleet Operator with old aliases.
+- A handles preflight failures, uncertain effects, lost IDs, expired read-back and
+  cancellation races without replaying writes.
+- B handles duplicate supervisor claims, actual cancellation/deadlines, fsynced result
+  recovery, stale work beyond list pagination, metrics and verified artifact chunks.
+- Local enrollment, exact-version staging/activation/rollback, user-service rendering,
+  core packaging, examples, schema and validation tooling are provided.
 
-- `operation_contracts/`: strict JSON, operator-owned project/resource/account grants,
-  durable SQLite operation/effect journal, exact approvals, private atomic receipts,
-  optional operator account budgets, optional MCP SDK compatibility helper.
-- `chat_ops/`: full multi-connector action catalog (not issue-only), scoped capability
-  observations, native Chat tool driver, bound approvals, preflight/read-back,
-  verification-only reconciliation, CLI, MCP app and bound Streamable HTTP client.
-  No additional model runtime is imported or invoked by A.
-- `fleet_operator/jobs/`: independent ordinary-process profiles, immutable repository
-  snapshots, isolated work directories, explicit trusted-local/container modes,
-  detached supervisor, progress, bounded logs, owned-child cancellation, timeout,
-  durable result reconciliation, CLI and private MCP app.
-- `fleet_operator/{secure_gateway,command_policy,host_io,remote_jobs}.py`:
-  bounded public gateway policy, confined read helper and typed remote job calls.
-- `fleet_operator/{outbox,redaction,relay_bus,relay_service}.py`:
-  non-replaying durable dispatch/outbox and idempotent result publication.
-
-## Required before integration
-
-1. Retrieve the actual current branch contents and verify every intended write.
-2. Finish wiring the public Fleet MCP server to `configured_runner` and typed job calls.
-3. Fix `remote_jobs.call` to use `runner.runtime_bindings`, not only HostSpec.runtime.
-4. Close SQLite connections in Outbox.connect using a contextmanager.
-5. Preserve/reconcile an already-written private result if interruption occurs between
-   atomic result creation and outbox SQL update; never re-execute the command.
-6. Finish physical migration of historical A/B/shared modules with compatibility aliases.
-7. Finish enrollment/service packaging, versioned upgrades, examples, schemas and docs.
-8. Restore/add and run the new A/B and adversarial regression tests. The earlier 139-test
-   local development result is historical, not a validation of this reconstructed branch.
-9. Run isolated host validation through Fleet Operator when a fresh relay result is available.
-10. Only then integrate a verified exact revision into main and publish a truthful receipt.
-
-## Safety boundaries
-
-- No paid model API, no Codex smoke, no real email sending/publication merely to test code.
-- No main merge or existing service reload has been requested for this branch yet.
-- The current gateway readiness probe is diagnostic only. Absence of its result does not
-  prove the gateway is online, offline, or that any deployment executed.
-- trusted-local is not an OS security sandbox. Use containers/VMs for untrusted projects.
-- A native tool receipt is caller-observed, not an independently obtained connector proof.
-- Custom app attachment and transport authentication are separate live validation gates.
-- The GitHub relay is owner-operated fallback transport, not a confidential log store.
-- PAIR/Serena/provider adapters are optional, not implicit dependencies or hidden model calls.
+The code is now committed on `feat/ab-products-20260911` through the GitHub connector.
+The earlier claim that no write action was available was incorrect. No main merge
+or deployment was performed. See `CURRENT.md`, `../docs/AB_VALIDATION.md` and
+`../audits/ab-implementation-20260911/` for evidence and remaining live acceptance gates.
+T38, deployments and real services remain paused.
