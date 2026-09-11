@@ -61,7 +61,7 @@ class Projects:
         if resource is None or action not in resource["actions"]:
             raise ContractError("resource/action is not authorized for this project")
         for key, expected in resource.get("bindings", {}).items():
-            if arguments.get(key) != expected:
+            if key not in arguments or digest(arguments[key]) != digest(expected):
                 raise ContractError("operation does not match the bound project resource")
         return resource
 
