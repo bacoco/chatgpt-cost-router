@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789143969.4322271,
+  "host": "macbook",
+  "job_id": "job-ab-final-mcp-20260911-1625",
+  "job_sha256": "7ada927ab78b48b1d852b6cb3f8c01939dad21c2b9b849a87ec8cd530ba583b8",
+  "result": {
+    "argv": [
+      "python3",
+      "-c",
+      "import pathlib,subprocess; h=pathlib.Path.home(); repo=h/'codex-t30-broker-test'; rev='f5da6b6b56ffce6e7378338c3f15d5edc03b0ce0'; root=h/'.local/share/chatgpt-cost-router/ab'; subprocess.run(['git','-C',str(repo),'fetch','origin','feat/ab-products-20260911'],check=True,capture_output=True,timeout=60); source=subprocess.check_output(['git','-C',str(repo),'show',rev+':scripts/ab_gateway_activate.py'],timeout=20); compile(source,'ab_gateway_activate.py','exec'); target=root/'bootstrap'/(rev+'-gateway.py'); target.write_bytes(source); target.chmod(384); py=root/'venvs/10b3ee3e438d57b210b1155e2dbaf19aac9b00db/bin/python'; subprocess.run([str(py),str(target),'--rollout',str(root/'rollout.json'),'--legacy-config',str(h/'.config/chatgpt-cost-router/fleet-operator.json'),'--repo',str(repo)],check=True,timeout=180)"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 1.093,
+    "exit_code": 1,
+    "host": "macbook",
+    "stderr": "fatal: path 'scripts/ab_gateway_activate.py' does not exist in 'f5da6b6b56ffce6e7378338c3f15d5edc03b0ce0'\nTraceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py\", line 424, in check_output\n    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,\n  File \"/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py\", line 528, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['git', '-C', '/Users/loic/codex-t30-broker-test', 'show', 'f5da6b6b56ffce6e7378338c3f15d5edc03b0ce0:scripts/ab_gateway_activate.py']' returned non-zero exit status 128.\n",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789143968.2783659,
+  "status": "FAILED",
+  "version": 1
+}
