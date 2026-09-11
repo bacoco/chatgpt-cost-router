@@ -5,7 +5,6 @@ import selectors
 import signal
 import time
 from operation_contracts.common import number
-from .metrics import sample
 
 
 def _progress(line):
@@ -24,7 +23,12 @@ def _progress(line):
         return None
 
 
-from operation_contracts.owned_process import status as owned_status, signal_group as signal_child
+def signal_child(process, sig):
+    if process.poll() is None:
+        try:
+            os.killpg(process.pid, sig)
+        except ProcessLookupError:
+            pass
 
 
 def _heartbeat(journal, row, token, data):
@@ -48,7 +52,7 @@ def monitor(process, journal, row, token, root, profile):
     stopped, stop_at, last_pulse, last_output = None, 0, 0, None
     progress, buffer, truncated, exit_at = None, b"", False, None
     try:
-        while selector.get_map() or owned_status(process) is None:
+        while selector.get_map() or process.poll() is None:
             now = time.time()
             current = journal.get(row["principal"], row["project"], row["id"])
             if current["data"].get("token") != token or current["state"] == "UNCERTAIN":
@@ -85,14 +89,13 @@ def monitor(process, journal, row, token, root, profile):
                     for line in lines:
                         progress = _progress(line) or progress
             if now-last_pulse >= 1:
-                _heartbeat(journal,row,token,{"heartbeat":now,"last_output_at":last_output,"progress":progress,"resources":sample(process)})
+                _heartbeat(journal,row,token,{"heartbeat":now,"last_output_at":last_output,"progress":progress})
                 last_pulse = now
-            if owned_status(process) is not None:
+            if process.poll() is not None:
                 exit_at = now if exit_at is None else exit_at
                 if now-exit_at > 2 and selector.get_map():
                     stopped = "UNCERTAIN"
                     break
-        signal_child(process, signal.SIGKILL)
         process.wait(timeout=5)
         return {"state":stopped or ("SUCCEEDED" if process.returncode == 0 else "FAILED"),
                 "exit_code":process.returncode, "output_truncated":truncated,
@@ -104,6 +107,6 @@ def monitor(process, journal, row, token, root, profile):
         for stream in (process.stdout, process.stderr):
             if not stream.closed:
                 stream.close()
-        if process.returncode is None:
+        if process.poll() is None:
             signal_child(process, signal.SIGKILL)
             process.wait(timeout=5)
