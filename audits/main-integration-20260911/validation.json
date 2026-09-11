@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "repository": "bacoco/chatgpt-cost-router",
+  "tested_commit": "ed26e5e846652ca3552026677584ab83b1367885",
+  "main_base": "e96562155afd2c91e6dd05b8903746cd85557b20",
+  "generated_at": "2026-09-11T19:10:03.655900+00:00",
+  "python": "3.13.5",
+  "tests_run": 227,
+  "passed": 226,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 1,
+  "successful": true,
+  "source_unchanged_during_tests": true,
+  "seconds": 52.847365,
+  "skip_details": [
+    {
+      "test": "test_gateway_integration_local.GatewayTests.test_actual_mcp_sdk_inprocess_discovery_and_health",
+      "state": "SKIPPED",
+      "seconds": 2.2e-05,
+      "detail": "optional official mcp SDK unavailable in this environment"
+    }
+  ],
+  "verified_git_trees": {
+    "chat_ops": "99bbc0fb722c0c6c77c34df1875c7666b9be84c1",
+    "cost_router": "7dc8f14e17bba721e90dd661f55d18a3c515a235",
+    "examples": "f10c7106129358bc1d058522df6e7c137a653d34",
+    "fleet_operator": "f6f0a0d096b664b8f00cf790a85fb14c25b78ace",
+    "operation_contracts": "5d5c6d8f854f79ad00d08ac4f27af2f2bce0d9b3",
+    "policy": "c915f052ac17f5ab17baaa93ba68644b3f098391",
+    "schemas": "2a205aba3da388ee605e2b3e9e8e692dd150ad11",
+    "scripts": "03258369dcfe33338154259d718d42680bc83f6c",
+    "skills": "6531266c83238adf3978746cfca8ef93c0c8a742",
+    "tests": "78b549fe2738cef381addbf01738e1d581edcfab"
+  },
+  "test_log_sha256": "b3c99ce95fd25c3f717129dc3e25f37fdfe0e6b6a31fd52789c7e09438594e1b",
+  "full_validation_sha256": "71bf934c692e5a345e1f838b7aad17a1ccee420f261354c2da20887cec9cb0ab",
+  "reproduce": "python scripts/validate_ab.py --output /tmp/ab-validation",
+  "method": "Local reconstruction; ten complete directory hashes matched GitHub at tested_commit before merge. The blocked B edit is excluded. Documentation and evidence-only follow-up commits do not change these trees.",
+  "limits": [
+    "Not a GitHub Actions run",
+    "No fresh deployment or live connector acceptance",
+    "Official MCP SDK not installed; startup fixtures do not replace live SDK validation"
+  ],
+  "unmerged_pr": 13,
+  "blocked_file": "fleet_operator/jobs/service.py"
+}
