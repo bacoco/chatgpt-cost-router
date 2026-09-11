@@ -14,7 +14,7 @@ try:
     for part in parts[:-1]:
         new=os.open(part,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW,dir_fd=fd)
         os.close(fd);fd=new
-    item=os.open(parts[-1],os.O_RDONLY|os.O_NOFOLLOW,dir_fd=fd)
+    item=os.open(parts[-1],os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK,dir_fd=fd)
     try:
         if not stat.S_ISREG(os.fstat(item).st_mode):
             raise SystemExit(2)
@@ -29,6 +29,29 @@ finally:os.close(fd)
 
 
 def safe_environment(environment):
-    blocked = {"OPENAI_API_KEY","ANTHROPIC_API_KEY","AZURE_OPENAI_API_KEY","GOOGLE_API_KEY",
-               "PYTHONPATH","PYTHONHOME","NODE_OPTIONS","BASH_ENV","ENV","LD_PRELOAD","DYLD_INSERT_LIBRARIES"}
-    return {key:value for key,value in environment.items() if key not in blocked and not key.startswith("GIT_CONFIG")}
+    allowed = {"HOME", "USER", "LOGNAME", "LANG", "LC_ALL", "TZ", "SSH_AUTH_SOCK", "XDG_RUNTIME_DIR"}
+    return {"PATH":"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/homebrew/bin",
+            **{key:value for key,value in environment.items() if key in allowed}}
+
+
+EXEC_HELPER = r'''import os,sys,json
+argv,cwd,roots=json.loads(sys.argv[1])
+if cwd is not None:
+    matches=[r for r in roots if cwd==r or cwd.startswith(r.rstrip('/')+'/')]
+    if not matches:raise SystemExit(2)
+    root=max(matches,key=len)
+    relative=os.path.relpath(cwd,root)
+    if relative=='..' or relative.startswith('../'):raise SystemExit(2)
+    fd=os.open(os.path.realpath(root),os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW)
+    try:
+        for part in relative.split('/'):
+            if part=='.':continue
+            child=os.open(part,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW,dir_fd=fd)
+            os.close(fd);fd=child
+        os.fchdir(fd)
+    finally:os.close(fd)
+allowed={'HOME','USER','LOGNAME','LANG','LC_ALL','TZ','SSH_AUTH_SOCK','XDG_RUNTIME_DIR'}
+env={k:v for k,v in os.environ.items() if k in allowed}
+env['PATH']='/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/homebrew/bin'
+os.execvpe(argv[0],argv,env)
+'''
