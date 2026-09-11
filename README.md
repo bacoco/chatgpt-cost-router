@@ -16,7 +16,7 @@ router remains a decision-support component, not either product's complete scope
 > `feat/ab-products-20260911` at `cd897ddf3856ffdabef68ba1a71b43dd99efad46`.
 > The delivery receipt distinguishes tests, simulations and unexecuted live gates.
 > Source, tests and documentation are committed through the GitHub connector.
-> Fresh local revalidation: **182 passed, zero failures/errors, one SDK test skipped**.
+> Fresh local revalidation: **200 passed, zero failures/errors, one SDK test skipped**.
 > **No main merge or deployment. T38 and real machine jobs remain paused.**
 
 Start with [usage](docs/AB_USAGE.md), [architecture](docs/ARCHITECTURE.md),

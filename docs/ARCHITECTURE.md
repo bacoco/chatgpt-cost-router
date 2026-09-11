@@ -65,8 +65,8 @@ not invented metrics. Health includes queue counts, capacity, load and free disk
 ## Gateway and relay
 
 The public MCP builder uses `configured_runner`, not the broader historical runner.
-The command policy accepts a small bounded read set and fast-forward Git pull;
-ordinary computation uses a project-bound profile. Git hook/fsmonitor/pager/config
+The command policy accepts only a small bounded inspection set. Raw mutation,
+including Git pull, is blocked; changes require a project-bound profile. Git hook/fsmonitor/pager/config
 escape options, relative executables and raw destructive commands are rejected.
 Filesystem helper code is fixed, component-confined and does not follow symlinks.
 Operator-owned repository metadata and local binaries remain trusted.

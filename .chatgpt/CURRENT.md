@@ -7,7 +7,7 @@ Verified pre-delivery head: `cd897ddf3856ffdabef68ba1a71b43dd99efad46`.
 Core A/B implementation, examples and regression tests have been committed on the
 feature branch using the actual GitHub write connector. The earlier ZIP-only delivery
 and assertion that writes were unavailable were incorrect. No PR, main merge or
-deployment was performed. Fresh local revalidation: 183 tests, 182 passed, no failures
+deployment was performed. Fresh local revalidation: 201 tests, 200 passed, no failures
 or errors, one optional official MCP SDK test skipped. Evidence is recorded under
 `audits/ab-implementation-20260911/`; live acceptance is separate from code delivery.
 

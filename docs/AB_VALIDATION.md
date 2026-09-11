@@ -21,8 +21,12 @@ and the implementation was committed on `feat/ab-products-20260911` starting fro
 `cd897ddf3856ffdabef68ba1a71b43dd99efad46`. No main merge, service reload, workflow
 dispatch, scheduler modification or job on the owner's fleet was performed.
 
-A fresh local execution of `scripts/validate_ab.py` ran 183 tests: 182 passed,
-zero failures, zero errors, one optional official SDK test skipped. The test receipt
+A fresh local execution of `scripts/validate_ab.py` ran 201 tests: 200 passed,
+zero failures, zero errors, one optional official SDK test skipped. This final run
+includes the 18 tests from the three interleaved commits identified in the delivery
+receipt; their security fixes were integrated without discarding lifecycle/recovery
+features. The verified code snapshot is `93944d8f6b7a973946d54cc6d0d4bdb77d4e1870`.
+The test receipt
 and publication evidence under `../audits/ab-implementation-20260911/` distinguish
 local validation from source delivery and from unperformed live acceptance.
 
@@ -30,8 +34,9 @@ local validation from source delivery and from unperformed live acceptance.
 
 `scripts/validate_ab.py` writes a test-by-test JSON receipt and a raw unittest log.
 It records runtime/dependency versions, source hashes, duration, failures and skips.
-The final bundle also includes the local demo result, wheel-install smoke checks,
-patch round-trip checks and content hashes. A checksum is integrity evidence, not
+The earlier bundle included local demo, wheel-install and patch round-trip checks.
+It is historical and is superseded by the verified GitHub source; those packaging
+receipts are not presented as tests of the final combined code. A checksum is integrity evidence, not
 proof that the tested machine matches a user's production fleet.
 
 Baseline/regression unit tests include mocked legacy providers/SSH and pure policy
@@ -51,7 +56,7 @@ invoke a provider/model, launch user-machine jobs or reload a real service.
 | Loopback MCP HTTP | Actual HTTP discovery/call/SSE exchanges with a local fixture server. |
 | MCP registration recorder | Checks public wiring and typed callable behavior; not execution of the official SDK. |
 | Official MCP SDK | A separate optional in-process test. SKIPPED when the pinned package is unavailable; never reported as PASS by the recorder test. |
-| Packaging | Core wheel built offline and imported outside the source checkout, including schemas/policy. |
+| Packaging | Historical pre-integration wheel smoke only; not claimed as validation of the final combined source. |
 | Live connector workflow | NOT RUN. Requires actual tool bindings, account permission, authorization and read-back. |
 | Real remote fleet / macOS | NOT RUN. No assertion about current services, connectivity or deployments. |
 | Container engine isolation | NOT RUN on an actual engine. Command/policy/owned-ID cleanup unit tests are not an OS containment certificate. |
