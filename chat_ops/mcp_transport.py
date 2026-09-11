@@ -4,6 +4,7 @@ Supports JSON replies and correlated JSON-RPC replies in an SSE response stream.
 Endpoints, account bindings, tool maps and optional headers are operator-owned.
 """
 import json
+import time
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import urlparse
@@ -21,6 +22,8 @@ class Client:
         fields(config,("url","account_ref","actions"),("headers_file",))
         parsed = urlparse(config["url"])
         loopback = parsed.hostname in {"127.0.0.1","localhost","::1"}
+        if not parsed.hostname:
+            raise ContractError("MCP endpoint requires a hostname")
         if parsed.username or parsed.password or parsed.query or parsed.fragment:
             raise ContractError("MCP URL cannot embed credentials/query/fragment")
         if parsed.scheme != "https" and not (parsed.scheme == "http" and loopback):
@@ -54,6 +57,7 @@ class Client:
         if self.session:
             headers["MCP-Session-Id"] = self.session
         request = Request(self.config["url"],data=json.dumps(body).encode(),headers=headers,method="POST")
+        deadline = time.monotonic()+30
         with self.opener.open(request,timeout=30) as response:
             self.session = response.headers.get("MCP-Session-Id",self.session)
             if notify:
@@ -61,6 +65,8 @@ class Client:
             if "text/event-stream" in response.headers.get("Content-Type",""):
                 total, data_lines = 0, []
                 while True:
+                    if time.monotonic() >= deadline:
+                        raise ContractError("MCP response exceeded its wall-clock deadline")
                     line = response.readline(65537)
                     total += len(line)
                     if total > 1_048_576 or not line:
@@ -129,9 +135,17 @@ class Client:
 
 class MCPTransport:
     def __init__(self, endpoints):
-        self.clients = {connector:Client(config) for connector,config in endpoints.items()}
+        self.clients = {}
+        for name, config in endpoints.items():
+            connector = config.get("connector",name)
+            client = Client({key:val for key,val in config.items() if key != "connector"})
+            key = (connector,config["account_ref"])
+            if key in self.clients:
+                raise ContractError("duplicate connector/account endpoint")
+            self.clients[key] = client
 
     def invoke(self, invocation):
-        if invocation["connector"] not in self.clients:
+        key = (invocation["connector"],invocation["account_ref"])
+        if key not in self.clients:
             raise ContractError("no direct MCP adapter; use the native Chat tool driver")
-        return self.clients[invocation["connector"]].call(invocation)
+        return self.clients[key].call(invocation)

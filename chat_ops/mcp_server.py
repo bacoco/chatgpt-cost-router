@@ -1,4 +1,7 @@
 """Private A MCP app. The native Chat client retains its existing connectors."""
+import uuid
+from typing import Any
+from operation_contracts.common import identifier
 from operation_contracts.mcp_runtime import new_server, annotations, serve
 from .config import configured
 
@@ -10,8 +13,16 @@ def build_server(path):
         "next returns a single native tool instruction; it does not call another model. "
         "Never call record with invented tool output. Recorded native evidence is caller-observed.")
 
-    def engine():
-        return configured(path)[0]
+    def engine(session_id=None):
+        e = configured(path)[0]
+        if session_id is not None:
+            e.session = identifier(session_id,"session")
+        return e
+
+    @server.tool(annotations=annotations(False))
+    def chat_begin_session() -> dict:
+        return {"session_id":uuid.uuid4().hex,"surface":engine().surface,
+                "instruction":"Keep this identifier in this conversation only; observe its actual tools afresh."}
 
     @server.tool(annotations=annotations(True))
     def chat_projects() -> dict:
@@ -23,8 +34,8 @@ def build_server(path):
         return {"actions":engine().catalog.list()}
 
     @server.tool(annotations=annotations(False))
-    def chat_observe_capability(project_id: str, resource: str, action: str, evidence: dict) -> dict:
-        e = engine()
+    def chat_observe_capability(project_id: str, resource: str, action: str, evidence: dict, session_id: str) -> dict:
+        e = engine(session_id)
         e.projects.project(e.principal,project_id)
         e.capabilities.observe(e.principal,project_id,resource,action,e.surface,e.session,evidence)
         return {"recorded":True,"source":"caller-observed-discovery"}
@@ -38,16 +49,16 @@ def build_server(path):
         return engine().approve(project_id,run_id,step_id)
 
     @server.tool(annotations=annotations(False))
-    def chat_next(project_id: str, run_id: str) -> dict:
-        return engine().next(project_id,run_id)
+    def chat_next(project_id: str, run_id: str, session_id: str) -> dict:
+        return engine(session_id).next(project_id,run_id)
 
     @server.tool(annotations=annotations(False))
-    def chat_record(project_id: str, run_id: str, step_id: str, token: str, output: dict, error: bool = False) -> dict:
-        return engine().record(project_id,run_id,step_id,token,output,error=error)
+    def chat_record(project_id: str, run_id: str, step_id: str, token: str, output: Any, session_id: str, error: bool = False) -> dict:
+        return engine(session_id).record(project_id,run_id,step_id,token,output,error=error)
 
     @server.tool(annotations=annotations(False))
-    def chat_reconcile(project_id: str, run_id: str, step_id: str) -> dict:
-        return engine().reconcile(project_id,run_id,step_id)
+    def chat_reconcile(project_id: str, run_id: str, step_id: str, session_id: str) -> dict:
+        return engine(session_id).reconcile(project_id,run_id,step_id)
 
     @server.tool(annotations=annotations(True))
     def chat_status(project_id: str, run_id: str) -> dict:

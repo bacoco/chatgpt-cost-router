@@ -99,7 +99,7 @@ class Operations:
             if kind == "call" and self.catalog.get(step["action"])["confirmation"] and not self.journal.approved(id_, step["id"], exact):
                 return {"run_id":id_, "state":"AWAITING_APPROVAL", "step":step["id"], "invocation":invocation}
             token = uuid.uuid4().hex
-            data = {**effect["data"], "pending":{"kind":kind, "token":token, "invocation":invocation}}
+            data = {**effect["data"], "pending":{"kind":kind, "token":token, "invocation":invocation, "session":self.session, "surface":self.surface}}
             if not self.journal.effect_transition(id_, step["id"], {state}, "PENDING", data):
                 return {"run_id":id_, "state":"AWAITING_RESULT", "redispatch_allowed":False}
             return {"run_id":id_, "state":"INVOKE_TOOL", "step":step["id"], "token":token, "kind":kind,

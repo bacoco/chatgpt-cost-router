@@ -29,13 +29,18 @@ def validate_workflow(value, catalog):
             if key not in step:
                 continue
             check = step[key]
-            fields(check, ("action", "arguments", "expect"))
+            fields(check, ("action", "arguments", "expect"), ("recover_output",) if key == "verify" else ())
             check_spec = catalog.get(check["action"])
             if not check_spec["read_only"] or check_spec["extra_model"]:
                 raise ContractError("preflight/verification must be non-model read actions")
             if not isinstance(check["arguments"], dict) or not isinstance(check["expect"], dict) or not check["expect"]:
                 raise ContractError("verification requires explicit arguments and expectations")
-            _references(check, names | ({step["id"]} if key == "verify" else set()))
+            _references({"arguments":check["arguments"], "expect":check["expect"]},
+                        names | ({step["id"]} if key == "verify" else set()))
+            if "recover_output" in check:
+                if not isinstance(check["recover_output"], dict):
+                    raise ContractError("recovered output must be an explicit object mapping")
+                _references(check["recover_output"], {"verification"})
         if not spec["read_only"] and "verify" not in step:
             raise ContractError("write/send/publish requires read-back verification")
         names.add(step["id"])

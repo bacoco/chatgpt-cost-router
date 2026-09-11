@@ -10,7 +10,7 @@ READS = {
     "contacts": "read search",
     "documents": "read search",
     "serena": "read symbols references",
-    "fleet": "status logs result profiles nodes",
+    "fleet": "status logs result artifact profiles nodes health events",
 }
 WRITES = {
     "gmail": "draft.create send draft.send trash",
@@ -20,7 +20,7 @@ WRITES = {
     "contacts": "update",
     "documents": "write",
     "serena": "edit",
-    "fleet": "submit cancel",
+    "fleet": "submit start cancel reconcile",
 }
 
 

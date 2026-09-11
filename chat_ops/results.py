@@ -11,6 +11,8 @@ def record(engine, project, id_, step_id, token, output, *, error=False, evidenc
         raise ContractError("no matching pending tool invocation")
     step = next(step for step in row["request"]["steps"] if step["id"] == step_id)
     pending = effect["data"]["pending"]
+    if pending.get("session",engine.session) != engine.session or pending.get("surface",engine.surface) != engine.surface:
+        raise ContractError("pending invocation belongs to another conversation context")
     data = {key:val for key,val in effect["data"].items() if key != "pending"}
     data.update(evidence_source=evidence_source, tool_result_digest=digest(output))
     parent_state = None
@@ -27,6 +29,10 @@ def record(engine, project, id_, step_id, token, output, *, error=False, evidenc
             new = "READY_CALL" if passed else "BLOCKED"
         else:
             new = "VERIFIED" if passed else "UNCERTAIN"
+            if passed and "output" not in data and "recover_output" in step["verify"]:
+                recovered = resolve(step["verify"]["recover_output"], {"verification":output})
+                no_credentials(recovered)
+                data.update(output=recovered, output_recovered_from_verification=True)
         data[pending["kind"]+"_digest"] = digest(output)
         data["verification_passed"] = passed
         if not passed:
