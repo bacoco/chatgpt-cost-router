@@ -1,0 +1,297 @@
+--- a/cost_router/workers.py
++++ b/cost_router/workers.py
+@@ -10,6 +10,8 @@
+ from pathlib import Path
+ from typing import Callable, Iterable, Union
+ 
++from .worker_health import status as worker_health_status
++
+ 
+ class WorkerError(ValueError):
+     """Raised when a worker registry or invocation is invalid."""
+@@ -88,9 +90,20 @@
+     return env
+ 
+ 
+-def probe(worker: Worker, *, run: Run = subprocess.run, codex_bin: str = "codex") -> dict:
++def probe(worker: Worker, *, run: Run = subprocess.run, codex_bin: str = "codex",
++          health_state_path: str | os.PathLike[str] | None = None) -> dict:
+     if not worker.enabled:
+-        return {"worker": worker.id, "ready": False, "reason": "disabled"}
++        return {"worker": worker.id, "ready": False, "reason": "disabled", "auth": "unavailable"}
++    try:
++        quarantined = worker_health_status(worker.id, path=health_state_path)
++    except (OSError, ValueError):
++        return {"worker": worker.id, "ready": False, "auth": "unavailable",
++                "reason": "health_state_invalid"}
++    if quarantined and quarantined.get("status") == "quarantined":
++        return {
++            "worker": worker.id, "ready": False, "auth": "unavailable",
++            "reason": quarantined.get("reason", "quarantined"),
++        }
+     result = run(
+         [codex_bin, "login", "status"],
+         capture_output=True,
+@@ -117,6 +130,7 @@
+     *,
+     run: Run = subprocess.run,
+     codex_bin: str = "codex",
++    health_state_path: str | os.PathLike[str] | None = None,
+ ) -> tuple[Worker, list[dict]]:
+     candidates = list(workers)
+     if requested != "auto":
+@@ -126,7 +140,7 @@
+     candidates = sorted((w for w in candidates if w.enabled), key=_rank)
+     probes = []
+     for worker in candidates:
+-        status = probe(worker, run=run, codex_bin=codex_bin)
++        status = probe(worker, run=run, codex_bin=codex_bin, health_state_path=health_state_path)
+         probes.append(status)
+         if status["ready"]:
+             return worker, probes
+--- a/tests/test_workers.py
++++ b/tests/test_workers.py
+@@ -7,6 +7,7 @@
+ from unittest.mock import patch
+ 
+ from cost_router.workers import Worker, WorkerError, load_registry, probe, run_task, select_worker
++from cost_router.worker_health import quarantine
+ 
+ 
+ class FakeRun:
+@@ -46,6 +47,18 @@
+         self.assertEqual(fake.calls[0][1]["env"]["CODEX_HOME"], expected)
+         self.assertNotIn("OPENAI_API_KEY", fake.calls[0][1]["env"])
+ 
++
++    def test_quarantined_worker_is_not_ready_even_if_login_status_would_pass(self):
++        worker = Worker("B", "openai", "codex-exec", "/B")
++        fake = FakeRun({"/B": True})
++        with tempfile.TemporaryDirectory() as folder:
++            health = Path(folder) / "health.json"
++            quarantine("B", path=health)
++            result = probe(worker, run=fake, health_state_path=health)
++            self.assertFalse(result["ready"])
++            self.assertEqual(result["reason"], "auth_failure")
++            self.assertEqual(fake.calls, [])
++
+     def test_auto_selection_falls_back_to_ready_worker(self):
+         a = Worker("A", "openai", "codex-exec", "/A", priority=10)
+         b = Worker("B", "openai", "codex-exec", "/B", priority=20)
+--- a/cost_router/remote_worker.py
++++ b/cost_router/remote_worker.py
+@@ -14,6 +14,7 @@
+ 
+ from .worker_budget import WorkerBudget, load_budget_state, select_economic_worker
+ from .workers import Worker, WorkerError, load_registry, probe, run_task, select_worker
++from .worker_health import auth_failure_reason, clear as clear_worker_health, quarantine as quarantine_worker
+ 
+ 
+ class RemoteWorkerError(ValueError):
+@@ -97,11 +98,12 @@
+     return {"worker": worker, "prompt": prompt}
+ 
+ 
+-def list_remote_workers(*, policy: RemotePolicy, registry_path: str, codex_bin: str = "codex", run=None) -> list[dict]:
++def list_remote_workers(*, policy: RemotePolicy, registry_path: str, codex_bin: str = "codex", run=None,
++                        health_state_path: str | os.PathLike[str] | None = None) -> list[dict]:
+     workers = _allowed_workers(load_registry(registry_path), policy)
+     result = []
+     for worker in workers:
+-        kwargs = {"codex_bin": codex_bin}
++        kwargs = {"codex_bin": codex_bin, "health_state_path": health_state_path}
+         if run is not None:
+             kwargs["run"] = run
+         state = probe(worker, **kwargs)
+@@ -110,14 +112,15 @@
+ 
+ 
+ def dispatch_remote(payload: Mapping[str, str], *, policy: RemotePolicy, registry_path: str,
+-                    budget_state_path: str | None = None, codex_bin: str = "codex", run=None, clock=None) -> dict:
++                    budget_state_path: str | None = None, codex_bin: str = "codex", run=None, clock=None,
++                    health_state_path: str | os.PathLike[str] | None = None) -> dict:
+     """Dispatch one bounded remote prompt to one locally isolated worker."""
+     workers = _allowed_workers(load_registry(registry_path), policy)
+     requested = payload["worker"]
+     if requested != "auto" and requested not in policy.allowed_workers:
+         raise RemoteWorkerError("requested worker is not authorized for remote use")
+ 
+-    select_kwargs = {"codex_bin": codex_bin}
++    select_kwargs = {"codex_bin": codex_bin, "health_state_path": health_state_path}
+     if run is not None:
+         select_kwargs["run"] = run
+     if budget_state_path:
+@@ -136,6 +139,14 @@
+             task_kwargs["clock"] = clock
+         result = run_task(worker, payload["prompt"], folder, ignore_user_config=True, **task_kwargs)
+ 
++    combined = (result.get("stderr") or "") + "\n" + (result.get("stdout") or "")
++    if result.get("exit_code") == 0:
++        clear_worker_health(worker.id, path=health_state_path)
++    else:
++        reason = auth_failure_reason(combined)
++        if reason:
++            quarantine_worker(worker.id, path=health_state_path, reason=reason)
++
+     return {
+         "worker": result["worker"],
+         "provider": result["provider"],
+--- a/tests/test_remote_worker.py
++++ b/tests/test_remote_worker.py
+@@ -12,6 +12,7 @@
+     parse_request_body,
+     tailscale_identity,
+ )
++from cost_router.worker_health import status as worker_health_status
+ 
+ 
+ class FakeRun:
+@@ -102,6 +103,39 @@
+             self.assertIn("--ignore-user-config", exec_command)
+             self.assertEqual(exec_command[exec_command.index("--sandbox") + 1], "read-only")
+ 
++
++    def test_actual_auth_failure_quarantines_worker_and_hides_ready_state(self):
++        with tempfile.TemporaryDirectory() as root:
++            reg = Path(root) / "workers.json"
++            registry(reg)
++            health = Path(root) / "health.json"
++
++            class AuthFailRun(FakeRun):
++                def __call__(self, command, **kwargs):
++                    self.calls.append((command, kwargs))
++                    if command[1:3] == ["login", "status"]:
++                        return subprocess.CompletedProcess(command, 0, "Logged in using ChatGPT\n", "")
++                    return subprocess.CompletedProcess(
++                        command, 1, "",
++                        "401 Unauthorized: refresh_token_reused; Please log out and sign in again.\n",
++                    )
++
++            fake = AuthFailRun({"/B"})
++            result = dispatch_remote(
++                {"worker": "B", "prompt": "hi"},
++                policy=self.policy(root), registry_path=str(reg), run=fake,
++                health_state_path=health,
++            )
++            self.assertEqual(result["exit_code"], 1)
++            self.assertEqual(worker_health_status("B", path=health)["status"], "quarantined")
++            calls_before = len(fake.calls)
++            listing = list_remote_workers(
++                policy=self.policy(root), registry_path=str(reg), run=fake,
++                health_state_path=health,
++            )
++            self.assertEqual(listing, [{"worker": "B", "ready": False, "auth": "unavailable"}])
++            self.assertEqual(len(fake.calls), calls_before)
++
+     def test_policy_unknown_worker_fails_closed(self):
+         with tempfile.TemporaryDirectory() as root:
+             reg = Path(root) / "workers.json"
+--- a/cost_router/worker_budget.py
++++ b/cost_router/worker_budget.py
+@@ -2,6 +2,7 @@
+ from __future__ import annotations
+ 
+ import json
++import os
+ from dataclasses import dataclass
+ from pathlib import Path
+ from typing import Iterable, Mapping, Union
+@@ -97,6 +98,7 @@
+     *,
+     run=None,
+     codex_bin: str = "codex",
++    health_state_path: str | os.PathLike[str] | None = None,
+ ):
+     all_workers = list(workers)
+     if requested != "auto":
+@@ -114,7 +116,7 @@
+         raise WorkerError("no worker eligible by budget state")
+     probes = []
+     for worker in ordered:
+-        kwargs = {"codex_bin": codex_bin}
++        kwargs = {"codex_bin": codex_bin, "health_state_path": health_state_path}
+         if run is not None:
+             kwargs["run"] = run
+         status = probe(worker, **kwargs)
+--- /dev/null
++++ b/cost_router/worker_health.py
+@@ -0,0 +1,79 @@
++"""Durable local health/quarantine state for model workers.
++
++A cheap login-status probe can be stale or optimistic. Actual execution failures
++that clearly indicate broken authentication quarantine the worker until an
++operator explicitly clears it after re-authentication.
++"""
++from __future__ import annotations
++
++import json
++import os
++import re
++import time
++from pathlib import Path
++from typing import Callable, Mapping
++
++
++DEFAULT_HEALTH_STATE = "~/.local/state/chatgpt-cost-router/worker-health.json"
++AUTH_ERROR_PATTERNS = tuple(re.compile(p, re.IGNORECASE) for p in (
++    r"refresh[_ ]token[_ ]reused",
++    r"refresh token has already been used",
++    r"access token could not be refreshed",
++    r"could not parse your authentication token",
++    r"\b401\s+unauthorized\b",
++    r"auth error:\s*401",
++    r"please log out and sign in again",
++))
++
++
++def health_path(path: str | os.PathLike[str] | None = None) -> Path:
++    return Path(path or DEFAULT_HEALTH_STATE).expanduser()
++
++
++def _load(path: Path) -> dict:
++    if not path.exists():
++        return {"version": 1, "workers": {}}
++    data = json.loads(path.read_text())
++    if data.get("version") != 1 or not isinstance(data.get("workers"), dict):
++        raise ValueError("invalid worker health state")
++    return data
++
++
++def _save(path: Path, data: Mapping) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(dict(data), indent=2, sort_keys=True) + "\n")
++    os.chmod(tmp, 0o600)
++    tmp.replace(path)
++    os.chmod(path, 0o600)
++
++
++def auth_failure_reason(text: str) -> str | None:
++    for pattern in AUTH_ERROR_PATTERNS:
++        if pattern.search(text or ""):
++            return "auth_failure"
++    return None
++
++
++def quarantine(worker_id: str, *, path: str | os.PathLike[str] | None = None,
++               reason: str = "auth_failure", clock: Callable[[], float] = time.time) -> dict:
++    p = health_path(path)
++    data = _load(p)
++    record = {"status": "quarantined", "reason": reason, "since_unix": float(clock())}
++    data["workers"][worker_id] = record
++    _save(p, data)
++    return record
++
++
++def clear(worker_id: str, *, path: str | os.PathLike[str] | None = None) -> bool:
++    p = health_path(path)
++    data = _load(p)
++    existed = worker_id in data["workers"]
++    if existed:
++        data["workers"].pop(worker_id, None)
++        _save(p, data)
++    return existed
++
++
++def status(worker_id: str, *, path: str | os.PathLike[str] | None = None) -> dict | None:
++    return _load(health_path(path))["workers"].get(worker_id)
