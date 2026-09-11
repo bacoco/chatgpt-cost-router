@@ -1,0 +1,29 @@
+{
+  "action": "read_file",
+  "finished_at_unix": 1789143118.420136,
+  "host": "macstudio",
+  "job_id": "job-ab-smoke-stderr-20260911-1610",
+  "job_sha256": "1f7c354057a090cbf5d05603d23d4866d6bd68bd4cca24c0597156bc97968a75",
+  "result": {
+    "argv": [
+      "head",
+      "-c",
+      "8192",
+      "--",
+      "/Users/macstudio/.local/share/chatgpt-cost-router/ab/node-state/runs/f112ecf5f4414b5aab03032031249ed0/stderr.log"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 0.281,
+    "exit_code": 0,
+    "host": "macstudio",
+    "path": "/Users/macstudio/.local/share/chatgpt-cost-router/ab/node-state/runs/f112ecf5f4414b5aab03032031249ed0/stderr.log",
+    "stderr": "",
+    "stderr_truncated": false,
+    "stdout": "",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789143118.075906,
+  "status": "PASS",
+  "version": 1
+}
