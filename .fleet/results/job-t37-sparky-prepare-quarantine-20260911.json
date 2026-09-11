@@ -1,0 +1,26 @@
+{
+  "action": "exec_write",
+  "finished_at_unix": 1789097298.52002,
+  "host": "sparky",
+  "job_id": "job-t37-sparky-prepare-quarantine-20260911",
+  "job_sha256": "7a3b4eaa3babea218c02e42e42a7a8a8df7a2fcc7dcd9ef6a93d4164a7f45a70",
+  "result": {
+    "argv": [
+      "bash",
+      "-lc",
+      "set -euo pipefail; cd /home/baconnier/chatgpt-cost-router; git pull --ff-only origin main; bash scripts/stop_mesh_node.sh || true; bash scripts/stop_remote_worker.sh || true; python3 -c \"from cost_router.worker_health import clear; clear('openai-A')\"; export PATH=/home/baconnier/.nvm/versions/node/v20.20.0/bin:$PATH; export COST_ROUTER_ALLOWED_TAILSCALE_USERS=\"$(tailscale status --json | python3 -c 'import json,sys; d=json.load(sys.stdin); uid=str(d[\\\"Self\\\"][\\\"UserID\\\"]); print(d[\\\"User\\\"][uid][\\\"LoginName\\\"])')\"; export COST_ROUTER_REMOTE_WORKERS=openai-A; bash scripts/start_remote_worker.sh"
+    ],
+    "cwd": null,
+    "elapsed_seconds": 1.422,
+    "exit_code": 1,
+    "host": "sparky",
+    "stderr": "From https://github.com/bacoco/chatgpt-cost-router\n * branch            main       -> FETCH_HEAD\n   c473dcc..d228bb0  main       -> origin/main\nerror: failed to remove web serve: handler does not exist\n\ntry `tailscale serve --help` for usage info\n  File \"<string>\", line 1\n    import json,sys; d=json.load(sys.stdin); uid=str(d[\\\"Self\\\"][\\\"UserID\\\"]); print(d[\\\"User\\\"][uid][\\\"LoginName\\\"])\n                                                        ^\nSyntaxError: unexpected character after line continuation character\nscripts/start_remote_worker.sh: line 9: COST_ROUTER_ALLOWED_TAILSCALE_USERS: Set COST_ROUTER_ALLOWED_TAILSCALE_USERS to the exact Tailscale login(s) allowed to use this worker\n",
+    "stderr_truncated": false,
+    "stdout": "Updating c473dcc..d228bb0\nFast-forward\n .chatgpt/CURRENT.md                                | 10 +--\n .../T36_TWO_NODE_MESH_LIVE_2026-09-10.md           | 57 ++++++++++++++++\n cost_router/remote_worker.py                       | 19 ++++--\n cost_router/worker_budget.py                       |  4 +-\n cost_router/worker_health.py                       | 79 ++++++++++++++++++++++\n cost_router/workers.py                             | 20 +++++-\n docs/VALIDATION_STATUS_2026-09-10.md               | 25 +++++--\n fleet_operator/core.py                             | 52 ++++++++++++++\n tests/test_fleet_operator.py                       | 41 +++++++++++\n tests/test_remote_worker.py                        | 34 ++++++++++\n tests/test_workers.py                              | 13 ++++\n 11 files changed, 336 insertions(+), 18 deletions(-)\n create mode 100644 .chatgpt/test-receipts/T36_TWO_NODE_MESH_LIVE_2026-09-10.md\n create mode 100644 cost_router/worker_health.py\n",
+    "stdout_truncated": false,
+    "timed_out": false
+  },
+  "started_at_unix": 1789097297.030255,
+  "status": "FAILED",
+  "version": 1
+}
