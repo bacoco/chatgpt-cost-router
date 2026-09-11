@@ -17,6 +17,12 @@ class AccountBudgets:
                 settled INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(account,operation));
             """)
 
+        with journal.transaction() as db:
+            columns = {row[1] for row in db.execute("PRAGMA table_info(account_reservations)")}
+            if "reserved_units" not in columns:
+                db.execute("ALTER TABLE account_reservations ADD COLUMN reserved_units INTEGER")
+                db.execute("UPDATE account_reservations SET reserved_units=units WHERE settled=0")
+
     def observe(self, account_ref, limit_units, expires, evidence_ref, *, now=None):
         identifier(account_ref)
         identifier(evidence_ref, "budget evidence reference")
@@ -33,10 +39,12 @@ class AccountBudgets:
         integer(units, 1, 1_000_000_000)
         now = time.time() if now is None else now
         with self.journal.transaction() as db:
-            old = db.execute("SELECT units FROM account_reservations WHERE account=? AND operation=?",
+            old = db.execute("SELECT units,reserved_units,settled FROM account_reservations WHERE account=? AND operation=?",
                              (account_ref,operation_id)).fetchone()
             if old:
-                if old["units"] != units:
+                if old["reserved_units"] is None:
+                    raise ContractError("historical settled reservation has no original amount; no new reservation allowed")
+                if old["reserved_units"] != units:
                     raise ContractError("reservation changed")
                 return
             quota = db.execute("SELECT * FROM account_allowances WHERE account=?", (account_ref,)).fetchone()
@@ -46,8 +54,8 @@ class AccountBudgets:
                               (account_ref,)).fetchone()[0]
             if used+units > quota["units"]:
                 raise ContractError("account budget exhausted across projects/nodes")
-            db.execute("INSERT INTO account_reservations(account,operation,units) VALUES(?,?,?)",
-                       (account_ref,operation_id,units))
+            db.execute("INSERT INTO account_reservations(account,operation,units,reserved_units) VALUES(?,?,?,?)",
+                       (account_ref,operation_id,units,units))
 
     def settle(self, account_ref, operation_id, actual_units):
         integer(actual_units, 0, 1_000_000_000)

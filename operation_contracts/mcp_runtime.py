@@ -33,7 +33,9 @@ def serve(builder, argv=None, default_port=8812):
     if args.transport == "stdio":
         server.run(transport="stdio")
         return
-    if hasattr(server,"settings"):
+    settings = getattr(server, "settings", None)
+    known = getattr(type(settings), "model_fields", getattr(type(settings), "__fields__", {}))
+    if "port" in known or hasattr(settings, "port"):
         server.settings.host = "127.0.0.1"
         server.settings.port = args.port
         server.settings.stateless_http = True

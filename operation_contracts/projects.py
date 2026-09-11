@@ -1,7 +1,7 @@
 """Project grants are operator policy, never permissions granted by repository text."""
 from __future__ import annotations
 from copy import deepcopy
-from .common import ContractError, fields, identifier, load, digest
+from .common import ContractError, fields, identifier, load, digest, canonical
 
 
 class Projects:
@@ -61,7 +61,7 @@ class Projects:
         if resource is None or action not in resource["actions"]:
             raise ContractError("resource/action is not authorized for this project")
         for key, expected in resource.get("bindings", {}).items():
-            if arguments.get(key) != expected:
+            if key not in arguments or canonical(arguments[key]) != canonical(expected):
                 raise ContractError("operation does not match the bound project resource")
         return resource
 
