@@ -35,7 +35,8 @@ def safe_environment(environment):
 
 
 EXEC_HELPER = r'''import os,sys,json
-argv,cwd,roots=json.loads(sys.argv[1])
+cwd,roots=json.loads(sys.argv[1])
+argv=sys.argv[2:]
 if cwd is not None:
     matches=[r for r in roots if cwd==r or cwd.startswith(r.rstrip('/')+'/')]
     if not matches:raise SystemExit(2)

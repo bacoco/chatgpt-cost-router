@@ -6,7 +6,7 @@ SYSTEM_DIRS = {'/bin', '/usr/bin', '/sbin', '/usr/sbin', '/usr/local/bin', '/opt
 VERSIONS = {'python', 'python3', 'node', 'npm', 'npx', 'brew', 'codex', 'claude'}
 SAFE_FLAGS = {
     'uname': {'-a','-s','-r','-v','-m','-n','-p','-i','-o'},
-    'hostname': set(), 'whoami': set(), 'id': {'-u','-g','-G','-n'},
+    'hostname': set(), 'whoami': set(), 'id': {'-u','-g','-G','-n','-un','-gn'},
     'sw_vers': {'-productName','-productVersion','-buildVersion'},
     'uptime': {'-p','-s'}, 'df': {'-h','-k','-P','-T','-i'},
 }
@@ -38,7 +38,8 @@ def read_allowed(argv):
                 continue
             if args[0] == 'log' and re.fullmatch(r'-[0-9]{1,3}', arg):
                 continue
-            if arg.startswith('-') or not re.fullmatch(r'[A-Za-z0-9_./:@{}^~+-]+', arg):
+            if (arg.startswith(('-', '/')) or '..' in arg.split('/')
+                    or not re.fullmatch(r'[A-Za-z0-9_./:@{}^~+-]+', arg)):
                 return False
         return True
     if name == 'tailscale':
@@ -49,5 +50,5 @@ def read_allowed(argv):
 
 
 def write_allowed(argv):
-    # Backwards-compatible tool name, not an unrestricted write capability.
+    # Preserve the legacy tool name without bypassing project-profile authorization.
     return read_allowed(argv)
