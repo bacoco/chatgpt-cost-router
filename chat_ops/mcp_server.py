@@ -69,6 +69,18 @@ def build_server(path):
         e = engine()
         return {**e.status(project_id,run_id),"outputs":e.outputs(e.row(project_id,run_id))}
 
+    @server.tool(annotations=annotations(False))
+    def chat_cancel(project_id: str, run_id: str) -> dict:
+        return engine().cancel(project_id, run_id)
+
+    @server.tool(annotations=annotations(True))
+    def chat_events(project_id: str, run_id: str, after: int = 0) -> dict:
+        return engine().events(project_id,run_id,after)
+
+    @server.tool(annotations=annotations(True))
+    def chat_list(project_id: str) -> dict:
+        return engine().list(project_id)
+
     return server
 
 

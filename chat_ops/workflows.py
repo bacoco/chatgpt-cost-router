@@ -14,8 +14,10 @@ def validate_workflow(value, catalog):
         raise ContractError("workflow requires 1..100 steps")
     names = set()
     for step in value["steps"]:
-        fields(step, ("id", "resource", "action", "arguments"), ("preflight", "verify"))
+        fields(step, ("id", "resource", "action", "arguments"), ("preflight", "verify", "recovery"))
         identifier(step["id"])
+        if "." in step["id"]:
+            raise ContractError("step ids cannot contain dots used by result references")
         identifier(step["resource"])
         if step["id"] in names:
             raise ContractError("duplicate workflow step")
@@ -25,7 +27,7 @@ def validate_workflow(value, catalog):
         if not isinstance(step["arguments"], dict):
             raise ContractError("tool arguments must be an object")
         _references(step["arguments"], names)
-        for key in ("preflight", "verify"):
+        for key in ("preflight", "verify", "recovery"):
             if key not in step:
                 continue
             check = step[key]

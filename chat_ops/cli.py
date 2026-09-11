@@ -17,7 +17,7 @@ def main(argv=None):
     observe = sub.add_parser("observe")
     for name in ("project","resource","action","evidence"):
         observe.add_argument("--"+name,required=True)
-    for name in ("next","status","result","run","approve","record","reconcile"):
+    for name in ("next","status","result","run","approve","record","reconcile","cancel","events"):
         action = sub.add_parser(name)
         action.add_argument("--project",required=True)
         action.add_argument("--run",required=True)
@@ -27,6 +27,8 @@ def main(argv=None):
             action.add_argument("--token",required=True)
             action.add_argument("--result",required=True)
             action.add_argument("--error",action="store_true")
+    listing = sub.add_parser("list")
+    listing.add_argument("--project", required=True)
     args = parser.parse_args(argv)
     try:
         engine, config = configured(args.config)
@@ -41,6 +43,8 @@ def main(argv=None):
             engine.capabilities.observe(engine.principal,args.project,args.resource,args.action,
                                         engine.surface,engine.session,load(args.evidence))
             out = {"recorded":True,"scope":"principal/project/resource/action/surface/session"}
+        elif args.command == "list":
+            out = engine.list(args.project)
         elif args.command == "record":
             out = engine.record(args.project,args.run,args.step,args.token,load(args.result),error=args.error)
         elif args.command in {"approve","reconcile"}:

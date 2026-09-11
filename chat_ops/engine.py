@@ -19,7 +19,12 @@ class Operations:
     def submit(self, workflow):
         workflow = validate_workflow(workflow, self.catalog)
         project = workflow["project_id"]
-        self.projects.project(self.principal, project)
+        policy = self.projects.project(self.principal, project)
+        for step in workflow["steps"]:
+            resource = policy.get("resources", {}).get(step["resource"])
+            specs = [step] + [step[k] for k in ("preflight", "verify", "recovery") if k in step]
+            if not resource or any(item["action"] not in resource["actions"] for item in specs):
+                raise ContractError("resource/action is not authorized for this project")
         row, new = self.journal.register(self.principal, project, "workflow", workflow["idempotency_key"], workflow, self.policy)
         return {"run_id":row["id"], "state":row["state"], "deduplicated":not new}
 
@@ -76,10 +81,19 @@ class Operations:
             return self.status(project, id_)
         if row["policy"] != self.policy:
             raise ContractError("project/action policy changed; review before continuing")
-        if row["request"]["deadline"] <= time.time():
+        effects = [self.journal.effect(id_, step["id"]) for step in row["request"]["steps"]]
+        complete = all(effect and effect["state"] == "VERIFIED" for effect in effects)
+        if complete:
+            self.journal.transition(id_, {"QUEUED", "RUNNING"},
+                                    "CANCELLED" if row["data"].get("cancel_requested") else "SUCCEEDED",
+                                    {"outputs_digest":digest(self.outputs(row))})
+            return self.status(project, id_)
+        if row["data"].get("cancel_requested") or row["request"]["deadline"] <= time.time():
             effects = [self.journal.effect(id_, step["id"]) for step in row["request"]["steps"]]
             pending = any(effect and effect["state"] in {"PENDING", "READY_VERIFY"} for effect in effects)
-            self.journal.transition(id_, {"QUEUED", "RUNNING"}, "UNCERTAIN" if pending else "BLOCKED", {"reason":"deadline"})
+            state = "UNCERTAIN" if pending else "CANCELLED" if row["data"].get("cancel_requested") else "BLOCKED"
+            self.journal.transition(id_, {"QUEUED", "RUNNING"}, state,
+                                    {"reason":"cancelled" if row["data"].get("cancel_requested") else "deadline"})
             return self.status(project, id_)
         self.journal.transition(id_, {"QUEUED"}, "RUNNING")
         outputs = self.outputs(row)
@@ -98,14 +112,35 @@ class Operations:
             exact = {**step, "arguments":resolve(step["arguments"], outputs)}
             if kind == "call" and self.catalog.get(step["action"])["confirmation"] and not self.journal.approved(id_, step["id"], exact):
                 return {"run_id":id_, "state":"AWAITING_APPROVAL", "step":step["id"], "invocation":invocation}
-            token = uuid.uuid4().hex
-            data = {**effect["data"], "pending":{"kind":kind, "token":token, "invocation":invocation, "session":self.session, "surface":self.surface}}
-            if not self.journal.effect_transition(id_, step["id"], {state}, "PENDING", data):
-                return {"run_id":id_, "state":"AWAITING_RESULT", "redispatch_allowed":False}
-            return {"run_id":id_, "state":"INVOKE_TOOL", "step":step["id"], "token":token, "kind":kind,
-                    "invocation":invocation, "instruction":"Invoke the exact native tool once and record its actual return. Never substitute model delegation."}
+            return self.dispatch(row, step, effect, kind, invocation)
         self.journal.transition(id_, {"RUNNING"}, "SUCCEEDED", {"outputs_digest":digest(outputs)})
         return self.status(project, id_)
+
+    def dispatch(self, row, step, effect, kind, invocation):
+        token = uuid.uuid4().hex
+        data = {**effect["data"], "pending":{"kind":kind, "token":token, "invocation":invocation, "session":self.session, "surface":self.surface}}
+        if not self.journal.claim_invocation(row["id"], step["id"], effect, data, invocation["read_only"]):
+            return {"run_id":row["id"], "state":"AWAITING_RESULT", "redispatch_allowed":False}
+        return {"run_id":row["id"], "state":"INVOKE_TOOL", "step":step["id"], "token":token, "kind":kind,
+                "invocation":invocation,
+                "instruction":"Invoke the exact native tool once and record its actual return. Never substitute model delegation."}
+
+    def cancel(self, project, id_):
+        row = self.row(project, id_)
+        effects = [self.journal.effect(id_, s["id"]) for s in row["request"]["steps"]]
+        uncertain = any(e and e["state"] in {"PENDING", "UNCERTAIN", "READY_VERIFY"} for e in effects)
+        self.journal.transition(id_, {"QUEUED", "RUNNING", "UNCERTAIN"},
+                                "UNCERTAIN" if uncertain else "CANCELLED",
+                                {"cancel_requested":True, "reason":"cancel requested; external effects are not rolled back"})
+        return self.status(project, id_)
+
+    def events(self, project, id_, after=0):
+        self.row(project, id_)
+        return {"events":self.journal.events(self.principal, project, id_, after)}
+
+    def list(self, project):
+        self.projects.project(self.principal, project)
+        return {"runs":[self.status(project, row["id"]) for row in self.journal.list(self.principal, project, "workflow")]}
 
     def record(self, project, id_, step, token, output, *, error=False, evidence_source="native-tool-observation"):
         from .results import record
