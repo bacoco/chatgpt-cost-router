@@ -1,0 +1,363 @@
+Diagnostic pour Loïc — pourquoi l’écriture GitHub planifiée ne marche pas
+Date : 16 septembre 2026
+
+Synthèse
+À partir du post-mortem transmis par Loïc, il y a probablement deux problèmes distincts :
+
+nous n’avons pas encore la preuve qu’un véritable run planifié a échoué ;
+nous avons en revanche la preuve qu’un appel create_issue a été bloqué par une protection OpenAI.
+La piste « mauvaise connexion GitHub / OAuth cassé » reste possible, mais elle n’est pas l’hypothèse prioritaire à ce stade.
+
+1. Le test scheduler n’est pas encore valide
+Le point le plus gênant est la chronologie :
+
+tâche prévue à 08:28 ;
+résultat produit vers 08:26–08:27 ;
+création de la tâche et résultat apparaissent dans le même tour.
+Avec timing_mode: exact_schedule, ce n’est pas le comportement attendu d’une exécution réellement déclenchée à 08:28.
+
+Avant même de chercher pourquoi « le scheduler ne peut pas écrire », il faut établir que le scheduler a réellement exécuté cette tentative.
+
+Deux scénarios restent possibles :
+
+création de la tâche
+      ↓
+traitement du prompt dans le tour interactif
+      ↓
+tentative immédiate de create_issue
+      ↓
+blocage sécurité
+
+ou :
+
+création de la tâche
+      ↓
+attente jusqu'à 08:28
+      ↓
+run automatique
+      ↓
+create_issue
+      ↓
+blocage
+
+Cette distinction est fondamentale.
+
+2. Le message d’erreur pointe vers OpenAI, pas vers GitHub
+Le message observé est :
+
+This tool call was blocked by OpenAI's safety checks. Please double check what you are sending.
+
+Ce n’est pas une erreur GitHub du type :
+
+401 Unauthorized
+403 Forbidden
+insufficient_scope
+repository not found
+GitHub App installation missing
+
+C’est un refus de la couche de sécurité avant ou autour de l’appel outil.
+
+Conclusion importante :
+
+« GitHub → Tout autoriser » ne signifie pas « tous les appels GitHub seront toujours exécutés ».
+
+Les permissions de l’application et les contrôles de sécurité sont deux couches différentes.
+
+3. Pourquoi le test qui a fonctionné est différent
+Le test réussi dans Alexmacapple/ay11-pre-audit était volontairement minimal :
+
+chercher une issue au titre exact
+        ↓
+si absente
+        ↓
+créer UNE issue statique
+        ↓
+terminer
+
+avec des interdictions explicites :
+
+pas de fichier modifié
+pas d'autre action GitHub
+
+Le test de Loïc demande beaucoup plus :
+
+lire README.md
+      ↓
+chercher les issues ouvertes
+      ↓
+chercher les issues fermées
+      ↓
+créer une issue
+      ↓
+relire l'issue
+      ↓
+fermer l'issue
+      ↓
+confirmer l'état final
+
+Il combine donc :
+
+lecture de contenu externe ;
+raisonnement à partir de ce contenu ;
+plusieurs lectures ;
+création d’un objet externe ;
+nouvelle lecture ;
+seconde mutation de cet objet.
+C’est un workflow nettement plus sensible.
+
+4. Hypothèse technique principale : contenu externe → mutation
+Le passage suivant est particulièrement suspect :
+
+fetch_file README.md
+        ↓
+...
+        ↓
+create_issue
+
+Un README GitHub est du contenu externe non fiable du point de vue d’un modèle de sécurité agentique.
+
+Même si ce README est parfaitement sain, le système doit gérer le scénario général :
+
+agent lit un fichier GitHub
+      ↓
+le fichier peut contenir une instruction malveillante
+      ↓
+l'agent possède un outil d'écriture
+      ↓
+l'agent modifie GitHub
+
+C’est la famille de risques des prompt injections indirectes.
+
+Je ne peux pas affirmer que c’est la règle exacte qui a provoqué le refus — nous n’avons pas les journaux internes du moteur de sécurité — mais c’est actuellement l’hypothèse qui explique le mieux la différence entre les deux protocoles.
+
+5. La fermeture de l’issue ajoute inutilement une deuxième mutation
+Loïc ne demande pas seulement :
+
+create_issue
+
+mais :
+
+create_issue
+→ relire
+→ close/update issue
+
+Le premier appel bloqué étant create_issue, la fermeture n’est évidemment pas la cause directe du refus.
+
+Mais elle augmente la portée globale du workflow et introduit une deuxième action d’écriture.
+
+Pour tester uniquement create_issue, il ne faut donc pas demander la fermeture de l’issue dans le même protocole.
+
+6. « Autoriser si faible risque » et « Tout autoriser » ne sont pas équivalents à une absence de garde-fous
+Le post-mortem indique à la fois :
+
+GitHub : « Tout autoriser » ;
+approbation générale des plugins : « Autoriser si faible risque ».
+Il faut distinguer :
+
+permission générale
++
+permission de l'app GitHub
++
+permission du compte GitHub connecté
++
+éventuelle politique du workspace
++
+contrôles de sécurité de la plateforme
+
+Le diagnostic ne doit donc pas résumer l’état en « GitHub est autorisé ».
+
+7. La piste « scheduler utilise une autre connexion GitHub » reste possible, mais secondaire
+Cette hypothèse doit être vérifiée, mais elle vient après les points précédents.
+
+Pourquoi ?
+
+Parce que le message reçu est un blocage OpenAI Safety, pas une erreur GitHub d’autorisation.
+
+Il faut néanmoins relever, si possible :
+
+compte GitHub utilisé
+GitHub app / connexion utilisée
+permission effective de l'app
+repo autorisé
+surface d'exécution
+
+Mais il ne faut pas reconnecter ou remplacer GitHub avant ce relevé : cela ferait disparaître une partie de l’état utile au diagnostic.
+
+8. Le Developer MCP est une fausse piste pour ce diagnostic
+Le problème actuel est :
+
+Pourquoi Scheduled Task + GitHub standard fonctionne dans un environnement et pas dans l’autre ?
+
+Ajouter maintenant :
+
+un nouveau MCP
++ une nouvelle authentification
++ une nouvelle politique
++ un nouveau serveur
+
+introduit plusieurs nouvelles variables.
+
+Le refus rencontré lors de la création du MCP est intéressant pour comprendre les protections Codex, mais il n’explique pas le problème du Scheduled Task standard.
+
+Il faut d’abord obtenir un résultat propre avec le connecteur GitHub standard.
+
+9. Protocole à exécuter maintenant chez Loïc
+Il faut reproduire presque exactement le test minimal qui a fonctionné.
+
+Test A — strict minimum
+Créer une nouvelle tâche ponctuelle avec ce prompt :
+
+Dans le dépôt GitHub `bacoco/loriq-watch-scheduler`,
+recherche une issue ouverte dont le titre est exactement :
+
+TEST — ChatGPT Scheduled Task GitHub write Loic v2
+
+Si elle n'existe pas, crée-la avec exactement ce corps :
+
+Test minimal de création d'une issue GitHub depuis une Scheduled Task ChatGPT.
+
+Si elle existe déjà, ne crée rien.
+
+N'effectue aucune autre action GitHub.
+Ne lis aucun fichier du dépôt.
+Ne ferme pas l'issue.
+Ne modifie aucun fichier.
+
+C’est tout.
+
+À exclure explicitement du test A
+pas de README ;
+pas de fermeture ;
+pas de MCP ;
+pas de relecture complexe ;
+pas de seconde mutation ;
+pas d’analyse d’un workflow GitHub Actions.
+10. S’assurer que le scheduler s’exécute réellement
+Exemple : s’il est 09:00, planifier à 09:05.
+
+Ensuite, ne plus intervenir dans la conversation de création.
+
+Avant 09:05 :
+
+last_run_time = null
+issue absente
+
+Après 09:05 :
+
+last_run_time >= 09:05
+
+Puis seulement contrôler GitHub.
+
+Le but est d’empêcher toute confusion entre :
+
+exécution interactive
+
+et :
+
+exécution scheduler
+
+11. Faire ensuite un test différentiel
+Si A fonctionne, ne changer qu’une variable à la fois.
+
+Test	Modification
+A	recherche exacte → création
+B	recherche ouvertes + fermées → création
+C	README → recherche → création
+D	recherche → création → relecture
+E	recherche → création → relecture → fermeture
+Cette démarche permettra d’isoler la cause.
+
+Exemple d’interprétation
+Si :
+
+A ✅
+B ✅
+C ❌
+
+le suspect principal devient :
+
+lecture de contenu du dépôt avant une action d’écriture externe.
+
+Si :
+
+A ❌
+
+alors le README est innocent et il faut descendre d’un niveau :
+
+surface scheduler
+permissions GitHub
+approbation de l'action
+workspace
+connexion utilisée
+classification de sécurité
+
+12. Tester également le NOOP
+Après un premier succès, relancer exactement le même test avec le même titre.
+
+Résultat attendu :
+
+issue déjà présente
+      ↓
+aucune nouvelle issue
+      ↓
+aucune autre mutation
+
+Cela permet de démontrer réellement :
+
+observation
+→ condition
+→ action si nécessaire
+
+et pas seulement :
+
+cron
+→ create_issue
+
+13. Classement actuel des hypothèses
+Rang	Hypothèse	Niveau actuel
+1	Le « run planifié » observé n’était peut-être pas un véritable run exécuté à l’heure prévue	Très fort
+2	create_issue a rencontré une protection OpenAI indépendante des droits OAuth GitHub	Certain pour la tentative observée
+3	La chaîne README / contenu externe → write a déclenché ou contribué au contrôle de sécurité	Plausible et à tester prioritairement
+4	Le prompt est trop complexe pour un test élémentaire : création + relecture + fermeture	Plausible
+5	App GitHub / permission / connexion différente dans le scheduler	Possible
+6	OAuth GitHub complètement invalide	Moins probable
+7	GitHub lui-même refuse l’appel	Peu soutenu par les preuves disponibles
+8	Il faut obligatoirement un Developer MCP	Rien ne le démontre
+Conclusion
+Le test de Loïc est actuellement trop complexe pour diagnostiquer une panne élémentaire.
+
+Il teste simultanément :
+
+scheduler
++ GitHub connector
++ lecture de fichier
++ recherche
++ déduplication
++ création
++ relecture
++ fermeture
++ permissions
++ sécurité
+
+Le test qui a fonctionné était beaucoup plus réduit :
+
+scheduler
++ recherche exacte
++ create_issue
+
+C’est ce test minimal qu’il faut reproduire à l’identique chez Loïc.
+
+Si ce test A échoue réellement après l’heure programmée avec un last_run_time cohérent, nous disposerons enfin d’un différentiel propre et exploitable.
+
+Tant que ce test n’a pas été exécuté, je déconseille de :
+
+modifier la connexion GitHub ;
+installer un Developer MCP ;
+ajouter de nouvelles permissions ;
+complexifier davantage le prompt.
+La priorité est d’obtenir une expérience reproductible à une seule variable :
+
+Scheduled Task
+→ recherche exacte
+→ create_issue si absent
+→ sinon NOOP
