@@ -4,6 +4,11 @@ Read [deployment status](DEPLOYMENT_STATUS.md) for the current evidence and exac
 
 ## Implemented and under live acceptance
 
+GitHub Actions has been retired from the active execution policy. The active tree
+contains no workflows and the router rejects `github.actions.*`. Historical Actions
+receipts remain evidence only. Future validation uses Chat/local execution or Fleet.
+
+
 A has durable native/direct connector workflows, project/account/session scopes, exact approvals, verification, cancellation and non-replaying recovery. B has independent jobs, supervised processes, logs/progress, receipts/artifacts, typed gateway routing and durable relay publication. Optional worker/mesh code is separated with compatible imports. Owner installers create separate revision-pinned user services.
 
 Two acceptance classes must remain separate: a passing source test suite and a live service completing the owner's actual operation. Never infer either from a successful Git push or queue submission.
