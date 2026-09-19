@@ -1,6 +1,22 @@
 # Current A/B work
 
-Date: 2026-09-11. The owner explicitly authorized A/B deployment and a clear, current repository entrypoint. The earlier blanket deployment pause no longer applies; **T38/quota-burning experiments remain paused**.
+Date: 2026-09-19.
+
+Source policy update: current `main` forbids GitHub Actions as an execution,
+validation, recovery or publication lane. The active routing policy rejects
+`github.actions.*`; the repository must keep `.github/workflows/` empty.
+The branch-based Fleet relay remains valid because it is consumed by a separately
+installed user-level relay, not by GitHub runners.
+
+A 2026-09-19 Chat test also established a scoped native route for image work:
+native Chat image generation -> binary Git blob/commit -> read-back verification.
+Treat that as a runtime capability only when the current session re-verifies the
+required actions; do not infer universal image access from this receipt.
+
+These source changes do **not** assert that the previously installed A/B runtime
+revision has been redeployed.
+
+Earlier deployment context: The owner explicitly authorized A/B deployment and a clear, current repository entrypoint. The earlier blanket deployment pause no longer applies; **T38/quota-burning experiments remain paused**.
 
 Read ../README.md and ../docs/DEPLOYMENT_STATUS.md first. Final deployment evidence and remaining gates belong there, not in an old experiment count or ZIP. PR #12 was merged into main at e96562155afd2c91e6dd05b8903746cd85557b20. Use main; see ../docs/MAIN_INTEGRATION_STATUS.md for the remaining PR blocker.
 
