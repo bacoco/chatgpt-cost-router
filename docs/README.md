@@ -14,6 +14,6 @@ Start with the repository [README](../README.md). The current operational author
 
 ## Historical material
 
-T25–T38 documents, September 10 experiment logs, cost/quota studies, `BEGINNER_CLOUD_WORKFLOW.md`, handoff/bootstrap kits and earlier validation snapshots record the project's evolution. They are retained for traceability, not recommended as the current installation path or proof of current availability. References there to Codex, Work or a paused deployment do not override the current A/B guides.
+T25–T38 documents, September 10 experiment logs, cost/quota studies, `BEGINNER_CLOUD_WORKFLOW.md`, `CLOUD_EXECUTION_LANE.md`, handoff/bootstrap kits and earlier validation snapshots record the project's evolution. They are retained for traceability, not recommended as the current installation path or proof of current availability. References there to Codex, Work, GitHub Actions or a paused deployment do not override the current A/B guides or the current no-Actions policy.
 
 `SPEC.md` and routing schemas remain authoritative for the deterministic decision engine only. Optional mesh/provider-worker instructions are not prerequisites for ordinary A/B work. For WordPress operations use Cowboy, not WPVibe.
