@@ -2,7 +2,7 @@
 import copy
 
 from .capabilities import action_set, capability_reason, check_manifest
-from .validation import clock, digest, policy_config, validate
+from .validation import action_forbidden, clock, digest, policy_config, validate
 
 
 def transfers(plan, task):
@@ -61,6 +61,9 @@ def plan_rejections(plan, request, policy, now):
         if step['surface'] in task['forbidden_surfaces']:
             reasons.append('surface-forbidden')
         for action in step['actions']:
+            if action_forbidden(policy, action['action']):
+                reasons.append('action-forbidden-by-policy')
+                continue
             reason = capability_reason(manifest, step['surface'], step['session_id'], action,
                                        now, policy['max_capability_age_seconds'])
             if reason:
