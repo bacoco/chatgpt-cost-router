@@ -1,6 +1,6 @@
 # Validation and evidence
 
-The current result and scope are recorded in [deployment status](DEPLOYMENT_STATUS.md). Historical counts certify their own source trees only; do not add counts across revisions or equate local tests with CI/live fleet acceptance.
+The current result and scope are recorded in [deployment status](DEPLOYMENT_STATUS.md). Historical counts certify their own source trees only; do not add counts across revisions or equate source-suite results with live fleet acceptance. GitHub Actions is not used for current validation.
 
 ## Reproduce source validation
 
@@ -9,7 +9,7 @@ python -m pip install -r requirements-dev.txt
 python scripts/validate_ab.py --output /tmp/ab-validation
 ```
 
-The validator produces JSON cases, source hashes and an unfiltered test log. Full source must include the tracked skill metadata. Installing the optional MCP dependency enables the official-SDK smoke test; an unavailable dependency must remain an explicit skip, not a fabricated pass.
+Run this validation in the current authorized Chat/local environment or through an enrolled Fleet profile. The validator produces JSON cases, source hashes and an unfiltered test log. Full source must include the tracked skill metadata. Installing the optional MCP dependency enables the official-SDK smoke test; an unavailable dependency must remain an explicit skip, not a fabricated pass.
 
 The owner's `scripts/ab_validate_snapshot.py` validates an exact Git snapshot with the installed interpreter without switching the working checkout. It also checks relative file links in the current guides. Link-path checks do not certify every external URL or prose assertion.
 
