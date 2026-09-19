@@ -79,7 +79,8 @@ def validate(name, value):
 def policy_config(value=None):
     policy = load_json(DATA / 'policy/routing.json') if value is None else dict(value)
     expected = {'version', 'cost_unit', 'tie_break_order', 'max_transfers',
-                'min_transfer_savings_units', 'max_capability_age_seconds'}
+                'min_transfer_savings_units', 'max_capability_age_seconds',
+                'forbidden_action_prefixes'}
     if set(policy) != expected or policy['cost_unit'] != 'usd_micro':
         raise ValueError('Invalid routing policy fields or cost unit')
     if not isinstance(policy['version'], str) or not policy['version'].strip():
@@ -90,4 +91,14 @@ def policy_config(value=None):
     for key in ('max_transfers', 'min_transfer_savings_units', 'max_capability_age_seconds'):
         if type(policy[key]) is not int or policy[key] < 0:
             raise ValueError(key + ' must be a nonnegative integer')
+    prefixes = policy['forbidden_action_prefixes']
+    if not isinstance(prefixes, list) or not prefixes or any(
+            not isinstance(prefix, str) or not prefix.strip() for prefix in prefixes):
+        raise ValueError('forbidden_action_prefixes must be a non-empty list of strings')
+    if len(prefixes) != len(set(prefixes)):
+        raise ValueError('forbidden_action_prefixes must be unique')
     return policy
+
+
+def action_forbidden(policy, action_name):
+    return any(action_name.startswith(prefix) for prefix in policy['forbidden_action_prefixes'])
