@@ -30,11 +30,15 @@ repository, with their own capabilities, risks and recorded verification.
 - Handoff v2 preserves identity, scope, state and verifiable completion criteria.
 - A local durable ledger separates recommendation, acceptance and execution claims.
 - Production adapters must enforce the execution/recovery protocol at each effect.
+- Policy-level forbidden action prefixes are ineligible even when capability evidence says they are callable; `github.actions.*` is forbidden.
+- Native Chat actions such as image generation and binary Git writes are ordinary scoped capabilities, not reasons to escalate when the current session can complete and verify them.
 
 ## Acceptance
 
 The executable fixtures define scoped inputs and explicit expected results. All
-canonical and negative cases must pass CI. The former >90% routing-agreement target
+canonical and negative cases must pass the deterministic validation suite on an
+authorized Chat/local or enrolled Fleet execution surface. GitHub-hosted Actions
+is not an acceptance requirement or fallback. The former >90% routing-agreement target
 is reserved for a separate human-labeled evaluation set with defined capabilities,
 accepted plans, confidence, exclusions and denominator; it is not a claim of model
 quality from a deterministic test suite.
