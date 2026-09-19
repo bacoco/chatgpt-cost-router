@@ -102,6 +102,22 @@ class RouterTests(unittest.TestCase):
         data['candidates'] = []
         self.assertEqual(route(data, now=NOW)['status'], 'blocked')
 
+    def test_native_chat_image_and_github_binary_path_avoids_escalation(self):
+        required = [
+            action('image.generate.native', 'artifact:teaching-card'),
+            action('github.binary.write', 'bacoco/example'),
+            action('github.readback.verify', 'bacoco/example'),
+        ]
+        chat = plan('chat-native', step('CHAT', actions=required, cost=20, session='chat-1'))
+        codex = plan('codex-escalation', step('CODEX', actions=required, cost=80, session='codex-1'))
+        data = request([chat, codex], actions=required, current='CHAT')
+
+        result = route(data, now=NOW)
+
+        self.assertEqual(result['status'], 'routed')
+        self.assertEqual(result['route'], 'CHAT')
+        self.assertEqual(result['selected_plan_id'], 'chat-native')
+
     def test_route_does_not_mutate_request(self):
         data = request()
         snapshot = copy.deepcopy(data)
