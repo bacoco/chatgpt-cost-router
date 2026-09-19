@@ -1,6 +1,6 @@
 # Documentation index
 
-Start with the repository [README](../README.md). The current operational authority is [deployment status](DEPLOYMENT_STATUS.md) and its linked evidence, not an older experiment log or test count.
+Start with the repository [README](../README.md). Current source policy is defined by the repository README, `.chatgpt/CURRENT.md` and the current contracts. [Deployment status](DEPLOYMENT_STATUS.md) is the authority for the last observed installed-runtime evidence. Neither an older experiment log nor an old test count overrides current source policy.
 
 | Current guide | Question answered |
 | --- | --- |
