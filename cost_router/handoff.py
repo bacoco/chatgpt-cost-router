@@ -1,6 +1,6 @@
 """Handoff v2 invariants beyond structural JSON Schema validation."""
 from .capabilities import action_set, capability_reason, check_manifest
-from .validation import clock, digest, policy_config, timestamp, validate
+from .validation import action_forbidden, clock, digest, policy_config, timestamp, validate
 
 
 def validate_handoff(packet, *, manifest=None, now=None, current_commit=None,
@@ -24,6 +24,9 @@ def validate_handoff(packet, *, manifest=None, now=None, current_commit=None,
         raise ValueError('Destination surface is forbidden')
     if not action_set(packet['actions']) <= action_set(packet['authorized_actions']):
         raise ValueError('Handoff action is not authorized')
+    if accepted_policy_identity is None and any(
+            action_forbidden(policy, action['action']) for action in packet['actions']):
+        raise ValueError('Handoff action is forbidden by policy')
     budget = packet['max_cost_units']
     if budget is not None and packet['estimated_cost_units'] > budget:
         raise ValueError('Handoff exceeds its cost budget')
