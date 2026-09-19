@@ -1,5 +1,10 @@
 # Deployment status — 11 September 2026
 
+> **Source-policy note — 19 September 2026.** Current `main` now forbids
+> GitHub Actions and recognizes scoped native Chat image + binary Git routes. This
+> document remains the last deployment evidence for the installed A/B runtime and
+> does not claim that runtime has been redeployed to the new source revision.
+
 The A/B source was merged into `main` by PR #12 at `e96562155afd2c91e6dd05b8903746cd85557b20`. The table below records the last deployment evidence, not a new live availability check. A source merge does not update the installed runtime. Read [integration status](MAIN_INTEGRATION_STATUS.md) for the remaining blocked PR.
 
 Runtime under test: `10b3ee3e438d57b210b1155e2dbaf19aac9b00db`. Supplemental skill documents came from the same revision; later source commits improve deployment helpers/documentation without silently replacing installed runtime code.
