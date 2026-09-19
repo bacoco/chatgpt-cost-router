@@ -35,6 +35,15 @@ class HandoffTests(unittest.TestCase):
         with self.assertRaises(ValidationError):
             validate_handoff(self.packet, now=NOW)
 
+    def test_github_actions_handoff_is_forbidden_by_policy(self):
+        self.packet['actions'] = [{
+            'action': 'github.actions.runner.execute',
+            'resource': 'bacoco/chatgpt-cost-router',
+        }]
+        self.packet['authorized_actions'] = copy.deepcopy(self.packet['actions'])
+        with self.assertRaisesRegex(ValueError, 'forbidden by policy'):
+            validate_handoff(self.packet, now=NOW)
+
     def test_extension_namespace_preserves_forward_compatibility(self):
         self.packet['extensions']['reviewer-note'] = 'future metadata'
         validate_handoff(self.packet, now=NOW)
