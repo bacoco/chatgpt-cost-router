@@ -1,5 +1,12 @@
 # Cloud execution lane — Scheduled Chat + interactive Chat + GitHub MCP
 
+> **Historical evidence only — not the current execution policy (2026-09-19).**
+> This document records the 10 September cloud experiments, including GitHub Actions
+> control tests. The active repository policy now forbids `github.actions.*` and
+> requires an empty `.github/workflows/`. Do not execute, restore, rerun or configure
+> the Actions paths described below. Current verification uses authorized Chat/local
+> execution or an enrolled Fleet profile. The GitHub Fleet relay is not GitHub Actions.
+
 **Scope:** ChatGPT cloud only. The Codex desktop/CLI lane is intentionally deferred to a separate phase.
 
 **Goal:** complete as much useful engineering work as possible inside the already-paid ChatGPT experience, using Developer MCPs and the ChatGPT execution environment before consuming Codex or paid API capacity.
@@ -324,9 +331,9 @@ This is the key merged technique to validate more rigorously on a clean profile.
 
 Use when bounded executable verification fits the ephemeral Chat environment.
 
-### Route C5 — add GitHub Actions MCP
+### Route C5 — retired historical route
 
-Use only when GitHub runner capacity is currently available and hosted CI adds useful verification.
+Do not use. GitHub Actions is forbidden by the current routing policy; historical T17/T18 evidence below is retained only for provenance.
 
 ### Route C6 — Codex escalation
 
