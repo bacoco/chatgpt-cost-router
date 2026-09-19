@@ -40,7 +40,7 @@ It is **not** proof of:
 - a persistent local checkout;
 - unlimited context;
 - permanent connector availability;
-- free GitHub Actions minutes;
+- GitHub Actions execution (forbidden by the current project policy);
 - automatic Codex execution.
 
 GitHub remains the durable source of truth.
@@ -76,7 +76,7 @@ The scheduler prompt should stay short and point to these files. Do not paste th
 ```text
 This Scheduled Task is the ChatGPT workspace launcher for repository `<owner>/<repo>`.
 
-Use only the authorized Developer MCPs for this project. Resolve the repository's
+Use only the authorized connectors/apps actually available for this project. Resolve the repository's
 default branch freshly. Read `.chatgpt/PROJECT.md` and `.chatgpt/CURRENT.md` if they
 exist, then verify all referenced branch/commit/PR/issue state against GitHub.
 
@@ -86,9 +86,11 @@ If no project work is due, do not invent work; return a concise current-state su
 with the exact next safe action.
 
 Never treat this chat or its local filesystem as the durable project state. Do not
-repeat an already verified external effect. Prefer ChatGPT + Developer MCPs. Escalate
-to Codex only through a persisted GitHub handoff when a concrete capability boundary
-is reached. Never use a paid API silently.
+repeat an already verified external effect. Prefer native Chat + authorized
+connectors/apps. Use current Chat/local verification when sufficient or an enrolled
+Fleet profile when machine execution is required. GitHub Actions is forbidden.
+Escalate to Codex only through a persisted GitHub handoff when a concrete capability
+boundary is reached. Never use a paid API silently.
 ```
 
 Adapt the cadence and authorized effects to the project. A scheduler that only exists as a launcher should not perform expensive work on every recurrence.
@@ -119,7 +121,7 @@ Use a short continuation command:
 ```text
 Continue this project from the current GitHub checkpoint.
 Re-read `.chatgpt/PROJECT.md` and `.chatgpt/CURRENT.md`, verify current branch/SHA,
-and continue only the remaining work. Use ChatGPT + project Developer MCPs first.
+and continue only the remaining work. Use native Chat + authorized project connectors/apps first.
 ```
 
 This is intentionally different from saying "remember everything from earlier". GitHub state is revalidated each time.
