@@ -10,8 +10,8 @@
   "from_session_id": "codex-1",
   "recommended_surface": "CHAT",
   "target_session_id": "chat-1",
-  "policy_version": "2026-09-05.1",
-  "policy_sha256": "bc2ab16c36899930a00e0a336f9b217ae1f3880f39416b8114a3cbdae9067489",
+  "policy_version": "2026-09-19.1",
+  "policy_sha256": "8d42985aad136a4344841611bacfce4ea8cbd371fc410b2af983447b6c88a904",
   "created_at": "2026-09-05T00:30:00+00:00",
   "goal": "Review the pinned example repository",
   "done": [
