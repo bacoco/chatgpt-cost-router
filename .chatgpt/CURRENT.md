@@ -10,6 +10,7 @@ installed user-level relay, not by GitHub runners.
 
 A 2026-09-19 Chat test also established a scoped native route for image work:
 native Chat image generation -> binary Git blob/commit -> read-back verification.
+The durable proof is `.chatgpt/test-receipts/T39_NATIVE_CHAT_IMAGE_GIT_BINARY_2026-09-19.md`.
 Treat that as a runtime capability only when the current session re-verifies the
 required actions; do not infer universal image access from this receipt.
 
