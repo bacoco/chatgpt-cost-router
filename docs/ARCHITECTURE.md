@@ -44,6 +44,8 @@ B distinguishes submission, owned execution and terminal completion. Journal/rec
 
 The relay's outbox separates effect execution from result publication. A lost push can retry the stored result without re-running the effect. Conflicting job/result identities are rejected. The current private queue and the old compatibility queue must not both receive one operation.
 
+The GitHub relay is **not GitHub Actions**. Git branches carry immutable job/result messages; a separately installed user-level relay claims and executes them on an enrolled node. The repository has no active `.github/workflows/`, and `github.actions.*` actions are rejected by routing policy. Validation that needs execution belongs to the current authorized Chat/local runtime or a named Fleet profile.
+
 ## Deployment boundaries
 
 Runtime code is staged by exact SHA, uses a private virtualenv and is selected through explicit policy. Source delivery, configuration, service start, health, end-to-end completion and Chat attachment are distinct gates. Preserve the virtualenv executable path during activation.
