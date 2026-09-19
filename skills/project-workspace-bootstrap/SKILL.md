@@ -22,9 +22,10 @@ Resolve `bacoco/chatgpt-cost-router` `main` freshly and pin one exact source SHA
 
 - `docs/PROJECT_BOOTSTRAP_PROTOCOL.md`
 - `docs/REPO_SCHEDULER_WORKSPACE.md`
-- `docs/CLOUD_EXECUTION_LANE.md`
+- `README.md`
+- `docs/ARCHITECTURE.md`
+- `docs/AB_VALIDATION.md`
 - `docs/CHATGPT_TO_CODEX_HANDOFF.md`
-- `docs/VALIDATION_STATUS_2026-09-10.md`
 
 Do not use a remembered copy.
 
@@ -34,7 +35,7 @@ Do not use a remembered copy.
 2. Resolve the target default branch and exact HEAD SHA.
 3. Inspect existing `.chatgpt/`, `AGENTS.md`, `.agents/skills/`, project docs, open PRs/issues, and any Scheduled Task already relevant to this repo.
 4. Never overwrite an existing project-control file blindly. Reconcile compatible content and preserve project-specific instructions.
-5. Record unavailable capabilities as unavailable rather than silently substituting Codex, Work, GitHub Actions, or a paid API.
+5. Record unavailable capabilities as unavailable rather than silently substituting Codex, Work or a paid API. GitHub Actions is forbidden, not a fallback.
 
 ## Target repository structure
 
@@ -56,7 +57,7 @@ Install or reconcile:
     SKILL.md
 ```
 
-`PROJECT.md` contains stable project purpose, key paths, constraints, source-of-truth rules, source-kit SHA, and relevant Developer MCPs.
+`PROJECT.md` contains stable project purpose, key paths, constraints, source-of-truth rules, source-kit SHA, and relevant authorized connectors/apps.
 
 `CURRENT.md` is the compact recoverable checkpoint: current task, default/working branch, exact SHAs, issues/PRs, completed work, tests/evidence, blockers, next safe action, and whether Codex/API/Actions were used.
 
@@ -85,7 +86,9 @@ The scheduler must:
 - perform only due and authorized work;
 - update `.chatgpt/CURRENT.md` after meaningful work;
 - avoid duplicate external effects;
-- make ChatGPT + Developer MCPs the default route;
+- make native Chat + authorized connectors/apps the default route;
+- use current Chat/local verification when sufficient or an enrolled Fleet profile when machine execution is required;
+- never create, restore or use GitHub Actions;
 - hand off to Codex only through a persisted GitHub handoff;
 - never silently use a paid API.
 
