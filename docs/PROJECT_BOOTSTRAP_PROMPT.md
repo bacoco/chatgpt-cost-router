@@ -25,8 +25,8 @@ when useful. Its prompt must re-read the target repo and `.chatgpt/` checkpoint
 freshly on every run. Do not create a pointless frequent schedule only to keep a chat
 alive.
 
-After bootstrap, if there is already active project work, start with normal ChatGPT +
-the authorized Developer MCPs and persist progress in `.chatgpt/CURRENT.md`.
+After bootstrap, if there is already active project work, start with native ChatGPT +
+the authorized connectors/apps and persist progress in `.chatgpt/CURRENT.md`.
 
 If a real capability boundary is reached, use the source repo's
 `cloud-to-codex-handoff` skill to write a GitHub handoff and give me the short prompt
@@ -34,7 +34,9 @@ for Codex. When Codex returns, use `codex-to-cloud-return` evidence and verify t
 actual branch/SHA/diff/tests before continuing.
 
 Do not use Codex merely because code is involved. Do not silently use paid APIs.
-Treat GitHub Actions runner capacity as a separate budget/capability.
+GitHub Actions is forbidden: do not create workflows, dispatch/rerun hosted jobs or
+use an Actions control connector. Prefer current Chat/local verification or an enrolled
+Fleet profile when execution is required.
 
 At the end, report exactly what was installed, the source and target SHAs,
 branch/commit/PR, scheduler created or reused, current checkpoint, tests actually
