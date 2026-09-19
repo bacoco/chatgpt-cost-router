@@ -1,6 +1,6 @@
 # Surface capability map — validated execution lanes
 
-This is the concise operational map for `bacoco/chatgpt-cost-router` as of 2026-09-10. GitHub is the durable source of truth and transfer bus. Solid arrows are empirically validated. Dashed arrows are not yet validated or are optional future lanes.
+This is the concise operational map for `bacoco/chatgpt-cost-router` as of 2026-09-19. GitHub is the durable source of truth and transfer bus. Solid arrows are empirically validated. Dashed arrows are not yet validated or are optional future lanes. GitHub Actions is not an operational lane: the active policy rejects `github.actions.*` and the repository keeps `.github/workflows/` empty.
 
 ```text
 ┌──────────────────────────┐        ┌──────────────────────────┐        ┌──────────────────────────┐
@@ -58,6 +58,7 @@ This is the concise operational map for `bacoco/chatgpt-cost-router` as of 2026-
 | Same-chat continuation after scheduler | ✅ PASS | — | — | ? NOT TESTED | durable checkpoint supports recovery |
 | Fresh-chat recovery from repo | ✅ PASS | ? | ✅ repo rediscovery/reconcile PASS | ? | ✅ source of truth |
 | Local shell / Python tests | ✅ PASS for bounded verification | ? mode-specific | ✅ PASS, 40/40 | ✅ shell/Python commands PASS; full tests not part of T25 | stores code/evidence |
+| Native image → binary Git artifact | ✅ PASS — native image generation + Git blob/commit + read-back on 2026-09-19 | ? | possible as ordinary file handling, not this proof | ? | ✅ exact binary blob retained |
 | Persistent local workspace | no guarantee / treat ephemeral | ? NOT TESTED | ✅ PASS across independent sessions | ? NOT TESTED | ✅ remote durable state |
 | Headless/callable worker | scheduler can dispatch external tools | ? NOT TESTED | ✅ PASS via `codex exec` from normal shell; 10,215 tokens reported in T27 | Work is callable interactively; headless Work not tested | coordination bus |
 | Gmail read/search/Sent | ⛔ canonical Developer-MCP path missing | ✅ PASS built-in Gmail | — | ✅ search PASS; full read not tested | — |
@@ -83,7 +84,7 @@ Do not collapse these into one “token” number.
 | Codex Mac Work | T25/T26 empirically validate GitHub read, a pushed one-file GitHub return, Gmail search, local filesystem, shell and Python. Workspace persistence remains untested. Treat usage as part of the applicable Work/Codex agentic pool, not paid API, when signed in through ChatGPT. |
 | Additional OpenAI accounts A/B/C | Keep each account as a distinct worker budget/identity. Do not assume quota sharing across accounts. |
 | Claude / Anthropic | Separate provider/account allowance or billing. Measure independently. |
-| GitHub Actions | Independent GitHub runner capacity/cost. Control-plane MCP works; hosted runner allowance was exhausted during the observed test. |
+| GitHub Actions | Historical evidence only. The current repository policy forbids this execution lane regardless of runner capacity. |
 | Paid OpenAI API | Explicit separate billing path. **Not used** in the validated campaign. |
 | Other paid APIs | Explicit separate provider billing; never silently enabled. |
 
@@ -93,7 +94,8 @@ Use the cheapest already-paid, verified surface that can safely complete and ver
 
 ```text
 ChatGPT.com first
-  → Developer MCP when external state/actions are needed
+  → authorized connector/app when external state/actions are needed
+  → native Chat image generation + GitHub binary write/read-back when that completes the task
   → local ChatGPT verification when sufficient
   → Codex Mac Chat for capabilities proven there (for example Gmail)
   → Codex CLI when persistent local engineering state / shell loops are useful
