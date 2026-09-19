@@ -1,5 +1,10 @@
 # A/B operator guide
 
+The GitHub relay described below is not GitHub Actions: Git branches carry bounded
+job/result messages to a separately installed user-level relay. GitHub Actions is
+forbidden by current policy and must not be used as execution, validation or recovery.
+
+
 Start with [installation](INSTALLATION.md) and [deployment status](DEPLOYMENT_STATUS.md). The [examples](../examples/) contain local configurations and demonstration workflows; replace example bindings with explicit operator policy.
 
 ## A: native tool workflow
