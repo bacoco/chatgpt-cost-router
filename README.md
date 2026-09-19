@@ -19,6 +19,10 @@ A can coordinate an authorized email-to-repository-to-publication workflow and v
 
 The default preference is to use capabilities already available in Chat and ordinary local processes. Work, Codex, Claude, provider APIs, local inference, Serena and PAIR are optional choices, not hidden execution steps. This does not promise unlimited subscription quotas or free external services.
 
+**GitHub Actions is not an execution lane for this repository.** The active tree must contain no files under `.github/workflows/`, and the routing policy rejects `github.actions.*` actions even when historical capability evidence exists. Source validation runs in the current authorized Chat/local environment or through an enrolled Fleet profile. The GitHub Fleet relay is only a durable branch-based transport consumed by a user-level relay; it is not GitHub Actions.
+
+Native Chat capabilities are evaluated like any other action-scoped capability. When the current Chat can generate an image natively, write a binary Git blob and verify the committed bytes, that complete route should stay in Chat instead of escalating to Work, Codex or a paid model API solely for image production.
+
 ## Start from Chat
 
 Read [deployment status](docs/DEPLOYMENT_STATUS.md) first: it identifies what is actually installed, verified or blocked. Then use this prompt with the authorized GitHub connector:
