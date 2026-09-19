@@ -58,7 +58,7 @@ This is the concise operational map for `bacoco/chatgpt-cost-router` as of 2026-
 | Same-chat continuation after scheduler | ✅ PASS | — | — | ? NOT TESTED | durable checkpoint supports recovery |
 | Fresh-chat recovery from repo | ✅ PASS | ? | ✅ repo rediscovery/reconcile PASS | ? | ✅ source of truth |
 | Local shell / Python tests | ✅ PASS for bounded verification | ? mode-specific | ✅ PASS, 40/40 | ✅ shell/Python commands PASS; full tests not part of T25 | stores code/evidence |
-| Native image → binary Git artifact | ✅ PASS — native image generation + Git blob/commit + read-back on 2026-09-19 | ? | possible as ordinary file handling, not this proof | ? | ✅ exact binary blob retained |
+| Native image → binary Git artifact | ✅ PASS — T39: native image generation + Git blob/commit + read-back on 2026-09-19 | ? | possible as ordinary file handling, not this proof | ? | ✅ exact binary blob retained |
 | Persistent local workspace | no guarantee / treat ephemeral | ? NOT TESTED | ✅ PASS across independent sessions | ? NOT TESTED | ✅ remote durable state |
 | Headless/callable worker | scheduler can dispatch external tools | ? NOT TESTED | ✅ PASS via `codex exec` from normal shell; 10,215 tokens reported in T27 | Work is callable interactively; headless Work not tested | coordination bus |
 | Gmail read/search/Sent | ⛔ canonical Developer-MCP path missing | ✅ PASS built-in Gmail | — | ✅ search PASS; full read not tested | — |
@@ -70,6 +70,8 @@ This is the concise operational map for `bacoco/chatgpt-cost-router` as of 2026-
 | Create new GitHub repo | ⛔ Developer MCP returned 403 | ? | possible via `gh`, not part of validated T10/T27 | ? | existing repos validated |
 
 Legend: ✅ empirically verified; ⛔ blocked/unavailable in the tested context; ❌ explicitly unavailable action; ? not independently tested/classified.
+
+T39 evidence: [native Chat image → binary Git artifact](../.chatgpt/test-receipts/T39_NATIVE_CHAT_IMAGE_GIT_BINARY_2026-09-19.md).
 
 ## Allowance / cost map
 
