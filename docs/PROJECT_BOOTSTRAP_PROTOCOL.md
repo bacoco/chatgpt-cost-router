@@ -16,9 +16,10 @@ Resolve `bacoco/chatgpt-cost-router` `main` freshly and pin one SHA. At that SHA
 
 - `skills/project-workspace-bootstrap/SKILL.md`
 - `docs/REPO_SCHEDULER_WORKSPACE.md`
-- `docs/CLOUD_EXECUTION_LANE.md`
+- `README.md`
+- `docs/ARCHITECTURE.md`
+- `docs/AB_VALIDATION.md`
 - `docs/CHATGPT_TO_CODEX_HANDOFF.md`
-- `docs/VALIDATION_STATUS_2026-09-10.md`
 
 Do not use a remembered copy.
 
@@ -30,10 +31,10 @@ Do not use a remembered copy.
 4. Copy the exact pinned source versions of `skills/cloud-to-codex-handoff/SKILL.md` and `skills/codex-to-cloud-return/SKILL.md` into the target repository under `.agents/skills/<skill-name>/SKILL.md`. Preserve any unrelated existing target skills.
 5. Persist the source-kit SHA inside `PROJECT.md` so future refreshes are reproducible and the copied skills can be traced back to their source.
 6. Create/reuse a project Scheduled Task only if useful. Its prompt must read target repo state and `.chatgpt/` files freshly on every invocation.
-7. If the user supplied concrete work, begin with ChatGPT + Developer MCPs and persist checkpoints after meaningful progress.
+7. If the user supplied concrete work, begin with native Chat + authorized connectors/apps and persist checkpoints after meaningful progress.
 8. When a real capability boundary is reached, use `cloud-to-codex-handoff`; do not paste the whole conversation into Codex.
 9. On return from Codex, use `codex-to-cloud-return` evidence and verify actual GitHub state before continuing.
-10. Never silently use paid API capacity. GitHub Actions runner capacity is a separate cost/capability gate.
+10. Never silently use paid API capacity. GitHub Actions is forbidden: do not create workflows, dispatch runners, rerun jobs or use an Actions control connector.
 
 ## Installation safety
 
@@ -54,8 +55,10 @@ If scheduled work is actually due, execute only the authorized bounded work and
 persist a fresh checkpoint. Otherwise do not invent work; return the concise current
 state and exact next safe action.
 
-Use ChatGPT + authorized Developer MCPs first. Do not rely on chat-local filesystem
-persistence. Do not repeat verified external effects. If Codex becomes materially
+Use native Chat + authorized connectors/apps first. Do not rely on chat-local
+filesystem persistence. Do not repeat verified external effects. Use current
+Chat/local verification when sufficient or an enrolled Fleet profile when machine
+execution is required. GitHub Actions is forbidden. If Codex becomes materially
 useful, persist a cloud-to-Codex handoff in GitHub and stop at the handoff boundary.
 Never silently use a paid API.
 ```
