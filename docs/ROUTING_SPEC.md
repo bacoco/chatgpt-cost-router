@@ -43,7 +43,11 @@ Validate schemas and timestamps; reject duplicate candidate IDs. For each plan:
 4. Check total sequential active duration against its limit, if supplied.
 5. Count changes of executor context (surface **or session**), honoring the hop limit.
    Work in the current context remains possible after the hop budget is exhausted.
-6. Reject forbidden surfaces and require fresh scoped evidence for each step/action.
+6. Reject any action whose name starts with a policy-level `forbidden_action_prefixes`
+   entry. This applies even when a capability observation claims the action is callable.
+   Current policy forbids `github.actions.*`.
+7. Reject forbidden surfaces and require fresh scoped evidence for each remaining
+   step/action.
 
 Capabilities must match action, resource, surface and destination session exactly.
 The newest observation wins; a simultaneous disagreement fails closed. Observations
@@ -65,6 +69,8 @@ capability, authorization, budget or quality-related requirement.
 No rule automatically returns work to Chat. Apply the same evaluation to remaining
 work and current destination evidence. Policy controls can be deliberately revised;
 changes produce a new policy version/hash and require old handoffs to be re-evaluated.
+A forbidden action cannot be restored by a cheaper cost estimate or historical runtime
+evidence.
 Already-running results can still be reconciled under their accepted policy identity;
 this never authorizes another execution. See [EXECUTION_PROTOCOL](EXECUTION_PROTOCOL.md).
 
