@@ -70,7 +70,7 @@ The MCP ToolAnnotations describe the real behavior. Write tools are not mislabel
 - aliases resolve only from local `~/.config/chatgpt-cost-router/fleet-operator.json`;
 - local config is mode `0600` and is not committed;
 - SSH uses `BatchMode=yes`, strict host-key checking, connection timeout and keepalive;
-- commands are argv arrays and are shell-quoted on the gateway;
+- commands are argv arrays and are shell-quoted by the gateway;
 - each host has explicit read/write executable allowlists;
 - read mode is command-aware: interpreters/build tools are rejected and multi-purpose CLIs are constrained to known read-only subcommands/actions;
 - direct root/admin commands are hard blocked;
