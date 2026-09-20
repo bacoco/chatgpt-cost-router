@@ -1,8 +1,10 @@
 """Optional official MCP SDK compatibility; no SDK import for ordinary A/B CLI use."""
 import argparse
+from .mcp_recovery import with_recovery_instructions
 
 
 def new_server(name, instructions):
+    instructions = with_recovery_instructions(instructions)
     try:
         from mcp.server import MCPServer
         return MCPServer(name,instructions=instructions)

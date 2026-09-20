@@ -23,6 +23,27 @@ Fleet Operator MCP
 
 The MCP implementation uses the current MCP Python SDK Streamable HTTP transport and binds only to loopback. OpenAI Secure MCP Tunnel is the intended production ingress; do not expose port 8810 through Funnel or a public listener.
 
+## Embedded conversation recovery
+
+[MCP-CONVERSATION-RECOVERY-v1]
+Utilise le connecteur et le compte explicitement choisis par l'utilisateur.
+Distingue outil absent et appel échoué ; rapporte l'erreur réellement observée.
+Pour « This conversation does not support developer MCPs », « This conversation
+is restricted to developer MCPs », ou des outils absents après sélection vérifiée,
+en Chat interactif propose une branche de conversation ChatGPT autorisée
+(⋯ → Branch in new chat), ou un nouveau chat autorisé, puis la sélection du même
+plugin et un seul test de lecture minimale vérifiable. Pas une branche Git.
+Ne présente pas cette piste comme un correctif garanti ni une cause démontrée.
+Ne modifie pas les permissions et ne substitue pas un autre compte/connecteur.
+Ne contourne aucune restriction administrateur, protection ou approbation explicite.
+Ne confonds pas ce cas avec authentification, droits GitHub, quota ou approbation.
+Si le retest échoue, arrête les boucles et conserve le diagnostic sans secrets.
+Une lecture réussie ne valide ni les écritures ni les exécutions planifiées.
+Réconcilie toute écriture incertaine avant reprise ; ne la rejoue pas aveuglément.
+En tâche planifiée, signale le blocage dans le résultat disponible, sans créer
+une tâche de remplacement ni prétendre avoir ouvert une nouvelle conversation.
+Sauve un checkpoint seulement si le stockage reste accessible et autorisé.
+
 ## Tools
 
 Read-only tools:
@@ -49,7 +70,7 @@ The MCP ToolAnnotations describe the real behavior. Write tools are not mislabel
 - aliases resolve only from local `~/.config/chatgpt-cost-router/fleet-operator.json`;
 - local config is mode `0600` and is not committed;
 - SSH uses `BatchMode=yes`, strict host-key checking, connection timeout and keepalive;
-- commands are argv arrays and are shell-quoted by the gateway;
+- commands are argv arrays and are shell-quoted on the gateway;
 - each host has explicit read/write executable allowlists;
 - read mode is command-aware: interpreters/build tools are rejected and multi-purpose CLIs are constrained to known read-only subcommands/actions;
 - direct root/admin commands are hard blocked;
@@ -78,3 +99,13 @@ See `docs/FLEET_OPERATOR_RELAY.md` and `schemas/fleet-operator-job.schema.json`.
 ## Verification state
 
 Live evidence proves autonomous GitHub-relay execution on the gateway MacBook and remote machines over SSH/Tailscale. T37 adds command-aware read semantics and durable worker-auth quarantine; the full repository suite passed 100 tests. In live verification, `exec_read` blocked interpreter-based mutation while preserving safe `git status`, and a real Codex authentication failure quarantined a worker so the mesh advertised it `ready=false`. Secure MCP Tunnel and a direct ChatGPT MCP invocation remain untested.
+
+## Recovery configuration revision — 2026-09-20
+
+`operation_contracts.mcp_runtime.new_server()` now appends the self-contained rule
+above through `operation_contracts.mcp_recovery`. It applies to this gateway,
+Chat-first Operations and Fleet Jobs without changing any tool or approval policy.
+The source change needs a deployment and a fresh MCP initialization before a
+connected server can expose it. No live server restart or installed ChatGPT app
+configuration change was performed by this repository update.
+See [configuration and verification](MCP_LAUNCH_CONFIGURATION.md).

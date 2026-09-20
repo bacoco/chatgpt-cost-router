@@ -1,38 +1,45 @@
-# Règle de secours MCP — texte prêt à intégrer
+# Règle MCP — intégrée aux sources et aux contextes de lancement
 
-**À copier dans les instructions du projet ou le prompt de lancement.**
-Ce document n'a pas été installé dans les réglages du plugin ou de ChatGPT.
-Le texte doit être accessible sans un premier appel à GitHub : un lien seul
-ne suffit pas lorsque GitHub est justement bloqué.
+La règle ci-dessous est embarquée dans `.chatgpt/PROJECT.md`, `.chatgpt/SCHEDULER.md`,
+les prompts de bootstrap/workspace et le skill qui initialise les autres projets.
+`operation_contracts/mcp_recovery.py` la fournit également à `new_server()` :
+Chat-first Operations, Fleet Operator et Fleet Jobs la reçoivent à l'initialisation.
+Les copies sont contrôlées par `tests/test_mcp_launch_recovery.py`.
 
 ```text
+[MCP-CONVERSATION-RECOVERY-v1]
 Utilise le connecteur et le compte explicitement choisis par l'utilisateur.
 Distingue outil absent et appel échoué ; rapporte l'erreur réellement observée.
-Pour « This conversation does not support developer MCPs », ou des outils encore
-absents après sélection vérifiée, propose une branche de conversation ChatGPT
+Pour « This conversation does not support developer MCPs », « This conversation
+is restricted to developer MCPs », ou des outils absents après sélection vérifiée,
+en Chat interactif propose une branche de conversation ChatGPT autorisée
 (⋯ → Branch in new chat), ou un nouveau chat autorisé, puis la sélection du même
-plugin et une lecture minimale vérifiable. Pas une branche Git.
+plugin et un seul test de lecture minimale vérifiable. Pas une branche Git.
 Ne présente pas cette piste comme un correctif garanti ni une cause démontrée.
-Ne modifie pas les permissions, ne substitue pas un autre compte/connecteur et
-ne contourne aucune restriction administrateur ou protection explicite.
+Ne modifie pas les permissions et ne substitue pas un autre compte/connecteur.
+Ne contourne aucune restriction administrateur, protection ou approbation explicite.
 Ne confonds pas ce cas avec authentification, droits GitHub, quota ou approbation.
-Après correction de la sélection, un seul retest en lecture ; si l'échec persiste,
-arrête les boucles et conserve le diagnostic pour le support, sans secrets.
+Si le retest échoue, arrête les boucles et conserve le diagnostic sans secrets.
 Une lecture réussie ne valide ni les écritures ni les exécutions planifiées.
 Réconcilie toute écriture incertaine avant reprise ; ne la rejoue pas aveuglément.
-En tâche planifiée, signale le blocage sans créer de tâche de remplacement ni
-prétendre avoir ouvert une nouvelle conversation.
+En tâche planifiée, signale le blocage dans le résultat disponible, sans créer
+une tâche de remplacement ni prétendre avoir ouvert une nouvelle conversation.
+Sauve un checkpoint seulement si le stockage reste accessible et autorisé.
 ```
 
-## Petit test de lecture
+## Déploiement et limites
 
-```text
-Utilise uniquement GitHub — chatgpt, avec le compte prévu.
-Lis instructions/README.md dans bacoco/alfred-chatgpt, refs/heads/main.
-Donne l'outil réellement appelé, le résultat et le SHA s'il est retourné.
-Ne change aucun fichier, compte, connecteur, permission ou tâche.
-```
+Ces changements modifient les sources et modèles du dépôt, pas rétroactivement
+les réglages d'une application installée, les tâches natives ni un serveur distant.
+La fiche de `GitHub — chatgpt` dans ChatGPT n'est pas éditable par l'outil GitHub.
+Sa configuration hébergée n'a pas été modifiée par ce commit. Ne pas annoncer
+le contraire. Le texte ci-dessus est aussi le contenu autonome destiné au champ
+d'instructions du plugin quand l'opérateur en dispose ; il n'ajoute aucun droit.
 
-[Constat, limites et procédure](MCP_CONVERSATION_RECOVERY.md).
-Une description de plugin aide seulement si elle a été chargée ; cette règle
-n'accorde aucun pouvoir supplémentaire à un serveur ou au modèle.
+Le serveur A/B modifié transmet la règle via les instructions MCP lorsqu'il est
+installé puis initialisé. Un refus de ChatGPT avant initialisation ne peut pas être
+intercepté par ce serveur : le contexte de lancement doit donc embarquer la règle.
+Un fichier sur GitHub n'est pas automatiquement une instruction chargée dans ChatGPT.
+
+Voir [le raccordement et sa recette](MCP_LAUNCH_CONFIGURATION.md) et
+[les observations initiales](MCP_CONVERSATION_RECOVERY.md).
