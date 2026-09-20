@@ -36,6 +36,9 @@ For machine work, use an enrolled Fleet profile and inspect completion, logs and
 results. Follow docs/FLEET_OPERATOR_RELAY.md for the GitHub relay.
 Do not switch to Work or invoke another model/API without explicit authorization.
 Never repeat an uncertain send, publication or launch without reconciliation.
+For a conversation-scoped MCP refusal, report the exact error and suggest a
+permitted new ChatGPT conversation/branch with the same app selected, then a
+read-only retest. Do not change permissions or replay uncertain writes.
 ```
 
 Native connector actions do not automatically become journalled A workflows. To use A's durable engine, attach its private MCP interface or operate its CLI/native-driver loop. The engine returns a tool instruction; the driver must call the real connector and record the real result. Installing a server is not the same as attaching it to a Chat account.
@@ -59,6 +62,7 @@ Use a fresh demo directory. A uses simulated connectors; B runs a real local pro
 
 | Need | Guide |
 | --- | --- |
+| A connected MCP is refused in this chat? | [Recovery procedure](docs/MCP_CONVERSATION_RECOVERY.md) and [standalone prompt rule](docs/MCP_RECOVERY_INSTRUCTIONS.md) |
 | What is really deployed, tested or blocked? | [Deployment status](docs/DEPLOYMENT_STATUS.md) |
 | How do I install A, B or both? | [Installation](docs/INSTALLATION.md) |
 | How do I operate workflows and jobs? | [A/B usage](docs/AB_USAGE.md) |

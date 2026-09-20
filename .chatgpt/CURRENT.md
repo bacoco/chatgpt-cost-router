@@ -1,6 +1,6 @@
 # Current A/B work
 
-Date: 2026-09-19.
+Date: 2026-09-20.
 
 Source policy update: current `main` forbids GitHub Actions as an execution,
 validation, recovery or publication lane. The active routing policy rejects
@@ -24,3 +24,14 @@ Read ../README.md and ../docs/DEPLOYMENT_STATUS.md first. Final deployment evide
 Runtime currently being accepted is 10b3ee3e438d57b210b1155e2dbaf19aac9b00db. MacBook and macstudioprod have completed real process/artifact/cancellation checks. Other hosts must retain their specific blockers. Keep existing legacy services/checkouts intact and use the separate A/B queue only once its result evidence is confirmed.
 
 Never claim Chat attachment from local MCP initialization, success from a queued job, CI pass from a local suite, or complete fleet deployment from two verified nodes. Do not replay the macstudio uncertain smoke.
+
+## MCP conversation recovery — observed 2026-09-20
+
+The personal `GitHub — chatgpt` connector read ALFRED's instructions successfully
+after a previously reported conversation-scoped refusal. The downloaded bytes
+matched the returned Git blob SHA. See `../docs/MCP_CONVERSATION_RECOVERY.md`.
+A new ChatGPT conversation/branch is a troubleshooting candidate, not a proven
+cause, a Git branch operation, a permission bypass or scheduled-runtime proof.
+Keep `../docs/MCP_RECOVERY_INSTRUCTIONS.md` in the launch context itself: GitHub
+must not be the only source of help when GitHub is unavailable.
+These documentation changes do not modify the installed plugin or its server.

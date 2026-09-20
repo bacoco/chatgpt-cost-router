@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-20",
+  "surface": "ChatGPT interactive Chat",
+  "connector": "GitHub — chatgpt",
+  "prior_failure": {
+    "message": "FORBIDDEN: This conversation does not support developer MCPs",
+    "evidence": "Reported earlier in this conversation; no raw platform/server logs attached."
+  },
+  "successful_read": {
+    "tool": "GitHub_—_chatgpt.get_file_contents",
+    "repository": "bacoco/alfred-chatgpt",
+    "path": "instructions/README.md",
+    "ref": "refs/heads/main",
+    "response": "successfully downloaded text file",
+    "byte_count": 4241,
+    "git_blob_sha1": "088b5ba0909c3bbf1c0b83df482553e550cb75e1",
+    "hash_recomputed_locally": true,
+    "hash_matches": true
+  },
+  "limits": {
+    "chat_branch_creation_observed": null,
+    "branching_causality_proven": false,
+    "server_failure_logs_reviewed": false,
+    "write_test_in_this_probe": false,
+    "scheduled_execution_tested": false,
+    "plugin_settings_modified": false
+  },
+  "interpretation": "Read availability is verified after a previously reported refusal. A new conversation/branch is a bounded troubleshooting option, not a proven cause or guaranteed repair.",
+  "note": "This receipt records the read before the documentation edits; later documentation writes are separate evidence. The recorded file SHA can legitimately change.",
+  "sources": [
+    "https://help.openai.com/en/articles/20001497",
+    "https://help.openai.com/en/articles/6825453-chatgpt-release-notes",
+    "https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt-beta",
+    "https://developers.openai.com/api/docs/mcp"
+  ]
+}
