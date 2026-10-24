@@ -2,6 +2,12 @@
 
 The current result and scope are recorded in [deployment status](DEPLOYMENT_STATUS.md). Historical counts certify their own source trees only; do not add counts across revisions or equate source-suite results with live fleet acceptance. GitHub Actions is not used for current validation.
 
+The [24 October source receipt](../audits/main-integration-20261024/validation.json)
+certifies exact main `d2438d95e2a3ceca994d60b7ec25522e23be5f83`: 255 tests,
+254 PASS, one SKIP (optional official MCP SDK unavailable), no failures/errors.
+See [reproduction and environment](../audits/main-integration-20261024/README.md).
+The recorded deployed/live-verified runtime remains `10b3ee3e438d57b210b1155e2dbaf19aac9b00db`.
+
 ## Reproduce source validation
 
 ```bash

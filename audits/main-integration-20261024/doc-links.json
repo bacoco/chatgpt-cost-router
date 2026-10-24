@@ -1,0 +1,187 @@
+[
+  {
+    "file": "README.md",
+    "target": "docs/DEPLOYMENT_STATUS.md",
+    "exists": true
+  },
+  {
+    "file": "README.md",
+    "target": "examples/",
+    "exists": true
+  },
+  {
+    "file": "README.md",
+    "target": "docs/MCP_CONVERSATION_RECOVERY.md",
+    "exists": true
+  },
+  {
+    "file": "README.md",
+    "target": "docs/MCP_RECOVERY_INSTRUCTIONS.md",
+    "exists": true
+  },
+  {
+    "file": "README.md",
+    "target": "docs/DEPLOYMENT_STATUS.md",
+    "exists": true
+  },
+  {
+    "file": "README.md",
+    "target": "docs/INSTALLATION.md",
+    "exists": true
+  },
+  {
+    "file": "README.md",
+    "target": "docs/AB_USAGE.md",
+    "exists": true
+  },
+  {
+    "file": "README.md",
+    "target": "docs/FLEET_OPERATOR_RELAY.md",
+    "exists": true
+  },
+  {
+    "file": "README.md",
+    "target": "docs/ARCHITECTURE.md",
+    "exists": true
+  },
+  {
+    "file": "README.md",
+    "target": "docs/ROADMAP.md",
+    "exists": true
+  },
+  {
+    "file": "README.md",
+    "target": "docs/README.md",
+    "exists": true
+  },
+  {
+    "file": "README.md",
+    "target": "SPEC.md",
+    "exists": true
+  },
+  {
+    "file": "docs/README.md",
+    "target": "../README.md",
+    "exists": true
+  },
+  {
+    "file": "docs/README.md",
+    "target": "DEPLOYMENT_STATUS.md",
+    "exists": true
+  },
+  {
+    "file": "docs/README.md",
+    "target": "INSTALLATION.md",
+    "exists": true
+  },
+  {
+    "file": "docs/README.md",
+    "target": "AB_USAGE.md",
+    "exists": true
+  },
+  {
+    "file": "docs/README.md",
+    "target": "FLEET_OPERATOR_RELAY.md",
+    "exists": true
+  },
+  {
+    "file": "docs/README.md",
+    "target": "ARCHITECTURE.md",
+    "exists": true
+  },
+  {
+    "file": "docs/README.md",
+    "target": "AB_VALIDATION.md",
+    "exists": true
+  },
+  {
+    "file": "docs/README.md",
+    "target": "ROADMAP.md",
+    "exists": true
+  },
+  {
+    "file": "docs/README.md",
+    "target": "../.chatgpt/CURRENT.md",
+    "exists": true
+  },
+  {
+    "file": "docs/INSTALLATION.md",
+    "target": "DEPLOYMENT_STATUS.md",
+    "exists": true
+  },
+  {
+    "file": "docs/INSTALLATION.md",
+    "target": "AB_USAGE.md",
+    "exists": true
+  },
+  {
+    "file": "docs/INSTALLATION.md",
+    "target": "../examples/",
+    "exists": true
+  },
+  {
+    "file": "docs/AB_USAGE.md",
+    "target": "INSTALLATION.md",
+    "exists": true
+  },
+  {
+    "file": "docs/AB_USAGE.md",
+    "target": "DEPLOYMENT_STATUS.md",
+    "exists": true
+  },
+  {
+    "file": "docs/AB_USAGE.md",
+    "target": "../examples/",
+    "exists": true
+  },
+  {
+    "file": "docs/AB_USAGE.md",
+    "target": "FLEET_OPERATOR_RELAY.md",
+    "exists": true
+  },
+  {
+    "file": "docs/ARCHITECTURE.md",
+    "target": "DEPLOYMENT_STATUS.md",
+    "exists": true
+  },
+  {
+    "file": "docs/ARCHITECTURE.md",
+    "target": "ROADMAP.md",
+    "exists": true
+  },
+  {
+    "file": "docs/AB_VALIDATION.md",
+    "target": "DEPLOYMENT_STATUS.md",
+    "exists": true
+  },
+  {
+    "file": "docs/ROADMAP.md",
+    "target": "DEPLOYMENT_STATUS.md",
+    "exists": true
+  },
+  {
+    "file": "docs/DEPLOYMENT_STATUS.md",
+    "target": "MAIN_INTEGRATION_STATUS.md",
+    "exists": true
+  },
+  {
+    "file": "docs/DEPLOYMENT_STATUS.md",
+    "target": "ROADMAP.md",
+    "exists": true
+  },
+  {
+    "file": "docs/FLEET_OPERATOR_RELAY.md",
+    "target": "DEPLOYMENT_STATUS.md",
+    "exists": true
+  },
+  {
+    "file": "docs/MAIN_INTEGRATION_STATUS.md",
+    "target": "../audits/main-integration-20260911/validation.json",
+    "exists": true
+  },
+  {
+    "file": "docs/MAIN_INTEGRATION_STATUS.md",
+    "target": "DEPLOYMENT_STATUS.md",
+    "exists": true
+  }
+]

@@ -1,0 +1,73 @@
+{
+  "generated_at": "2026-10-24T13:29:33.622839+00:00",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+  "dependencies": {
+    "jsonschema": "4.26.0",
+    "mcp": "NOT_INSTALLED",
+    "setuptools": "68.1.2",
+    "PyYAML": "6.0.1"
+  },
+  "tests_run": 255,
+  "passed": 254,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 1,
+  "successful": true,
+  "source_unchanged_during_tests": true,
+  "seconds": 15.377089,
+  "live_gates": {
+    "native_chat_attachment": "NOT_RUN",
+    "real_connectors": "NOT_RUN",
+    "user_fleet_ssh": "NOT_RUN",
+    "macos_service_installation": "NOT_RUN",
+    "container_engine": "NOT_RUN",
+    "remote_commit_merge": "NOT_PERFORMED"
+  },
+  "version": 1,
+  "repository": "bacoco/chatgpt-cost-router",
+  "tested_commit": "d2438d95e2a3ceca994d60b7ec25522e23be5f83",
+  "tested_git_tree": "7c00fb40fa6c02eb76f16be142f7440bdfd729d1",
+  "observed_origin_main_before_tests": "d2438d95e2a3ceca994d60b7ec25522e23be5f83",
+  "head_unchanged_during_tests": true,
+  "working_tree_clean_before_and_after": true,
+  "recorded_file_hashes_match_tested_commit": true,
+  "verified_git_trees": {
+    "chat_ops": "8baf7b205f7ed0f504ad08f970aff52a66043223",
+    "cost_router": "8f91aa2faebe6be991735a15effec0c3453e7d2b",
+    "examples": "01fff8a9631591f7c2d539c59d7d5293c8d7dbed",
+    "fleet_operator": "35255ea8d8e7938b113d3c3568e4a7106af09bf2",
+    "operation_contracts": "a081d23c3f9b869e4a0007b982475418fdff189d",
+    "policy": "814ce23944bc2093566b28f3df5a6d4beb19d978",
+    "schemas": "2a205aba3da388ee605e2b3e9e8e692dd150ad11",
+    "scripts": "03258369dcfe33338154259d718d42680bc83f6c",
+    "skills": "7c91f156d681c6c62139803837aad70b6e12ae8d",
+    "tests": "bddfd3f8037e9548e866eab795ad5eb3cd114baa"
+  },
+  "skip_details": [
+    {
+      "test": "test_gateway_integration_local.GatewayTests.test_actual_mcp_sdk_inprocess_discovery_and_health",
+      "state": "SKIPPED",
+      "seconds": 1.1e-05,
+      "detail": "optional official mcp SDK unavailable in this environment"
+    }
+  ],
+  "relative_links_checked": 37,
+  "broken_relative_links": [],
+  "artifacts_sha256": {
+    "full-validation.json": "a40c8ea5cebeae3e6bc412ac19d5ecd77990266ed16de426a25baa80de04bde8",
+    "unittest.log": "a4395e60be39f056ba9a5e240c2ec8f799035e8ec944eb3595e994e6a0facaba",
+    "doc-links.json": "83c27327b53faae864e41756556eca9d8371316566962890de986552e05814e7"
+  },
+  "reproduce": "git worktree add --detach /tmp/cost-router-source-20261024 d2438d95e2a3ceca994d60b7ec25522e23be5f83\ncd /tmp/cost-router-source-20261024\npython3 scripts/validate_ab.py --output /tmp/ab-validation",
+  "method": "Existing complete local suite, including schema and documentation-parser checks; clean worktree at fetched main, recorded file hashes compared to exact Git blobs. Relative-link check reuses the current-guide algorithm from scripts/ab_validate_snapshot.py.",
+  "historical_validator_source_baseline": "cd897ddf3856ffdabef68ba1a71b43dd99efad46",
+  "source_baseline_note": "The unchanged validator contains a historical source_baseline constant. It is not this run identity; tested_commit and verified_git_trees identify the source.",
+  "limits": [
+    "Local deterministic and temporary-process/loopback integration validation only",
+    "No GitHub Actions, deployment, real provider/connector or remote fleet calls",
+    "Optional official MCP SDK unavailable; its acceptance remains SKIPPED",
+    "PyYAML 6.0.1 installed versus development pin 6.0.2; no dependency installation performed",
+    "Documentation/evidence commits after tested_commit do not certify a new source revision"
+  ]
+}
