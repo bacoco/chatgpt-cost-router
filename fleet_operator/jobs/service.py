@@ -165,4 +165,10 @@ class Jobs:
             rows = db.execute("SELECT id,project FROM operations WHERE principal=? AND kind='process' AND state='QUEUED' ORDER BY created,id LIMIT 200",
                               (self.config.principal,)).fetchall()
         for row in rows:
+            try:
+                self.config.projects.project(self.config.principal, row["project"])
+            except ContractError:
+                self.journal.transition(row["id"], {"QUEUED"}, "BLOCKED",
+                                        {"reason":"project authorization revoked before start"})
+                continue
             self.start(row["project"],row["id"])
