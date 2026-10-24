@@ -1,0 +1,1715 @@
+{
+  "version": 1,
+  "source_baseline": "cd897ddf3856ffdabef68ba1a71b43dd99efad46",
+  "generated_at": "2026-10-24T13:29:33.622839+00:00",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+  "dependencies": {
+    "jsonschema": "4.26.0",
+    "mcp": "NOT_INSTALLED",
+    "setuptools": "68.1.2",
+    "PyYAML": "6.0.1"
+  },
+  "tests_run": 255,
+  "passed": 254,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 1,
+  "successful": true,
+  "source_unchanged_during_tests": true,
+  "seconds": 15.377089,
+  "cases": [
+    {
+      "test": "test_ab_chat_recovery.ChatRecoveryTests.test_bound_resource_distinguishes_boolean_and_number",
+      "state": "PASS",
+      "seconds": 0.019655,
+      "detail": null
+    },
+    {
+      "test": "test_ab_chat_recovery.ChatRecoveryTests.test_cancel_before_execution_stops_all_tools",
+      "state": "PASS",
+      "seconds": 0.023298,
+      "detail": null
+    },
+    {
+      "test": "test_ab_chat_recovery.ChatRecoveryTests.test_cancel_pending_write_allows_only_readback",
+      "state": "PASS",
+      "seconds": 0.046344,
+      "detail": null
+    },
+    {
+      "test": "test_ab_chat_recovery.ChatRecoveryTests.test_concurrent_next_emits_one_instruction",
+      "state": "PASS",
+      "seconds": 0.069204,
+      "detail": null
+    },
+    {
+      "test": "test_ab_chat_recovery.ChatRecoveryTests.test_deadline_does_not_prevent_verifying_an_already_completed_write",
+      "state": "PASS",
+      "seconds": 0.054015,
+      "detail": null
+    },
+    {
+      "test": "test_ab_chat_recovery.ChatRecoveryTests.test_events_are_scoped_and_do_not_expose_tool_output",
+      "state": "PASS",
+      "seconds": 0.028408,
+      "detail": null
+    },
+    {
+      "test": "test_ab_chat_recovery.ChatRecoveryTests.test_expired_workflow_cannot_start_a_new_tool",
+      "state": "PASS",
+      "seconds": 0.022374,
+      "detail": null
+    },
+    {
+      "test": "test_ab_chat_recovery.ChatRecoveryTests.test_missing_null_binding_is_not_authorized",
+      "state": "PASS",
+      "seconds": 0.018874,
+      "detail": null
+    },
+    {
+      "test": "test_ab_chat_recovery.ChatRecoveryTests.test_preflight_failure_retries_only_preflight",
+      "state": "PASS",
+      "seconds": 0.042843,
+      "detail": null
+    },
+    {
+      "test": "test_ab_chat_recovery.ChatRecoveryTests.test_same_connector_supports_multiple_explicit_accounts",
+      "state": "PASS",
+      "seconds": 0.060407,
+      "detail": null
+    },
+    {
+      "test": "test_ab_contracts.ContractTests.test_account_budget_is_shared_not_per_project",
+      "state": "PASS",
+      "seconds": 0.017607,
+      "detail": null
+    },
+    {
+      "test": "test_ab_contracts.ContractTests.test_bad_grants_are_rejected",
+      "state": "PASS",
+      "seconds": 6.6e-05,
+      "detail": null
+    },
+    {
+      "test": "test_ab_contracts.ContractTests.test_duplicate_and_nonfinite_json_rejected",
+      "state": "PASS",
+      "seconds": 6.6e-05,
+      "detail": null
+    },
+    {
+      "test": "test_ab_contracts.ContractTests.test_journal_idempotency_scope_and_conflict",
+      "state": "PASS",
+      "seconds": 0.014055,
+      "detail": null
+    },
+    {
+      "test": "test_ab_contracts.ContractTests.test_project_and_bound_resource",
+      "state": "PASS",
+      "seconds": 6.8e-05,
+      "detail": null
+    },
+    {
+      "test": "test_ab_delivery.IntegrationTests.test_a_to_b_process_and_verified_artifact",
+      "state": "PASS",
+      "seconds": 0.156333,
+      "detail": null
+    },
+    {
+      "test": "test_ab_delivery.IntegrationTests.test_artifact_rejects_foreign_project_and_unknown_name",
+      "state": "PASS",
+      "seconds": 0.065241,
+      "detail": null
+    },
+    {
+      "test": "test_ab_delivery.IntegrationTests.test_receipt_tampering_and_symlink_rejected",
+      "state": "PASS",
+      "seconds": 0.119996,
+      "detail": null
+    },
+    {
+      "test": "test_ab_delivery.IntegrationTests.test_standalone_cli_submit_status_and_artifact",
+      "state": "PASS",
+      "seconds": 0.228574,
+      "detail": null
+    },
+    {
+      "test": "test_ab_delivery.NativeRecoveryTests.test_lost_response_recovered_and_used_by_next_step",
+      "state": "PASS",
+      "seconds": 0.102911,
+      "detail": null
+    },
+    {
+      "test": "test_ab_delivery.NativeRecoveryTests.test_other_session_cannot_record_pending_result",
+      "state": "PASS",
+      "seconds": 0.033165,
+      "detail": null
+    },
+    {
+      "test": "test_ab_delivery_examples.ExampleTests.test_demo_has_simulated_connectors_but_real_process_and_artifact",
+      "state": "PASS",
+      "seconds": 0.303754,
+      "detail": null
+    },
+    {
+      "test": "test_ab_delivery_examples.ExampleTests.test_examples_follow_schema_and_runtime_workflow_contract",
+      "state": "PASS",
+      "seconds": 0.005689,
+      "detail": null
+    },
+    {
+      "test": "test_ab_delivery_examples.ExampleTests.test_old_worker_imports_are_exact_compatibility_aliases",
+      "state": "PASS",
+      "seconds": 1.9e-05,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_cancel_pending_read_does_not_allow_following_write",
+      "state": "PASS",
+      "seconds": 0.05029,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_cancellation_is_fenced_at_mutation_claim",
+      "state": "PASS",
+      "seconds": 0.042402,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_cancelled_uncertain_write_is_only_reconciled_by_read",
+      "state": "PASS",
+      "seconds": 0.049364,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_events_are_project_scoped",
+      "state": "PASS",
+      "seconds": 0.034771,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_failed_preflight_is_retried_as_read_not_skipped",
+      "state": "PASS",
+      "seconds": 0.07097,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_journal_is_private_at_creation_and_refuses_symlink",
+      "state": "PASS",
+      "seconds": 0.034835,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_late_reply_cannot_overwrite_new_read_token",
+      "state": "PASS",
+      "seconds": 0.067977,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_lost_created_id_is_recovered_using_bound_read",
+      "state": "PASS",
+      "seconds": 0.085567,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_missing_recovery_identity_fails_closed",
+      "state": "PASS",
+      "seconds": 0.042995,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_other_session_cannot_record_pending_native_output",
+      "state": "PASS",
+      "seconds": 0.045574,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_readback_can_complete_after_deadline_without_replaying_write",
+      "state": "PASS",
+      "seconds": 0.082214,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_recover_output_cannot_reference_future_or_unobserved_result",
+      "state": "PASS",
+      "seconds": 0.015404,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_recovery_cannot_be_a_write",
+      "state": "PASS",
+      "seconds": 0.031399,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_ungranted_later_action_is_rejected_before_any_work",
+      "state": "PASS",
+      "seconds": 0.031004,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_utf8_byte_limit_and_nonregular_json",
+      "state": "PASS",
+      "seconds": 0.031991,
+      "detail": null
+    },
+    {
+      "test": "test_ab_recovery_regressions.RecoveryTests.test_verified_output_mapping_unblocks_downstream_without_replay",
+      "state": "PASS",
+      "seconds": 0.100996,
+      "detail": null
+    },
+    {
+      "test": "test_actions_budget_gate.ActionsPolicyGateTests.test_github_actions_is_rejected_even_when_capability_is_verified",
+      "state": "PASS",
+      "seconds": 0.097823,
+      "detail": null
+    },
+    {
+      "test": "test_audit_regressions.AuditRegressions.test_canonical_example_is_valid",
+      "state": "PASS",
+      "seconds": 0.032789,
+      "detail": null
+    },
+    {
+      "test": "test_audit_regressions.AuditRegressions.test_native_skills_have_discoverable_metadata",
+      "state": "PASS",
+      "seconds": 0.00058,
+      "detail": null
+    },
+    {
+      "test": "test_audit_regressions.AuditRegressions.test_reject_blank_objective",
+      "state": "PASS",
+      "seconds": 0.000303,
+      "detail": null
+    },
+    {
+      "test": "test_audit_regressions.AuditRegressions.test_reject_empty_success_criteria",
+      "state": "PASS",
+      "seconds": 0.000816,
+      "detail": null
+    },
+    {
+      "test": "test_audit_regressions.AuditRegressions.test_reject_missing_or_unknown_version",
+      "state": "PASS",
+      "seconds": 0.000387,
+      "detail": null
+    },
+    {
+      "test": "test_audit_regressions.AuditRegressions.test_reject_wrong_known_control_types",
+      "state": "PASS",
+      "seconds": 0.000928,
+      "detail": null
+    },
+    {
+      "test": "test_capability_store.CapabilityStoreTests.test_denial_and_expiry_remain_account_scoped",
+      "state": "PASS",
+      "seconds": 0.024583,
+      "detail": null
+    },
+    {
+      "test": "test_capability_store.CapabilityStoreTests.test_every_existing_context_dimension_still_isolated",
+      "state": "PASS",
+      "seconds": 0.019434,
+      "detail": null
+    },
+    {
+      "test": "test_capability_store.CapabilityStoreTests.test_legacy_six_field_keys_are_retained_but_require_fresh_observation",
+      "state": "PASS",
+      "seconds": 0.018121,
+      "detail": null
+    },
+    {
+      "test": "test_capability_store.CapabilityStoreTests.test_newer_other_account_survives_reopen_without_clobbering",
+      "state": "PASS",
+      "seconds": 0.018187,
+      "detail": null
+    },
+    {
+      "test": "test_capability_store.CapabilityStoreTests.test_same_account_conflict_and_stale_observation_still_rejected",
+      "state": "PASS",
+      "seconds": 0.019659,
+      "detail": null
+    },
+    {
+      "test": "test_capability_store.CapabilityStoreTests.test_same_timestamp_accounts_and_connectors_coexist",
+      "state": "PASS",
+      "seconds": 0.027033,
+      "detail": null
+    },
+    {
+      "test": "test_capability_store.CapabilityStoreTests.test_wrong_account_or_connector_has_no_evidence",
+      "state": "PASS",
+      "seconds": 0.015338,
+      "detail": null
+    },
+    {
+      "test": "test_chat_operations.ChatOperationsTests.test_catalog_is_not_limited_to_issues",
+      "state": "PASS",
+      "seconds": 0.018956,
+      "detail": null
+    },
+    {
+      "test": "test_chat_operations.ChatOperationsTests.test_multi_app_workflow_approval_and_readback",
+      "state": "PASS",
+      "seconds": 0.074266,
+      "detail": null
+    },
+    {
+      "test": "test_chat_operations.ChatOperationsTests.test_new_chat_does_not_inherit_capability_claims",
+      "state": "PASS",
+      "seconds": 0.041476,
+      "detail": null
+    },
+    {
+      "test": "test_chat_operations.ChatOperationsTests.test_newer_denial_wins",
+      "state": "PASS",
+      "seconds": 0.045773,
+      "detail": null
+    },
+    {
+      "test": "test_chat_operations.ChatOperationsTests.test_pending_native_call_has_single_use_token",
+      "state": "PASS",
+      "seconds": 0.035885,
+      "detail": null
+    },
+    {
+      "test": "test_chat_operations.ChatOperationsTests.test_uncertain_write_is_never_redispatched",
+      "state": "PASS",
+      "seconds": 0.079903,
+      "detail": null
+    },
+    {
+      "test": "test_chat_operations.ChatOperationsTests.test_unknown_plugin_requires_operator_descriptor",
+      "state": "PASS",
+      "seconds": 0.019866,
+      "detail": null
+    },
+    {
+      "test": "test_chat_operations.ChatOperationsTests.test_unverified_write_and_credentials_are_rejected",
+      "state": "PASS",
+      "seconds": 0.021976,
+      "detail": null
+    },
+    {
+      "test": "test_chat_operations.ChatOperationsTests.test_wrong_project_binding_is_rejected",
+      "state": "PASS",
+      "seconds": 0.041233,
+      "detail": null
+    },
+    {
+      "test": "test_cli.CliTests.test_blocked_has_distinct_exit_and_no_plan",
+      "state": "PASS",
+      "seconds": 0.161794,
+      "detail": null
+    },
+    {
+      "test": "test_cli.CliTests.test_capability_validation_uses_explicit_clock",
+      "state": "PASS",
+      "seconds": 0.085099,
+      "detail": null
+    },
+    {
+      "test": "test_cli.CliTests.test_documented_example",
+      "state": "PASS",
+      "seconds": 0.148729,
+      "detail": null
+    },
+    {
+      "test": "test_cli.CliTests.test_invalid_json_and_duplicate_fields_fail_without_traceback",
+      "state": "PASS",
+      "seconds": 0.160257,
+      "detail": null
+    },
+    {
+      "test": "test_cli.CliTests.test_invalid_offset_is_not_normalized_into_valid_time",
+      "state": "PASS",
+      "seconds": 3.8e-05,
+      "detail": null
+    },
+    {
+      "test": "test_delivery_gaps.ArtifactDeliveryTests.test_verified_content",
+      "state": "PASS",
+      "seconds": 0.123797,
+      "detail": null
+    },
+    {
+      "test": "test_delivery_gaps.EnrollmentTests.test_enrolled_runtime_uses_gateway_mapping",
+      "state": "PASS",
+      "seconds": 0.000182,
+      "detail": null
+    },
+    {
+      "test": "test_deployment_assets.DeploymentAssetsTests.test_asset_repair_does_not_include_runtime_code",
+      "state": "PASS",
+      "seconds": 0.00057,
+      "detail": null
+    },
+    {
+      "test": "test_deployment_assets.DeploymentAssetsTests.test_skill_metadata_included_in_deployment_bundle",
+      "state": "PASS",
+      "seconds": 0.000965,
+      "detail": null
+    },
+    {
+      "test": "test_deployment_loopback.LoopbackTests.test_rpc_explicitly_disables_proxy_only_for_loopback",
+      "state": "PASS",
+      "seconds": 0.001556,
+      "detail": null
+    },
+    {
+      "test": "test_deployment_operator.DeploymentTests.test_all_python_sources_compile",
+      "state": "PASS",
+      "seconds": 0.035949,
+      "detail": null
+    },
+    {
+      "test": "test_deployment_operator.DeploymentTests.test_deployment_profiles_validate_and_real_smoke",
+      "state": "PASS",
+      "seconds": 0.925616,
+      "detail": null
+    },
+    {
+      "test": "test_deployment_operator.DeploymentTests.test_disabled_host_refused",
+      "state": "PASS",
+      "seconds": 0.001097,
+      "detail": null
+    },
+    {
+      "test": "test_deployment_operator.DeploymentTests.test_local_does_not_spawn_ssh",
+      "state": "PASS",
+      "seconds": 7.7e-05,
+      "detail": null
+    },
+    {
+      "test": "test_deployment_operator.DeploymentTests.test_root_host_refused",
+      "state": "PASS",
+      "seconds": 0.00014,
+      "detail": null
+    },
+    {
+      "test": "test_deployment_operator.DeploymentTests.test_ssh_checks_host_key_and_disables_forwarding",
+      "state": "PASS",
+      "seconds": 5.7e-05,
+      "detail": null
+    },
+    {
+      "test": "test_deployment_operator.DeploymentTests.test_unconfigured_host_refused",
+      "state": "PASS",
+      "seconds": 4.8e-05,
+      "detail": null
+    },
+    {
+      "test": "test_deployment_operator.VirtualenvActivationTests.test_activation_keeps_virtualenv_symlink_path",
+      "state": "PASS",
+      "seconds": 0.108868,
+      "detail": null
+    },
+    {
+      "test": "test_documented_commands.DocumentedCommandsTests.test_readme_demo_script_and_options_exist",
+      "state": "PASS",
+      "seconds": 0.083823,
+      "detail": null
+    },
+    {
+      "test": "test_documented_commands.DocumentedCommandsTests.test_usage_commands_parse_before_accessing_private_configuration",
+      "state": "PASS",
+      "seconds": 0.015413,
+      "detail": null
+    },
+    {
+      "test": "test_enrollment_local.EnrollmentTests.test_activation_plan_apply_and_real_bootstrap_health",
+      "state": "PASS",
+      "seconds": 0.179307,
+      "detail": null
+    },
+    {
+      "test": "test_enrollment_local.EnrollmentTests.test_activation_refuses_queued_or_uncertain_jobs",
+      "state": "PASS",
+      "seconds": 0.071585,
+      "detail": null
+    },
+    {
+      "test": "test_enrollment_local.EnrollmentTests.test_enrollment_detects_gateway_drift",
+      "state": "PASS",
+      "seconds": 0.105792,
+      "detail": null
+    },
+    {
+      "test": "test_enrollment_local.EnrollmentTests.test_explicit_rollback_keeps_previous_revision",
+      "state": "PASS",
+      "seconds": 0.119048,
+      "detail": null
+    },
+    {
+      "test": "test_enrollment_local.EnrollmentTests.test_plan_is_readonly_and_apply_changes_only_bound_alias",
+      "state": "PASS",
+      "seconds": 0.074297,
+      "detail": null
+    },
+    {
+      "test": "test_enrollment_local.EnrollmentTests.test_stage_verify_tamper_and_idempotent_stage",
+      "state": "PASS",
+      "seconds": 0.084808,
+      "detail": null
+    },
+    {
+      "test": "test_enrollment_local.EnrollmentTests.test_user_service_rendering_never_installs_or_overwrites",
+      "state": "PASS",
+      "seconds": 0.000434,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_jobs.ProcessTests.test_cancel_before_start_does_not_spawn",
+      "state": "PASS",
+      "seconds": 0.012641,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_jobs.ProcessTests.test_fixed_sha_does_not_modify_dirty_checkout",
+      "state": "PASS",
+      "seconds": 0.12808,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_jobs.ProcessTests.test_foreign_project_and_command_injection_rejected",
+      "state": "PASS",
+      "seconds": 0.007426,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_jobs.ProcessTests.test_log_path_is_not_a_request_parameter",
+      "state": "PASS",
+      "seconds": 0.008429,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_jobs.ProcessTests.test_logs_are_bounded",
+      "state": "PASS",
+      "seconds": 0.111598,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_jobs.ProcessTests.test_paid_environment_is_not_inherited",
+      "state": "PASS",
+      "seconds": 0.065481,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_jobs.ProcessTests.test_real_process_result_progress_and_deduplication",
+      "state": "PASS",
+      "seconds": 0.124922,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_jobs.ProcessTests.test_real_timeout",
+      "state": "PASS",
+      "seconds": 1.085231,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_jobs.ProcessTests.test_running_cancellation",
+      "state": "PASS",
+      "seconds": 0.367177,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_jobs.ProcessTests.test_stale_claim_is_uncertain_not_replayed",
+      "state": "PASS",
+      "seconds": 0.010823,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_cwd_cannot_escape_allowed_root",
+      "state": "PASS",
+      "seconds": 0.00033,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_destructive_requires_explicit_flag",
+      "state": "PASS",
+      "seconds": 0.000227,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_inventory_hides_ssh_targets",
+      "state": "PASS",
+      "seconds": 0.000122,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_local_transport_skips_ssh",
+      "state": "PASS",
+      "seconds": 0.00014,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_output_is_capped",
+      "state": "PASS",
+      "seconds": 0.000136,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_parallel_preserves_requested_host_order",
+      "state": "PASS",
+      "seconds": 0.000553,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_read_command_enforces_allowlist",
+      "state": "PASS",
+      "seconds": 0.000141,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_read_file_stays_under_root_and_uses_head",
+      "state": "PASS",
+      "seconds": 0.000169,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_read_mode_allows_safe_git_status",
+      "state": "PASS",
+      "seconds": 0.000143,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_read_mode_blocks_find_exec_and_delete",
+      "state": "PASS",
+      "seconds": 0.000168,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_read_mode_rejects_interpreters_and_mutating_subcommands",
+      "state": "PASS",
+      "seconds": 0.00014,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_root_admin_command_is_hard_blocked",
+      "state": "PASS",
+      "seconds": 0.000106,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_ssh_is_batch_strict_and_quotes_argv",
+      "state": "PASS",
+      "seconds": 0.000142,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator.FleetOperatorTests.test_timeout_becomes_structured_result",
+      "state": "PASS",
+      "seconds": 0.000122,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator_macos.MacOSFleetOperatorTests.test_compatible_python_skips_39_and_uses_311",
+      "state": "PASS",
+      "seconds": 0.000147,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator_macos.MacOSFleetOperatorTests.test_dry_relay_install_has_no_host_targets_in_plist",
+      "state": "PASS",
+      "seconds": 0.000847,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator_macos.MacOSFleetOperatorTests.test_dry_server_install_plist_has_config_path_not_config_contents",
+      "state": "PASS",
+      "seconds": 0.00065,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator_macos.MacOSFleetOperatorTests.test_dry_tunnel_install_plist_contains_no_api_key",
+      "state": "PASS",
+      "seconds": 0.000456,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator_macos.MacOSFleetOperatorTests.test_init_config_is_private_and_hides_nothing_in_repo",
+      "state": "PASS",
+      "seconds": 0.000251,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator_macos.MacOSFleetOperatorTests.test_plist_keepalive_and_loopback_env",
+      "state": "PASS",
+      "seconds": 2.1e-05,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator_macos.MacOSFleetOperatorTests.test_tunnel_id_validation",
+      "state": "PASS",
+      "seconds": 1.5e-05,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator_macos.MacOSFleetOperatorTests.test_tunnel_yaml_uses_file_secret_and_local_mcp",
+      "state": "PASS",
+      "seconds": 2.2e-05,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator_relay.RelayTests.test_bad_action_returns_error_result_not_execution",
+      "state": "PASS",
+      "seconds": 0.005028,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator_relay.RelayTests.test_exec_read_cannot_smuggle_destructive_flag",
+      "state": "PASS",
+      "seconds": 0.000125,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator_relay.RelayTests.test_job_filename_and_expiry_are_enforced",
+      "state": "PASS",
+      "seconds": 3.2e-05,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_operator_relay.RelayTests.test_run_once_executes_and_replay_is_skipped",
+      "state": "PASS",
+      "seconds": 0.01517,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_queue.QueueTests.test_quarantine_storage_errors_propagate",
+      "state": "PASS",
+      "seconds": 0.008887,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_queue.QueueTests.test_removed_project_does_not_block_later_valid_job",
+      "state": "PASS",
+      "seconds": 0.065848,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_queue.QueueTests.test_revoked_membership_does_not_block_later_valid_job",
+      "state": "PASS",
+      "seconds": 0.118932,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_queue.QueueTests.test_revoked_node_uses_existing_policy_block",
+      "state": "PASS",
+      "seconds": 0.07077,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_queue.QueueTests.test_revoked_profile_uses_existing_policy_block",
+      "state": "PASS",
+      "seconds": 0.067244,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_queue.QueueTests.test_start_errors_propagate",
+      "state": "PASS",
+      "seconds": 0.010178,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_recovery_regressions.ProcessRecoveryTests.test_artifact_chunks_and_digest_drift",
+      "state": "PASS",
+      "seconds": 0.113013,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_recovery_regressions.ProcessRecoveryTests.test_artifact_symlink_and_unknown_name_refused",
+      "state": "PASS",
+      "seconds": 0.127784,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_recovery_regressions.ProcessRecoveryTests.test_changed_policy_blocks_queued_execution",
+      "state": "PASS",
+      "seconds": 0.010421,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_recovery_regressions.ProcessRecoveryTests.test_concurrent_submission_is_idempotent",
+      "state": "PASS",
+      "seconds": 0.022247,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_recovery_regressions.ProcessRecoveryTests.test_foreground_parent_cannot_leave_pipe_holding_descendant",
+      "state": "PASS",
+      "seconds": 2.202699,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_recovery_regressions.ProcessRecoveryTests.test_live_metrics_are_observed_and_node_capacity_is_reported",
+      "state": "PASS",
+      "seconds": 0.215302,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_recovery_regressions.ProcessRecoveryTests.test_saved_process_receipt_recovers_sql_failure_without_rerun",
+      "state": "PASS",
+      "seconds": 0.045737,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_recovery_regressions.ProcessRecoveryTests.test_stale_recovery_is_not_limited_to_last_200_jobs",
+      "state": "PASS",
+      "seconds": 0.441191,
+      "detail": null
+    },
+    {
+      "test": "test_fleet_recovery_regressions.ProcessRecoveryTests.test_two_supervisors_cannot_spawn_the_same_job",
+      "state": "PASS",
+      "seconds": 0.132579,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_delivery.GatewayDeliveryTests.test_absolute_git_has_disabled_hooks_and_textconv",
+      "state": "PASS",
+      "seconds": 0.000366,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_delivery.GatewayDeliveryTests.test_artifact_bytes_never_enter_github_relay",
+      "state": "PASS",
+      "seconds": 4.1e-05,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_delivery.GatewayDeliveryTests.test_default_mcp_uses_guarded_runner_and_typed_jobs",
+      "state": "PASS",
+      "seconds": 0.001886,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_delivery.GatewayDeliveryTests.test_lifecycle_denies_unenrolled_and_root_hosts",
+      "state": "PASS",
+      "seconds": 3.6e-05,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_delivery.GatewayDeliveryTests.test_local_cwd_symlink_escape_refused",
+      "state": "PASS",
+      "seconds": 0.000208,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_delivery.GatewayDeliveryTests.test_relative_and_unbounded_commands_refused",
+      "state": "PASS",
+      "seconds": 0.000106,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_delivery.GatewayDeliveryTests.test_supervisor_setup_error_cleans_owned_child",
+      "state": "PASS",
+      "seconds": 0.001734,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_integration_local.GatewayTests.test_actual_mcp_sdk_inprocess_discovery_and_health",
+      "state": "SKIPPED",
+      "seconds": 1.1e-05,
+      "detail": "optional official mcp SDK unavailable in this environment"
+    },
+    {
+      "test": "test_gateway_integration_local.GatewayTests.test_container_cleanup_removes_only_owned_exact_id",
+      "state": "PASS",
+      "seconds": 0.00046,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_integration_local.GatewayTests.test_file_reader_does_not_follow_symlink_or_block_on_fifo",
+      "state": "PASS",
+      "seconds": 0.087081,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_integration_local.GatewayTests.test_gateway_builder_registers_typed_jobs_not_unsafe_runner",
+      "state": "PASS",
+      "seconds": 0.055899,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_integration_local.GatewayTests.test_process_capture_is_bounded_and_environment_is_clean",
+      "state": "PASS",
+      "seconds": 0.027144,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_integration_local.GatewayTests.test_process_capture_timeout_is_bounded",
+      "state": "PASS",
+      "seconds": 0.202279,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_integration_local.GatewayTests.test_project_spoofing_and_revision_mismatch_are_rejected",
+      "state": "PASS",
+      "seconds": 0.090948,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_integration_local.GatewayTests.test_relative_binary_and_git_escape_options_are_rejected",
+      "state": "PASS",
+      "seconds": 0.004646,
+      "detail": null
+    },
+    {
+      "test": "test_gateway_integration_local.GatewayTests.test_typed_gateway_runs_process_and_retrieves_verified_artifact",
+      "state": "PASS",
+      "seconds": 0.337549,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.HandoffTests.test_delegation_and_completed_return",
+      "state": "PASS",
+      "seconds": 0.002485,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.HandoffTests.test_delegation_requires_work_but_return_has_no_new_actions",
+      "state": "PASS",
+      "seconds": 0.001675,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.HandoffTests.test_execution_requires_current_state_and_destination_proof",
+      "state": "PASS",
+      "seconds": 0.003032,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.HandoffTests.test_extension_namespace_preserves_forward_compatibility",
+      "state": "PASS",
+      "seconds": 0.001056,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.HandoffTests.test_false_completion_missing_or_wrong_commit_proof",
+      "state": "PASS",
+      "seconds": 0.004104,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.HandoffTests.test_github_actions_handoff_is_forbidden_by_policy",
+      "state": "PASS",
+      "seconds": 0.001189,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.HandoffTests.test_policy_and_current_repository_state_must_match",
+      "state": "PASS",
+      "seconds": 0.001967,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.HandoffTests.test_wrong_known_fields_and_typo_are_rejected",
+      "state": "PASS",
+      "seconds": 0.002895,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.LedgerTests.test_cancellation_only_before_execution",
+      "state": "PASS",
+      "seconds": 0.008849,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.LedgerTests.test_completed_requires_proof_and_is_terminal",
+      "state": "PASS",
+      "seconds": 0.011434,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.LedgerTests.test_identical_registration_is_idempotent_conflicting_payload_rejected",
+      "state": "PASS",
+      "seconds": 0.008143,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.LedgerTests.test_only_one_worker_obtains_the_running_transition",
+      "state": "PASS",
+      "seconds": 0.010527,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.LedgerTests.test_policy_update_blocks_new_claims_but_allows_result_reconciliation",
+      "state": "PASS",
+      "seconds": 0.013374,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.LedgerTests.test_result_cannot_change_scope",
+      "state": "PASS",
+      "seconds": 0.010265,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.LedgerTests.test_result_cannot_drop_required_tests",
+      "state": "PASS",
+      "seconds": 0.013139,
+      "detail": null
+    },
+    {
+      "test": "test_handoff_ledger.LedgerTests.test_uncertain_outcome_survives_restart_and_cannot_retry",
+      "state": "PASS",
+      "seconds": 0.012624,
+      "detail": null
+    },
+    {
+      "test": "test_macos_launchd.LaunchdTests.test_dry_install_control_writes_private_config_and_plist",
+      "state": "PASS",
+      "seconds": 0.001891,
+      "detail": null
+    },
+    {
+      "test": "test_macos_launchd.LaunchdTests.test_dry_install_worker_node_creates_two_agents",
+      "state": "PASS",
+      "seconds": 0.001986,
+      "detail": null
+    },
+    {
+      "test": "test_macos_launchd.LaunchdTests.test_mesh_node_agent_accepts_and_forwards_codex_bin",
+      "state": "PASS",
+      "seconds": 0.001966,
+      "detail": null
+    },
+    {
+      "test": "test_macos_launchd.LaunchdTests.test_plist_is_keepalive_user_process",
+      "state": "PASS",
+      "seconds": 6.3e-05,
+      "detail": null
+    },
+    {
+      "test": "test_macos_launchd.LaunchdTests.test_private_json_is_0600",
+      "state": "PASS",
+      "seconds": 0.000502,
+      "detail": null
+    },
+    {
+      "test": "test_macos_launchd.LaunchdTests.test_runner_mesh_node_uses_absolute_registry",
+      "state": "PASS",
+      "seconds": 0.002286,
+      "detail": null
+    },
+    {
+      "test": "test_macos_launchd.LaunchdTests.test_runner_remote_worker_uses_absolute_registry_and_binary_paths",
+      "state": "PASS",
+      "seconds": 0.001439,
+      "detail": null
+    },
+    {
+      "test": "test_macos_launchd.LaunchdTests.test_runner_requires_versioned_config",
+      "state": "PASS",
+      "seconds": 0.000482,
+      "detail": null
+    },
+    {
+      "test": "test_macos_launchd.LaunchdTests.test_worker_node_rejects_non_tailnet_control_url",
+      "state": "PASS",
+      "seconds": 0.000737,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_launch_recovery.RecoveryInstructionsTests.test_all_repo_servers_use_common_factory",
+      "state": "PASS",
+      "seconds": 0.000171,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_launch_recovery.RecoveryInstructionsTests.test_copyable_prompts_include_rule_inside_fence",
+      "state": "PASS",
+      "seconds": 0.000119,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_launch_recovery.RecoveryInstructionsTests.test_empty_instructions",
+      "state": "PASS",
+      "seconds": 2.2e-05,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_launch_recovery.RecoveryInstructionsTests.test_guardrails_are_embedded",
+      "state": "PASS",
+      "seconds": 2.3e-05,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_launch_recovery.RecoveryInstructionsTests.test_idempotent",
+      "state": "PASS",
+      "seconds": 2e-05,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_launch_recovery.RecoveryInstructionsTests.test_launch_copies_match",
+      "state": "PASS",
+      "seconds": 0.000295,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_launch_recovery.RecoveryInstructionsTests.test_legacy_constructor_receives_rule",
+      "state": "PASS",
+      "seconds": 0.000134,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_launch_recovery.RecoveryInstructionsTests.test_modern_constructor_receives_rule",
+      "state": "PASS",
+      "seconds": 5.4e-05,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_launch_recovery.RecoveryInstructionsTests.test_no_live_sdk_required_to_import",
+      "state": "PASS",
+      "seconds": 0.000214,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_launch_recovery.RecoveryInstructionsTests.test_non_text_rejected",
+      "state": "PASS",
+      "seconds": 5.8e-05,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_launch_recovery.RecoveryInstructionsTests.test_partial_marker_does_not_suppress_complete_rule",
+      "state": "PASS",
+      "seconds": 2e-05,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_launch_recovery.RecoveryInstructionsTests.test_preserves_server_instructions",
+      "state": "PASS",
+      "seconds": 1.8e-05,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_runtime_settings.SDKStartupTests.test_stdio_does_not_attempt_http_configuration",
+      "state": "PASS",
+      "seconds": 0.000223,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_runtime_settings.SDKStartupTests.test_v1_existing_transport_settings_remain_compatible",
+      "state": "PASS",
+      "seconds": 0.000207,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_runtime_settings.SDKStartupTests.test_v2_has_settings_but_http_configuration_is_passed_to_run",
+      "state": "PASS",
+      "seconds": 0.000211,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_transport_local.TransportTests.test_disjoint_resources_can_share_connector_and_account",
+      "state": "PASS",
+      "seconds": 0.538975,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_transport_local.TransportTests.test_multi_account_and_resource_binding",
+      "state": "PASS",
+      "seconds": 0.528625,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_transport_local.TransportTests.test_protocol_discovery_and_error_fail_closed",
+      "state": "PASS",
+      "seconds": 0.612367,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_transport_local.TransportTests.test_real_json_discovery_and_call",
+      "state": "PASS",
+      "seconds": 0.015697,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_transport_local.TransportTests.test_real_sse_skips_notification_and_correlates_response",
+      "state": "PASS",
+      "seconds": 0.521046,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_transport_local.TransportTests.test_unsafe_endpoints_are_rejected",
+      "state": "PASS",
+      "seconds": 0.50176,
+      "detail": null
+    },
+    {
+      "test": "test_mcp_transport_local.TransportTests.test_wrong_account_cannot_call_remote_tool",
+      "state": "PASS",
+      "seconds": 0.501804,
+      "detail": null
+    },
+    {
+      "test": "test_mesh.MeshTests.test_auto_selection_prefers_more_known_headroom",
+      "state": "PASS",
+      "seconds": 0.001582,
+      "detail": null
+    },
+    {
+      "test": "test_mesh.MeshTests.test_local_advertisement_hides_codex_home",
+      "state": "PASS",
+      "seconds": 0.000235,
+      "detail": null
+    },
+    {
+      "test": "test_mesh.MeshTests.test_mesh_dispatch_forwards_only_worker_and_prompt",
+      "state": "PASS",
+      "seconds": 0.000179,
+      "detail": null
+    },
+    {
+      "test": "test_mesh.MeshTests.test_node_id_cannot_be_taken_over_by_other_identity",
+      "state": "PASS",
+      "seconds": 0.000145,
+      "detail": null
+    },
+    {
+      "test": "test_mesh.MeshTests.test_registration_persists_and_ttl_expires",
+      "state": "PASS",
+      "seconds": 0.000158,
+      "detail": null
+    },
+    {
+      "test": "test_mesh.MeshTests.test_tailscale_identity_and_endpoint_validation",
+      "state": "PASS",
+      "seconds": 3.8e-05,
+      "detail": null
+    },
+    {
+      "test": "test_mesh.MeshTests.test_workers_are_namespaced_and_ambiguous_alias_fails_closed",
+      "state": "PASS",
+      "seconds": 0.000264,
+      "detail": null
+    },
+    {
+      "test": "test_no_github_actions.NoGitHubActionsTests.test_active_tree_contains_no_github_actions_workflows",
+      "state": "PASS",
+      "seconds": 3.2e-05,
+      "detail": null
+    },
+    {
+      "test": "test_relay_delivery.RelayDeliveryTests.test_completed_failure_is_not_successful_submission",
+      "state": "PASS",
+      "seconds": 0.007085,
+      "detail": null
+    },
+    {
+      "test": "test_relay_delivery.RelayDeliveryTests.test_interrupted_claim_is_uncertain_not_replayed",
+      "state": "PASS",
+      "seconds": 0.0064,
+      "detail": null
+    },
+    {
+      "test": "test_relay_delivery.RelayDeliveryTests.test_retry_publication_does_not_resubmit_process",
+      "state": "PASS",
+      "seconds": 0.010521,
+      "detail": null
+    },
+    {
+      "test": "test_relay_outbox_regressions.OutboxTests.test_atomic_receipt_is_preserved_after_sql_interruption",
+      "state": "PASS",
+      "seconds": 0.005599,
+      "detail": null
+    },
+    {
+      "test": "test_relay_outbox_regressions.OutboxTests.test_claim_without_receipt_becomes_uncertain_and_cannot_reclaim",
+      "state": "PASS",
+      "seconds": 0.004951,
+      "detail": null
+    },
+    {
+      "test": "test_relay_outbox_regressions.OutboxTests.test_conflicting_receipt_or_payload_never_overwrites_evidence",
+      "state": "PASS",
+      "seconds": 0.005048,
+      "detail": null
+    },
+    {
+      "test": "test_relay_outbox_regressions.OutboxTests.test_connection_is_closed_on_success_and_error",
+      "state": "PASS",
+      "seconds": 0.00261,
+      "detail": null
+    },
+    {
+      "test": "test_relay_outbox_regressions.OutboxTests.test_dispatch_lock_excludes_concurrent_relay",
+      "state": "PASS",
+      "seconds": 0.00228,
+      "detail": null
+    },
+    {
+      "test": "test_relay_outbox_regressions.OutboxTests.test_failed_publication_is_retried_without_execution",
+      "state": "PASS",
+      "seconds": 0.008065,
+      "detail": null
+    },
+    {
+      "test": "test_relay_outbox_regressions.OutboxTests.test_nonterminal_acceptance_is_not_success",
+      "state": "PASS",
+      "seconds": 0.001655,
+      "detail": null
+    },
+    {
+      "test": "test_relay_outbox_regressions.OutboxTests.test_outbox_delivery_does_not_need_job_file_or_node_config",
+      "state": "PASS",
+      "seconds": 0.007036,
+      "detail": null
+    },
+    {
+      "test": "test_remote_worker.RemoteWorkerTests.test_actual_auth_failure_quarantines_worker_and_hides_ready_state",
+      "state": "PASS",
+      "seconds": 0.00131,
+      "detail": null
+    },
+    {
+      "test": "test_remote_worker.RemoteWorkerTests.test_dispatch_rejects_non_allowed_worker_before_execution",
+      "state": "PASS",
+      "seconds": 0.000424,
+      "detail": null
+    },
+    {
+      "test": "test_remote_worker.RemoteWorkerTests.test_dispatch_uses_allowed_worker_and_returns_redacted_telemetry",
+      "state": "PASS",
+      "seconds": 0.001095,
+      "detail": null
+    },
+    {
+      "test": "test_remote_worker.RemoteWorkerTests.test_identity_required_and_allowlisted",
+      "state": "PASS",
+      "seconds": 0.000208,
+      "detail": null
+    },
+    {
+      "test": "test_remote_worker.RemoteWorkerTests.test_policy_unknown_worker_fails_closed",
+      "state": "PASS",
+      "seconds": 0.000425,
+      "detail": null
+    },
+    {
+      "test": "test_remote_worker.RemoteWorkerTests.test_remote_worker_listing_hides_paths",
+      "state": "PASS",
+      "seconds": 0.000513,
+      "detail": null
+    },
+    {
+      "test": "test_remote_worker.RemoteWorkerTests.test_request_schema_rejects_workspace_and_oversize",
+      "state": "PASS",
+      "seconds": 0.000285,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_all_cost_components_and_current_context_count",
+      "state": "PASS",
+      "seconds": 0.002824,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_canonical_and_adversarial_fixtures",
+      "state": "PASS",
+      "seconds": 0.034121,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_capability_is_action_resource_and_session_scoped",
+      "state": "PASS",
+      "seconds": 0.002287,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_expiry_boundary_and_stale_observation",
+      "state": "PASS",
+      "seconds": 0.001132,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_future_manifest_and_invalid_dates_rejected",
+      "state": "PASS",
+      "seconds": 0.000585,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_hop_limit_does_not_force_another_handoff",
+      "state": "PASS",
+      "seconds": 0.001049,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_later_denial_overrides_old_success_in_any_order",
+      "state": "PASS",
+      "seconds": 0.001281,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_missing_extra_and_duplicate_actions",
+      "state": "PASS",
+      "seconds": 0.001259,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_native_chat_image_and_github_binary_path_avoids_escalation",
+      "state": "PASS",
+      "seconds": 0.001737,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_negative_boolean_and_nonfinite_cost_rejected",
+      "state": "PASS",
+      "seconds": 0.001291,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_no_candidates_is_explicitly_blocked",
+      "state": "PASS",
+      "seconds": 0.000409,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_route_does_not_mutate_request",
+      "state": "PASS",
+      "seconds": 0.000772,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_same_timestamp_conflict_fails_closed",
+      "state": "PASS",
+      "seconds": 0.00065,
+      "detail": null
+    },
+    {
+      "test": "test_router.RouterTests.test_transfer_threshold_and_budget",
+      "state": "PASS",
+      "seconds": 0.001958,
+      "detail": null
+    },
+    {
+      "test": "test_worker_budget.WorkerBudgetTests.test_exhausted_worker_is_skipped",
+      "state": "PASS",
+      "seconds": 0.000304,
+      "detail": null
+    },
+    {
+      "test": "test_worker_budget.WorkerBudgetTests.test_explicit_exhausted_worker_fails_before_probe",
+      "state": "PASS",
+      "seconds": 0.000114,
+      "detail": null
+    },
+    {
+      "test": "test_worker_budget.WorkerBudgetTests.test_invalid_percentage_rejected",
+      "state": "PASS",
+      "seconds": 0.000113,
+      "detail": null
+    },
+    {
+      "test": "test_worker_budget.WorkerBudgetTests.test_prefers_greater_known_headroom_at_same_cost",
+      "state": "PASS",
+      "seconds": 9.7e-05,
+      "detail": null
+    },
+    {
+      "test": "test_worker_budget.WorkerBudgetTests.test_unknown_budget_falls_behind_known_headroom",
+      "state": "PASS",
+      "seconds": 8.5e-05,
+      "detail": null
+    },
+    {
+      "test": "test_workers.WorkerTests.test_auto_selection_falls_back_to_ready_worker",
+      "state": "PASS",
+      "seconds": 0.000113,
+      "detail": null
+    },
+    {
+      "test": "test_workers.WorkerTests.test_explicit_selection_does_not_probe_other_worker",
+      "state": "PASS",
+      "seconds": 5.3e-05,
+      "detail": null
+    },
+    {
+      "test": "test_workers.WorkerTests.test_probe_uses_worker_home_and_removes_paid_api_keys",
+      "state": "PASS",
+      "seconds": 0.000184,
+      "detail": null
+    },
+    {
+      "test": "test_workers.WorkerTests.test_quarantined_worker_is_not_ready_even_if_login_status_would_pass",
+      "state": "PASS",
+      "seconds": 0.000141,
+      "detail": null
+    },
+    {
+      "test": "test_workers.WorkerTests.test_registry_rejects_duplicate_ids",
+      "state": "PASS",
+      "seconds": 9.4e-05,
+      "detail": null
+    },
+    {
+      "test": "test_workers.WorkerTests.test_run_is_ephemeral_read_only_and_parses_telemetry",
+      "state": "PASS",
+      "seconds": 9.6e-05,
+      "detail": null
+    }
+  ],
+  "source_sha256": {
+    "chat_ops/__init__.py": "951d6f01dd70f20fbad6e5fe1896a9f845a276725271e4a3c8869c90d591e5d6",
+    "chat_ops/__main__.py": "307299fda7b77d22c64cb51430ec75e5f59d78e9c948786afb3b2544fe45e4b7",
+    "chat_ops/capability_store.py": "9e3d5947c59d0ebec0f2d945010dd9a1f63f0337f7a5c1d49de180e0dbf81e07",
+    "chat_ops/catalog.py": "c96f2a27ab0c05b95a2fdb52cc9ce93347b0d4cc9b39ca44b06e74db8c64dccc",
+    "chat_ops/cli.py": "9bd6ed0bb1f72c239ea445ee880ffc1a01732b7cfca7ee51eaad14f2e35df036",
+    "chat_ops/config.py": "a72812e24f7e6ee1a388680e5f745ed57ef5436766339f717eafaf971e4d116b",
+    "chat_ops/engine.py": "c43fd3efb2c8c011461a5f278baa6f64d4c84beb5a015dd51079d972cdc16f65",
+    "chat_ops/mcp_server.py": "371864ab4a1c9f138b8adc0064489c5ff78c15ecd6c43cee2474d844a1147dbc",
+    "chat_ops/mcp_transport.py": "d246d430cd5ad6631d737109dd75bfef1df673de9da371aed4753632a54b0c6c",
+    "chat_ops/results.py": "6ea5f4a4bafd6198be81b3403e2a9b634dcd6f9225c39ad665438a67b12b1adf",
+    "chat_ops/workflows.py": "1256564a86bd5a31cb8fee2ecdb3ed180fcf5c8671398fb845863ce8fd08ee21",
+    "fleet_operator/__init__.py": "677662353e6adfa968cea924e0a215d2d3f955bd4d4413e94e8c4e094dbd0e53",
+    "fleet_operator/__main__.py": "93c14db66d7e943d31f660a44b2a35676f441203a308ed5fc61d44e137333eb0",
+    "fleet_operator/bounded_process.py": "5894e17c800bd4d2eb402eff699f5285d5959277f47ec99c17a8753e5caed0d1",
+    "fleet_operator/command_policy.py": "f46005ab817d77384da78821b2ff7faeedc26186100a23435f42a309d1968238",
+    "fleet_operator/core.py": "191cb0c9e5e2fbebbabc368b721d76ba82cf6dca8428eb12fea1a453570e7f94",
+    "fleet_operator/enrollment/__init__.py": "e26a641582c05d2228b343cf71a24ec55d70ebad645a1666bcbf52a58636c8ad",
+    "fleet_operator/enrollment/bindings.py": "af2bad09ab7bf00a843353dee671eb3aa2dcc8b8c60dfa06386ca6de5825f922",
+    "fleet_operator/enrollment/cli.py": "40bb4f58a81232e62d116e22cdc85a74c6f85317bfd4e01e011db8585f644f72",
+    "fleet_operator/enrollment/releases.py": "28b955adae3085ee6fe62c3b20ed56b2895571a34f53564be0ed730138e95633",
+    "fleet_operator/enrollment/services.py": "93d62963aa3a0e57451970802ab58478de4fe791e7b05ba9fee993326e10d9fb",
+    "fleet_operator/gateway_jobs.py": "6a2ccbe7439e5b485c9c1c8aef3a426e88222bb9f7ab668beb5f723382b82828",
+    "fleet_operator/gateway_tools.py": "6a268e8a7e94b797708e166ea5d2e1160f8cd999bd60fa22536ded6e616be242",
+    "fleet_operator/host_io.py": "ee7b3eb43758a4bf2b6f8536c874a4a3a1d6808a1618448a72a4e8ba67e4c919",
+    "fleet_operator/jobs/__init__.py": "a98ded54bb645162d8b1b48253e70a1187e9912f39d09c6533016b36319ea753",
+    "fleet_operator/jobs/artifact_io.py": "05b6037e239be083496ca775d7eeb9410327e8e16873233ca58284e10834e080",
+    "fleet_operator/jobs/cli.py": "1641a588de741fbec7937b6d9656d276337d80dd15765c96ddf162f7127700ec",
+    "fleet_operator/jobs/command.py": "d42543977d37e2e35f983487d6070ea9ae509ae79ec0ae68391a0c0bf7c0a721",
+    "fleet_operator/jobs/config.py": "cc38fb5cc469bd2bae50ac93333aae619942ad7997499a4ffc1526ed5cc21550",
+    "fleet_operator/jobs/mcp_server.py": "e3c014204800b47c280fd2d451864a2bd308b77b57e1ccdfc5b7d17337755743",
+    "fleet_operator/jobs/metrics.py": "eef19a9e3c4f5cff7e80b9e739bdfda77d409a3eb5ebb0dcc02c52c913dfc955",
+    "fleet_operator/jobs/monitor.py": "dbe40e27d23df81bf3244dd4b4c17c149d6ff88a2d05e05ac8a47e5b8e73a617",
+    "fleet_operator/jobs/requests.py": "ac1fc5c3a485128fe0606e92fb5079ac8edf30c1acf326bb0e39343745ac870a",
+    "fleet_operator/jobs/service.py": "557d374a5b3c2b2495beaf06a698f6670de2676801e93693645461808e451768",
+    "fleet_operator/jobs/worker.py": "bbb2f1411891bf6f91d86b419a571020b8be31341e56b327e94761ea81f1db3b",
+    "fleet_operator/jobs/workspace.py": "b94cbb4f4003b8557aee55a56f6334c0aaafc424d70753eae81f0070ab69238b",
+    "fleet_operator/macos.py": "29445b7da1f8bd6ad04885ae6bc247423b68dc285ca99a3823d2bd4df399711d",
+    "fleet_operator/mcp_server.py": "4a4d870112903a2580fca0b920bb6d02b60a033273ab4bec7829d73824e4716e",
+    "fleet_operator/outbox.py": "c22c30d4736acb8f34f3efc4acd1f89e04617e91522a948e93e270189db96bd7",
+    "fleet_operator/process_worker.py": "64cb78bd910ee3f7b3d536aff04a89d844e7a36e5fdf6886900492f0e3797a06",
+    "fleet_operator/redaction.py": "92f78783bf824af117e83b5084bebd97555883c2395a9ce3e5d053cccc40bed7",
+    "fleet_operator/relay.py": "3c02392ea73e6580c317ddad427b1986deabe4f02018b5c136b98aebf0b59226",
+    "fleet_operator/relay_bus.py": "3ca37bec9fd34153f10eefaf55765e65e5f87a9bf02f92d12225cf00c6f42db0",
+    "fleet_operator/relay_service.py": "def53823477a8a67302b395d03f6939c36ae9a9128ddee4486d8ad48cc30fedc",
+    "fleet_operator/remote_jobs.py": "38f5755ea31c8f643605676671ca6457d4acbb38bf2b543b7910b7723824ab2d",
+    "fleet_operator/secure_gateway.py": "107ede1e514b1ee6cadd95ca5fe523401ca703eb20b4b100f9ef4f303b185e37",
+    "fleet_operator/workers/__init__.py": "ab8837903e8a804eecc95aebf8319ec1807e203c96f4fd5542a24548c67e56d4",
+    "fleet_operator/workers/macos_launchd.py": "d77f28d02501bed4e6c685ea57bec8a91f896a8b100e97a3b464e739907b7407",
+    "fleet_operator/workers/mesh.py": "5b2b381c84e44233cf8e4aa68af9f943a69ae9394c6a8b29a882b4204d21962f",
+    "fleet_operator/workers/remote_worker.py": "08834786d541a8318c625d7dc8e0f1f221139f0f468b4013811b85b5a49ae2a8",
+    "fleet_operator/workers/worker_budget.py": "9dabaf394231dcebca6aea4ed40e7bd670ffe12f95bacc1f25fda51f891692e4",
+    "fleet_operator/workers/worker_health.py": "93ece944777a1e2962b3b98436b517e4ee3843c1464967a5035c7a077211b2fa",
+    "fleet_operator/workers/workers.py": "6e3404ff36d050df65876c6a4c3fe13e6ff9e43883117c3ba9eaa3d84fd5047b",
+    "operation_contracts/__init__.py": "12523292648030cf2b1daa2c84b34f157c6b8fe1669bf0d438de57d8dff4b81e",
+    "operation_contracts/accounts.py": "9fc3b0e8f89b3e29ca579e2ff9d62bbaf7103f58baf099533ade36e59256e005",
+    "operation_contracts/common.py": "a8c6e1c0995e71238690c749e6b8888865f98702f1dcb537bbe13a484c297e8a",
+    "operation_contracts/files.py": "1d092c838d096917e764ffa3a16b55c6e745acda5f88fbf4b8d40a7e8a9293df",
+    "operation_contracts/journal.py": "de2bc54ba0fa89beeef224ea2b6e68dcd6d6a291848c3fd497c4539b17dfd428",
+    "operation_contracts/mcp_recovery.py": "7b879fea2c4b236df62dab6083c241490207ad6906fcf8ed364eba1a41694ba3",
+    "operation_contracts/mcp_runtime.py": "a5884fdb1fa45311f94fc1c709b825e76b4788bdf80800e6d80d4da426d52949",
+    "operation_contracts/projects.py": "3af2428f5f010f80c5a4469dccc925f5c810eecf8ae04357f0f071b5766e285d",
+    "cost_router/__init__.py": "983a530f81ae7670514b93aedc0f33277d93b78db5a0b404937516a7532b60e2",
+    "cost_router/__main__.py": "2dccfc8a188f9e7ef045cbf4b444a4a2490652a336528eda2edd43fbc39c2d8b",
+    "cost_router/capabilities.py": "700cb0c54dd7d807f1dc14907d6829ea829a8d7b88ed12c117f0779461a02983",
+    "cost_router/handoff.py": "c5773ffb82664066ef8e1655c589b59f86493f0376d4dc490656717bb25d2c08",
+    "cost_router/ledger.py": "d9286e0a57495e6169d3107a29d10a9beeceec16f71459fb9733f105762d64f6",
+    "cost_router/macos_launchd.py": "51f3db330d5557631f5eb3a47a1f8ecc97b70ca58388ca073a861fa147767d7a",
+    "cost_router/mesh.py": "d3d9251f1663d26bcb67ea4db08fcd86a809bc8ca26cc31f9f97e4ba9048ba5e",
+    "cost_router/remote_worker.py": "847edf444a1e64cfc6b17f1c893fc6135ce925c40b94fa411b172282be54085e",
+    "cost_router/router.py": "7d7d4ecb66e6e0a9272c65c94aa3a9b9e0492c720cf63572f79eb657af4ed549",
+    "cost_router/validation.py": "171a5a4cbeb21f580adbb8d4950f7556871140895e7505d107278e3f2ed85dc2",
+    "cost_router/worker_budget.py": "99bad435dae9726db21775cbaf63e62e2abcf4bc43316c8106102e820d590bfd",
+    "cost_router/worker_health.py": "d7171f93a3f9e544e8a89672fe4e1cf9ab90a333c237b6076e508b0931643409",
+    "cost_router/workers.py": "06fdb7b2b3ba3b39579bd84d13f52d85c95c07c03336c13b2b98aa3c3a3567d8",
+    "tests/routing_cases.json": "3524e673ebe2dc913f0d2007e7ab3adf293bb3ca2d9b893b5a36df01adc78d32",
+    "tests/support.py": "97ea7d87feceb96b22fc49180f4f0afd99bbc276850fc8feac14d1704ab391e4",
+    "tests/test_ab_chat_recovery.py": "a7cfb3cb179e74354c6295e858721ac1f20f7a7ab17bfd30e67c6361077bd095",
+    "tests/test_ab_contracts.py": "ec0c0269207ecd165d7801437be94c241e1683da269e8a6e69d3909a6a383402",
+    "tests/test_ab_delivery.py": "084750475f367de49e2dea09c704ab77d47e6743fadf45e4942ed7037bf50789",
+    "tests/test_ab_delivery_examples.py": "1adad714b315da1f9d3836951fe2c518dc479d827dd32328ce47a53343366ca9",
+    "tests/test_ab_recovery_regressions.py": "0b2234694633577847e8f8d160465fa2c55e013b8ede2e23ff69e63772844f8a",
+    "tests/test_actions_budget_gate.py": "3ed8f5abbb9bc4c641af6df6a3cb3142d876e2a85034fddad6559a87822256c7",
+    "tests/test_audit_regressions.py": "9eadd9f8096df132bd1d184b2890daa007a22a975babe16d536ef4c1c8eb6f75",
+    "tests/test_capability_store.py": "abdbd37bef3180c881b6f606b0420325d2aef8701ad6c2983d53e849cfa2664f",
+    "tests/test_chat_operations.py": "eb011f44b1212a3fadbcd9273e112eda212e688d6ff86c438162255da134c433",
+    "tests/test_cli.py": "57fc1fa63c76a63ffe0f6230d55b33026b4b26418f0010d6b49cf7677b6ebf89",
+    "tests/test_delivery_gaps.py": "3b723a62f9f4bfd957561e123ca4645bcc30ae93b72c47d296088a2682313c4d",
+    "tests/test_deployment_assets.py": "693593adbf9896f1a7311efd5ca393ab5b1e8a2421a2fbc0527faf71c38e8e85",
+    "tests/test_deployment_loopback.py": "e0f7e6fd8e76a8f315650c7ed6dd695f98e470b96c82451c2be663792fe306d8",
+    "tests/test_deployment_operator.py": "b59ed98be575912d717dad518b963d64a2eea50bcff961110ee5c269e772a6b0",
+    "tests/test_documented_commands.py": "a414028ccd3dbb7d7e3cfcbfe4387219c647fd157fd28af68949b6f32da17005",
+    "tests/test_enrollment_local.py": "aa415f28c82108d059318904d5673d1f9ac5ba4e9ad00bb6e2b30208c0d2c6f6",
+    "tests/test_fleet_jobs.py": "b3123399e55b6ae482ded16f638f2c22c18a5572ebccc7fb47f98d2520196b0a",
+    "tests/test_fleet_operator.py": "b2bf10e96b6292f85849636e6ff32a2c6278be094d55845df6ea208055787876",
+    "tests/test_fleet_operator_macos.py": "049dc8a87f99d4597a6004e453ee761f2924f0df19f9eda664e59de1b6bfeddc",
+    "tests/test_fleet_operator_relay.py": "ab5699aa3d907e4b3b4a5b133e54c9bf6e437e509fc125bb61d6e821c33a02f7",
+    "tests/test_fleet_queue.py": "8d65e05096ca538474a86da5fc9d29a29609fbe344788fb7e31f0805059bec76",
+    "tests/test_fleet_recovery_regressions.py": "4256f28a27024e9a1a9b618d07cb6221ac612078cf1c1088afb606256258469d",
+    "tests/test_gateway_delivery.py": "e66afd80391030d6d776ab589f8ae3a6eea73db8c168bc0cc32bbabd2bc3a453",
+    "tests/test_gateway_integration_local.py": "a7aabf8ae86a5fbd1aafac370a7d66fa971911c0092043165c23aa397c572dc8",
+    "tests/test_handoff_ledger.py": "3150d62902444feb59f50474b7aca04084348aa3cdbce9847f64050150d94eb9",
+    "tests/test_macos_launchd.py": "23921b48c2f0a8e5353b098af2b68b54525d933426578e2069e288e75f908443",
+    "tests/test_mcp_launch_recovery.py": "7c78e0710a6164937a690e7c9647f75ab84069d0c257583c15b6b26fb90b7344",
+    "tests/test_mcp_runtime_settings.py": "7dafd24adde9592f1409fb76fec99d88cbba04dd6751fc270883f70fb74634dd",
+    "tests/test_mcp_transport_local.py": "11427914e7f24fc6c16bbe9eef631770df30de6faf7fb7e838c6dd89724fcaa2",
+    "tests/test_mesh.py": "37ed59d8ea9b99568b646797577b4e68734d9526219e07d857c2e7f1c352e29e",
+    "tests/test_no_github_actions.py": "4b8d21da216a3a118fe45af94e75fdc3423a74113929d4ecf1a8d4195d902f53",
+    "tests/test_relay_delivery.py": "e323e735a786a0505c83a27f5c4599a03b27afc9a578ec3f9e026f3ca87a3ba8",
+    "tests/test_relay_outbox_regressions.py": "566674c380ebe01c46d8689126c3b1db755ef744ae80709716e93dec12292361",
+    "tests/test_remote_worker.py": "722a3b393b12fb0d7f58dc9afe25124778cba492582e03b98813ebda24d9e0f4",
+    "tests/test_router.py": "0ab740963ec1ab9e674a0a2913980e74050f92595161e9d95f4d109a28e93261",
+    "tests/test_worker_budget.py": "c888a19091f114aaf6633d50b6d303bb2de7194c793ea08ce67eb9c8f405180e",
+    "tests/test_workers.py": "69e077eb6316366033643ca4d125c033564759571e0e44116d5251bed2a74c82",
+    "scripts/ab_complete_assets.py": "97dc33dd643cd16c8d71d527e586c2d722fb6b40b786432500a6b87e5d2846ac",
+    "scripts/ab_demo.py": "076ce9a69bccf90682dff16b99beb247d072d8bfb58291b9df16d83ef395bc0a",
+    "scripts/ab_fleet_deploy.py": "2eade9ec8a6f6cfb3d54ce031c092231ad96501b3bf5e1b559d88fb33a694fa9",
+    "scripts/ab_gateway_activate.py": "104ecc4b55a477c1e0dab5f5261f3115af02ac61580f552298b1bc3a04a2b605",
+    "scripts/ab_host_install.py": "6ccaff917446ff1dd5a8fa912c480b83bbb7f58ff39c9dce723c1b4e9e07b199",
+    "scripts/ab_smoke_task.py": "e98ffbe812a7f7592b630fe743f32e6a79dc6dffab7786cb0e14352413836d49",
+    "scripts/ab_validate_snapshot.py": "663ff0da6b06902e4cc84516877ab1243ab15a58fb720250ebb45716ab120b44",
+    "scripts/build_schemas.py": "6ac48d66fdb12d2375fed16c64e786b08ccce24d3cb030f3ba5714e021a9db8b",
+    "scripts/chat_operations.py": "a379a9462b466a59bbb92b98a4abd86063a3fffbf3eceabb53b0de78ac9c0642",
+    "scripts/fleet_enroll.py": "658a8001f7eea7ea6d380b46ce4147f84e501a95311d5fc1c64f2edbe03c7f38",
+    "scripts/fleet_jobs.py": "916234ce2368e3371aa6144b610ddd23fc53ee1b085c67ab0cdcbb1e03491e4e",
+    "scripts/fleet_operator_macos.py": "c22fec9eb0aabce0da7ff36687e92d04a190339eb753c9b8f87c9c850e6c1516",
+    "scripts/fleet_operator_relay.py": "8b3e659db7fd854bb21b53eb43a789fde1df9026d7e34d32c685bea9b8a36798",
+    "scripts/fleet_operator_server.py": "38ac94bce96aa7040cded87664e9aa348f2625d8c7afde24a69338a1cbe491b2",
+    "scripts/fleet_runtime.py": "88895f1bf03f9acf885a6206ea034951dc4ad35d98804af07621c1f43ff7f397",
+    "scripts/macos_mesh_service.py": "8cf698f8da4e4a4ecc13466744ce08dfc1da65f5acbc00e432e2c9f9079c2854",
+    "scripts/mesh_client.py": "fe48cac1277c44d250ed625dd12b96f93a387ec7b2c3d8d563ea693884f6e692",
+    "scripts/mesh_control_server.py": "9a211cf1f9649d6915bdb0c704532a4eb26e560b2b284d3fa8348a521cf164d8",
+    "scripts/mesh_node_agent.py": "12c76094704557ef4cc663a63ddbe6056c234f99b203d13df2b47576b9fb0bff",
+    "scripts/mesh_service_runner.py": "21a2e7483c54c3cafde87b119e7ddd28d0e0240e23ad09414cdd5130c75ef4b2",
+    "scripts/remote_worker_client.py": "0e3cc2b2bddb24d373ca47325ca15f1a26cc4af8dd2b486773359871c7742743",
+    "scripts/remote_worker_server.py": "0d85dda834dcf6dfc25267a8d755169a6b4b3a3c464069ff4e4024e3b37f8d4e",
+    "scripts/start_mesh_control.sh": "96e4e0d5ab1fc8a4bc347d1a993e5c3aa338f01e64a8a8df25bf9bf1334061ee",
+    "scripts/start_mesh_node.sh": "f6e8da421407b64b0fa2dcb0773932106b48de13e35f9c8c11351906b4d00935",
+    "scripts/start_remote_worker.sh": "0e308f9429965d8fc23021cf958b08d91d69ec851787a5095abba0d96b1933b9",
+    "scripts/stop_mesh_control.sh": "91dde720c065eafaae6028741fe7a32a48d59b15110266e5d53060bf32fa8d13",
+    "scripts/stop_mesh_node.sh": "fe8025f4430ae76e12b8a1c8c66b1baa5080c954f39b002bbb7b974df72f35b4",
+    "scripts/stop_remote_worker.sh": "a3167e5ec2ac6f46bce7066f3749cd330a89addc9a7faeb9d52e77fb5a679d26",
+    "scripts/validate_ab.py": "a3a9a8c431b9fbc4b35aba10c48b4263a06666c0cec537d8c130a3157867747b",
+    "scripts/worker_broker.py": "3f8927d2573675821ff4ae1154df25a4ab72f6637e64f40b11e31b5e75ccac4d",
+    "schemas/ab-contracts.schema.json": "bd0facc32c10ec37b1e3333932f003023360db306b732c33c22c3710db063979",
+    "schemas/capabilities.schema.json": "28b1fac4176dc1e7cbab03df3d399494e438c335860641bb3f70d8c29bf085aa",
+    "schemas/common.schema.json": "038e3d4eea4eb93d7d385b1da82aff1cd99256db9ada8a8901cda0f7735cd4e5",
+    "schemas/decision.schema.json": "62b77f2dfc77719d4a9ed386e6e576bbbee38d3806fad88d0ef225f018d3167b",
+    "schemas/fleet-operator-job.schema.json": "016c450d6bd549cd75c8f1e15d07f11dc64f0df43acfcfa0f03a93ae35c733da",
+    "schemas/handoff.schema.json": "68476d70b4489bb74500694fe474640a73f32f481b18167aac404282cb0027a3",
+    "schemas/request.schema.json": "d24840096420a0098dda0bb0ca3464ea75034b9eaceaa2a7d7572cb219c38eb8",
+    "policy/routing.json": "a1063109c1642119a2242a6ff32d13766482e3f18a469a806f4cb03e3556271e"
+  },
+  "log_sha256": "a4395e60be39f056ba9a5e240c2ec8f799035e8ec944eb3595e994e6a0facaba",
+  "live_gates": {
+    "native_chat_attachment": "NOT_RUN",
+    "real_connectors": "NOT_RUN",
+    "user_fleet_ssh": "NOT_RUN",
+    "macos_service_installation": "NOT_RUN",
+    "container_engine": "NOT_RUN",
+    "remote_commit_merge": "NOT_PERFORMED"
+  }
+}

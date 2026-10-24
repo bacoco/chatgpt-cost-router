@@ -25,7 +25,7 @@ Native Chat capabilities are evaluated like any other action-scoped capability. 
 
 ## Start from Chat
 
-Read [deployment status](docs/DEPLOYMENT_STATUS.md) first: it identifies what is actually installed, verified or blocked. Then use this prompt with the authorized GitHub connector:
+Read [deployment status](docs/DEPLOYMENT_STATUS.md) first: it identifies what is actually installed, verified or blocked. **SOURCE-TESTED** is `d2438d95e2a3ceca994d60b7ec25522e23be5f83` ([24 October receipt](audits/main-integration-20261024/validation.json): 254 PASS, 1 SKIP). **DEPLOYED** and the limited historical **LIVE-VERIFIED** state remain at `10b3ee3e438d57b210b1155e2dbaf19aac9b00db`; this source validation makes no new runtime claim. Then use this prompt with the authorized GitHub connector:
 
 ```text
 Read README.md, .chatgpt/CURRENT.md and docs/DEPLOYMENT_STATUS.md from

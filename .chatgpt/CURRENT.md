@@ -1,6 +1,22 @@
 # Current A/B work
 
-Date: 2026-09-20.
+Date: 2026-10-24.
+
+## Source validation and runtime evidence
+
+PR #21 (issue #19, revoked queued project quarantine) and PR #20 (issue #16,
+account-scoped capability evidence) merged after independent review. The exact
+integrated main `d2438d95e2a3ceca994d60b7ec25522e23be5f83` is **SOURCE-TESTED**:
+255 tests, 254 PASS, 1 SKIP (optional official MCP SDK absent), no failures/errors;
+source unchanged. See the [receipt](../audits/main-integration-20261024/validation.json)
+and [reproduction/environment](../audits/main-integration-20261024/README.md).
+Later documentation/evidence commits do not certify a new source revision.
+**DEPLOYED** and limited historical **LIVE-VERIFIED** remain at
+`10b3ee3e438d57b210b1155e2dbaf19aac9b00db`; no service was redeployed or checked
+live in this lot. Keep PR #13 excluded; its [triage proposal](https://github.com/bacoco/chatgpt-cost-router/issues/18#issuecomment-6384618206)
+is tracked in #18.
+
+## Existing source policy and deployment context
 
 Source policy update: current `main` forbids GitHub Actions as an execution,
 validation, recovery or publication lane. The active routing policy rejects
