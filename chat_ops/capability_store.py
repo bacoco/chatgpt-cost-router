@@ -1,4 +1,4 @@
-"""Action evidence scoped to principal, project, resource, surface and session."""
+"""Action evidence scoped to principal, project, resource, account and context."""
 import json
 import time
 from operation_contracts.common import ContractError, canonical, fields, identifier, number
@@ -15,12 +15,14 @@ class CapabilityStore:
             db.execute("CREATE TABLE IF NOT EXISTS connector_evidence(scope TEXT PRIMARY KEY, observed REAL NOT NULL, data TEXT NOT NULL)")
 
     @staticmethod
-    def scope(principal, project, resource, action, surface, session):
+    def scope(principal, project, resource, action, surface, session, *, connector, account_ref):
         if surface not in SURFACES:
             raise ContractError("unknown conversation surface")
-        for value in (principal, project, resource, action, session):
+        for value in (principal, project, resource, action, connector, account_ref, session):
             identifier(value)
-        return canonical([principal, project, resource, action, surface, session])
+        # Eight-field keys never match legacy six-field evidence. Keep old rows
+        # for inspection; require fresh account-scoped observations after upgrade.
+        return canonical([principal, project, resource, action, connector, account_ref, surface, session])
 
     def observe(self, principal, project, resource, action, surface, session, evidence, *, now=None):
         fields(evidence, ("level", "tool_name", "connector", "account_ref", "observed_at", "expires_at", "evidence_ref"))
@@ -33,7 +35,8 @@ class CapabilityStore:
             identifier(evidence[key], key)
         if not isinstance(evidence["tool_name"], str) or not 1 <= len(evidence["tool_name"]) <= 256:
             raise ContractError("tool name must come from current discovery")
-        scope = self.scope(principal, project, resource, action, surface, session)
+        scope = self.scope(principal, project, resource, action, surface, session,
+                           connector=evidence["connector"], account_ref=evidence["account_ref"])
         with self.journal.transaction() as db:
             old = db.execute("SELECT * FROM connector_evidence WHERE scope=?", (scope,)).fetchone()
             if old and old["observed"] > evidence["observed_at"]:
@@ -45,7 +48,8 @@ class CapabilityStore:
 
     def require(self, principal, project, resource, action, surface, session, binding, *, now=None):
         now = time.time() if now is None else now
-        scope = self.scope(principal, project, resource, action, surface, session)
+        scope = self.scope(principal, project, resource, action, surface, session,
+                           connector=binding["connector"], account_ref=binding["account_ref"])
         with self.journal.transaction() as db:
             row = db.execute("SELECT data FROM connector_evidence WHERE scope=?", (scope,)).fetchone()
         if not row:

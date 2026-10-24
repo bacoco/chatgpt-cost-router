@@ -27,6 +27,24 @@ Preflight again at each scheduled execution, handoff acceptance and execution cl
 A scheduler created successfully today does not prove tomorrow's connectors will
 work. A remote call can still fail after preflight; follow the uncertain-effect protocol.
 
+## Chat Operations account scope
+
+For Chat Operations, persisted evidence also includes principal, project, connector
+and account reference in its exact scope. Observations for different accounts or
+connectors coexist; lookup uses the project's bound connector and account only.
+Expiry, denial, observation ordering and same-timestamp conflict checks apply
+within that complete scope.
+
+### Existing Chat Operations journals
+
+The account-aware scope uses eight-field JSON keys in `connector_evidence`:
+`[principal, project, resource, action, connector, account_ref, surface, session]`.
+Legacy six-field keys remain unchanged for inspection and are never looked up or
+silently converted. After upgrading, obtain fresh scoped observations through the
+normal discovery/observation path before invoking tools. Reopening a journal has
+the same behavior; there is no automatic migration of historical evidence or
+change to project grants. Previously overwritten observations cannot be recovered.
+
 ## Historical observations
 
 The previous architecture document listed Scheduled Chat PASS/NOT EXPOSED/FAIL
